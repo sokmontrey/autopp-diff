@@ -1,49 +1,54 @@
 #include <iostream>
 #include <vector>
 
+template <template <typename> class OP, typename T>
+class Operator;
+
+template <typename T>
+class Node;
+
 template <typename T>
 class Node {
-private:
-	T _value;
-	T _d_value;
+	private:
+		T _value;
+		T _value_d;
+	public:
+		Node() = default;
+		Node(T value): _value(value) {}
 
-	Operator<T> _operator;
-public:
-	Node() = default;
-	Node(T value): _value(value);
-	Node(Opeator<T> &&operator): _operator(operator);
+		T GetValue(){ return this->_value; }
+		T GetDerivative(){ return this->_value_d; }
+};
+
+template <template <typename> class OP, typename T>
+class Operator {
+	private:
+		Node<T> &_a;
+		Node<T> &_b;
+	public:
+		Operator() = default;
+		Operator(Node<T> &a, Node<T> &b): _a(a), _b(b) {}
+
+		T Compute() {
+			return OP<T>::Compute(this->GetValueA, this->GetValueB);
+		}
 };
 
 template <typename T>
-class Operator{
-private:
-	Node<T> &_a;
-	Node<T> &_b;
-
-protected:
-	void setA(Node<int> &a){ this->_a = a; }
-	void setB(Node<int> &b){ this->_b = b; }
-
-	T getValueA(){return this->_a.getValue();}
-	T getValueB(){return this->_b.getValue();}
-
-	T Compute();
-	T Derivative();
-}
-
-template <typename T>
-class Add: public Operator{
-	Add(Node<T> &a, Node<T> &b): _a(a), _b(b) {}
-
-	T Compute(){ return this->getValueA() + this->getValueB(); }
+struct Add{
+	static T Compute(T a, T b){
+		return a + b;
+	}
+	static T Derivative(){
+		return 1;
+	}
 };
-
 
 int main(){
 	Node<int> a = 10;
 	Node<int> b = 20;
 
-	Node<int> c(Add(a, b));
+	Operator<Add, int> add(a, b);
 
 	return 0;
 }
