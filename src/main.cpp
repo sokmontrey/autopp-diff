@@ -1,59 +1,77 @@
 #include <iostream>
-#include <vector>
 #include <cmath>
 
 template <typename T>
 class Node{
-	private:
+	protected:
 		T _value;
 		T _d_value;
 
-	public:
 		Node() = default;
-		Node(T value): _value(value) {}
 
-		T getValue(){ return this->_value; }
-		T getDValue(){ return this->_d_value; }
+		virtual void setValue(T new_value){
+			this->_value = new_value;
+		}
 
-		void setDValue(T d_value){ this->_d_value = d_value; }
+		virtual void operator=(T value){
+			this->_value = value;
+		}
+
+	public:
+		virtual T compute() { return this->_value; }
+		T getValue(){return this->_value;}
 };
 
-/*
+
+template <typename T>
+class Var: public Node<T>{
+	public:
+		Var() = default;
+		Var(T value){ 
+			this->_value = value;
+		}
+};
+
+template <typename T>
+class Const: public Node<T>{
+	public:
+		Const(T value){ 
+			this->_value = value;
+		}
+
+		void setValue (T new_value) override {
+			//throw: Const is immutable
+			std::cout << "Warning: Constant is immutable" << "\n";
+		}
+		void operator=(T value) override {
+			this->setValue(value);
+		}
+};
+
 template <template <typename> class OP, typename T>
-class Node{
+class Op: public Node<T>{
 	private:
-		Node<T> *_a = nullptr;
-		Node<T> *_b = nullptr;
-
+		Node<T>* _a;
+		Node<T>* _b;
 	public:
-		Node() = default;
-		Node(Node<T> *a): _a(a) { }
-		Node(Node<T> *a, Node<T> *b): _a(a), _b(b) { }
-
-		T compute(){
-			if(_b)
-				return OP<T>::compute( _a->getValue(), _b->getValue() );
-			else
-				return OP<T>::compute( _a->getValue() );
+		Op(Node<T> *a, Node<T> *b=nullptr){
+			this->_a = a;
+			this->_b = b;
 		}
 
-		T computeD(bool is_a=true, bool is_update_node=true){
-			//TODO: manage if the operator is single variable
-			T d_value;
+		void setValue(T new_value) override {
+			//throw: modifying Operator's value doesn't affect anything
+			std::cout << "Warning: Op immut" << "\n";
+		}
+		void operator=(T value) {
+			this->setValue(value);
+		}
 
-			if(_b)
-				d_value = OP<T>::computeD( _a->getValue(), _b->getValue(), is_a );
-			else
-				d_value = OP<T>::computeD( _a->getValue(), is_a );
-
-			if(is_update_node){
-				is_a ? _a->setDValue(d_value) : _b->setDValue(d_value);
-			}
-
-			return d_value;
+		T compute() override {
+			this->_value = OP<T>::compute(_a->compute(), _b->compute());
+			return this->_value;
 		}
 };
-*/
 
 template <typename T>
 struct Add{
@@ -91,22 +109,20 @@ struct Pow{
 //		Var
 //		Op
 //		Const
+
+
 int main(){
+	Var<int> a = 10;
+	Const<int> b = 20;
+
+	Op<Add, int> c(&a, &b);
+	Op<Add, int> d(&c, &a);
+
+	std::cout << a.compute() << "\n";
+	std::cout << b.compute() << "\n";
+	std::cout << c.compute() << "\n";
+	std::cout << d.compute() << "\n";
 	
 	return 0;
 }
 
-// Emery is good
-// It is free
-
-/* Dear Viewers,
-Thank you for joining me on my YouTube LIVE Stream. I hope you have enjoyed the content and found it informative.
-
-I would like to take this opportunity to say goodbye and express my gratitude for your support. It has been a pleasure interacting with you and sharing my knowledge and thoughts with you.
-
-I hope you will continue to tune in for future streams and continue to support me in my endeavors.
-
-Thank you again for joining me. I look forward to seeing you in the next stream.
-
-Sincerely,
-Sokmontrey Sythat */
