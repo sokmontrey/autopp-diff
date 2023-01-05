@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <memory>
 
 enum NODE_TYPE{
 	VARIABLE = 1,
@@ -166,25 +167,50 @@ struct Pow{
 	}
 };
 
-//TODO:new design:
-//	Node
-//		Var
-//		Op
-//		Const
+template <typename T>
+struct Cos{
+	static T compute(T a, T b=T()){
+		return std::cos(a);
+	}
+	static T computeD(bool is_a, T a, T b=T()){
+		return -std::sin(a);
+	}
+};
 
+template <typename T>
+struct Sin{
+	static T compute(T a, T b=T()){
+		return std::sin(a);
+	}
+	static T computeD(bool is_a, T a, T b=T()){
+		return std::cos(a);
+	}
+};
+
+//TODO: temporary parameter for Operator
+//TODO: higher degree of derivative
 
 int main(){
-	Var<int> a = 2;
-	Const<int> b = 2;
-	Const<int> c = 5;
+	Const<double> b = 1;
+	Const<double> x = 1;
+	Var<double> w = 1;
 
-	Op<Pow, int> power(&a, &b);
-	Op<Mul, int> multiply(&power, &c);
+	/*
+	Var<double>* p2 = &w;
 
-	multiply.compute();
-	multiply.computeD();
+	std::shared_ptr<Node<double>> p = std::make_shared<Node<double>>(*p2);
+	*/
 
-	std::cout << a.getDValue() << "\n";
+	/*
+	Op<ReLU, double> f(
+		Op<Add, double>(
+			Op<Mul, double>(&w, &x), &b
+		)
+	);
+
+	std::cout << f.compute() << "\n";
+	*/
+
 	
 	return 0;
 }
