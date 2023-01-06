@@ -217,6 +217,7 @@ struct Sin{
 	}
 };
 
+//TODO: split code into organized files structure
 //TODO: support other data type
 //	such as custom matrix operation
 //TODO: higher degree of derivative
