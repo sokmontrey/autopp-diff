@@ -24,8 +24,8 @@ class Node{
 		virtual void setValue(T new_value){ this->_value = new_value; }
 		virtual void operator=(T value){ this->_value = value; }
 
-		virtual T compute() { return this->_value; }
-		virtual void computeD( T chain_value ) {};
+		virtual T evaluate() { return this->_value; }
+		virtual void differentiate( T chain_value ) {};
 
 		T getValue(){ return this->_value; }
 		T getDValue(){ return this->_d_value; }
@@ -42,11 +42,12 @@ class Var: public Node<T>{
 			this->_value = value;
 		}
 
-		T compute() override {
+		T evaluate() override {
 			this->_d_value = T();
 			return this->_value;
 		}
-		void computeD(T chain_value){
+
+		void differentiate(T chain_value){
 			this->_d_value += chain_value;
 		}
 };
@@ -119,36 +120,36 @@ class Op: public Node<T>{
 			this->setValue(value);
 		}
 
-		T compute() override {
+		T evaluate() override {
 			this->_d_value = T();
 
 			if(this->_b)
-				this->_value = OP<T>::compute(_a->compute(), _b->compute());
+				this->_value = OP<T>::evaluate(_a->evaluate(), _b->evaluate());
 			else
-				this->_value = OP<T>::compute(_a->compute());
+				this->_value = OP<T>::evaluate(_a->evaluate());
 
 			return this->_value;
 		}
 
-		void computeD(T chain_value=1) override {
+		void differentiate(T chain_value=1) override {
 			this->_d_value += chain_value;
 
 			if(_b){
 				if(_a->getType() != CONSTANT){
-					_a->computeD( chain_value * 
-						OP<T>::computeD(true, _a->getValue(), _b->getValue()) 
+					_a->differentiate( chain_value * 
+						OP<T>::differentiate(true, _a->getValue(), _b->getValue()) 
 					);
 				}
 
 				if(_b->getType() != CONSTANT){
-					_b->computeD( chain_value * 
-						OP<T>::computeD(false, _a->getValue(), _b->getValue())
+					_b->differentiate( chain_value * 
+						OP<T>::differentiate(false, _a->getValue(), _b->getValue())
 					);
 				}
 			}else{
 				if(_a->getType() != CONSTANT){
-					_a->computeD( chain_value * 
-						OP<T>::computeD(true, _a->getValue()) 
+					_a->differentiate( chain_value * 
+						OP<T>::differentiate(true, _a->getValue()) 
 					);
 				}
 			}
@@ -157,65 +158,67 @@ class Op: public Node<T>{
 
 template <typename T>
 struct Add{
-	static T compute(T a, T b=T()){
+	static T evaluate(T a, T b=T()){
 		return a + b;
 	}
 
-	static T computeD(bool is_a, T a, T b=T()){
+	static T differentiate(bool is_a, T a, T b=T()){
 		return 1;
 	}
 };
 
 template <typename T>
 struct ReLU{
-	static T compute(T a, T b=T()){
+	static T evaluate(T a, T b=T()){
 		return a > 0 ? a : 0;
 	}
-	static T computeD(bool is_a, T a, T b=T()){
+	static T differentiate(bool is_a, T a, T b=T()){
 		return a > 0 ? 1 : 0;
 	}
 };
 
 template <typename T>
 struct Mul{
-	static T compute(T a, T b=T()){
+	static T evaluate(T a, T b=T()){
 		return a * b;
 	}
-	static T computeD(bool is_a, T a, T b=T()){
+	static T differentiate(bool is_a, T a, T b=T()){
 		return is_a ? b : a;
 	}
 };
 
 template <typename T>
 struct Pow{
-	static T compute(T a, T b=T()){
+	static T evaluate(T a, T b=T()){
 		return std::pow(a, b);
 	}
-	static T computeD(bool is_a, T a, T b=T()){
+	static T differentiate(bool is_a, T a, T b=T()){
 		return b * std::pow(a, b-1);
 	}
 };
 
 template <typename T>
 struct Cos{
-	static T compute(T a, T b=T()){
+	static T evaluate(T a, T b=T()){
 		return std::cos(a);
 	}
-	static T computeD(bool is_a, T a, T b=T()){
+	static T differentiate(bool is_a, T a, T b=T()){
 		return -std::sin(a);
 	}
 };
 
 template <typename T>
 struct Sin{
-	static T compute(T a, T b=T()){
+	static T evaluate(T a, T b=T()){
 		return std::sin(a);
 	}
-	static T computeD(bool is_a, T a, T b=T()){
+	static T differentiate(bool is_a, T a, T b=T()){
 		return std::cos(a);
 	}
 };
 
+//TODO: support other data type
+//	such as custom matrix operation
 //TODO: higher degree of derivative
 //TODO: determine the safety of storing normal ptr to a shared_ptr
 
@@ -226,14 +229,15 @@ int main(){
 
 	Op<ReLU, double> f(
 		new Op<Add, double>(
-			new Op<Mul, double>(&w, &x),
-			&b
+			new Op<Mul, double>(&w, &x), &b
 		)
 	);
 
-	std::cout << f.compute() << "\n";
-
+	std::cout << f.evaluate() << "\n";
+	f.differentiate();
 	
+	std::cout << w.getDValue() << "\n";
+
 	return 0;
 }
 
