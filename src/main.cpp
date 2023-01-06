@@ -72,15 +72,44 @@ class Const: public Node<T>{
 template <template <typename> class OP, typename T>
 class Op: public Node<T>{
 	private:
-		Node<T>* _a;
-		Node<T>* _b;
+		std::shared_ptr<Node<T>> _a;
+		std::shared_ptr<Node<T>> _b;
+
 	public:
-		Op(Node<T> *a, Node<T> *b=nullptr){
+		//Both arguments are normal object
+		//	OR there is only one argument that is a normal object
+		Op(Node<T>* a, Node<T>* b=nullptr){
 			this->_type = OPERATOR;
 
-			this->_a = a;
-			this->_b = b;
+			this->_a = std::shared_ptr<Node<T>>(a);
+			this->_b = std::shared_ptr<Node<T>>(b);
 		}
+
+		//One of the arguments is a temporary object
+		//	a is a temp object
+		//	OR there is only a and a is a temporary object
+		Op(Node<T>&& a, Node<T>* b=nullptr){
+			this->_type = OPERATOR;
+
+			this->_a = std::make_shared<Node<T>>(std::move(a));
+			this->_b = std::shared_ptr<Node<T>>(b);
+		}
+		//	b is a temp object
+		Op(Node<T>* a, Node<T>&& b){
+			this->_type = OPERATOR;
+
+			this->_a = std::shared_ptr<Node<T>>(a);
+			this->_b = std::make_shared<Node<T>>(std::move(b));
+		}
+
+		//Both arguments are temporary
+		Op(Node<T>&& a, Node<T>&& b){
+			this->_type = OPERATOR;
+
+			this->_a = std::make_shared<Node<T>>(std::move(a));
+			this->_b = std::make_shared<Node<T>>(std::move(b));
+		}
+
 
 		void setValue(T new_value) override {
 			//throw: modifying Operator's value doesn't affect anything
@@ -187,29 +216,22 @@ struct Sin{
 	}
 };
 
-//TODO: temporary parameter for Operator
 //TODO: higher degree of derivative
+//TODO: determine the safety of storing normal ptr to a shared_ptr
 
 int main(){
-	Const<double> b = 1;
-	Const<double> x = 1;
 	Var<double> w = 1;
+	Var<double> b = 2;
+	Var<double> x = 3;
 
-	/*
-	Var<double>* p2 = &w;
-
-	std::shared_ptr<Node<double>> p = std::make_shared<Node<double>>(*p2);
-	*/
-
-	/*
 	Op<ReLU, double> f(
-		Op<Add, double>(
-			Op<Mul, double>(&w, &x), &b
+		new Op<Add, double>(
+			new Op<Mul, double>(&w, &x),
+			&b
 		)
 	);
 
 	std::cout << f.compute() << "\n";
-	*/
 
 	
 	return 0;
