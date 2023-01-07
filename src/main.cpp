@@ -12,20 +12,21 @@
 //TODO: error handling
 
 int main(){
-	Var<double> w = 10;
-	Var<double> b = 2;
-	Var<double> x = 3;
+	Var<double> x = 5;
+	Const<double> c = 2;
 
-	Op<ReLU, double> f(
-		new Op<Add, double>(
-			new Op<Mul, double>(&w, &x), &b
-		)
-	);
-
+	Op<Sin, double> s(&x);
+	Op<Pow, double> p(&x, &c);
+	Op<Mul, double> m(&x, &c);
+	Op<Add, double> a1(&p, &m);
+	Op<Add, double> a2(&a1, &s);
+	Op<Cos, double> f(&a2);
 	std::cout << f.evaluate() << "\n";
+
 	f.differentiate();
-	
-	std::cout << w.getDValue() << "\n";
+
+	std::cout << x.getDValue() << "\n";
+
 	return 0;
 }
 

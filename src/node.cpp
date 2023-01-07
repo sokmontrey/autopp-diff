@@ -84,7 +84,7 @@ void Const<T>::operator=(T value) {
 }
 
 template <typename T>
-void differentiate(T derivative_factor) {  } 
+void Const<T>::differentiate(T derivative_factor) {  } 
 
 /*___________OP___________*/
 
