@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <memory>
+#include <stdexcept>
 
 enum NODE_TYPE{
 	VARIABLE = 1,
@@ -217,6 +218,7 @@ struct Sin{
 	}
 };
 
+//TODO:Use operator overload to create Operator
 //TODO: split code into organized files structure
 //TODO: support other data type
 //	such as custom matrix operation
