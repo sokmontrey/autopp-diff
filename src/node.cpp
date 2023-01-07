@@ -1,5 +1,7 @@
 #include "node.h"
 
+using namespace node;
+
 /*___________NODE___________*/
 
 template <typename T>
@@ -80,6 +82,9 @@ template <typename T>
 void Const<T>::operator=(T value) {
 	this->setValue(value);
 }
+
+template <typename T>
+void differentiate(T derivative_factor) {  } 
 
 /*___________OP___________*/
 

@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <iostream>
 
+namespace node{
+
 enum NODE_TYPE{
 	VARIABLE = 1,
 	CONSTANT = 2,
@@ -13,6 +15,7 @@ enum NODE_TYPE{
 
 //TODO: deconstructor
 //TODO: check type of T then assign if Premitive or Other (Matric, etc)
+
 //Base class for other type of Node such as Var, Const, and Op
 template <typename T>
 class Node{
@@ -57,6 +60,8 @@ class Const: public Node<T>{
 
 		void setValue (T new_value) override;
 		void operator=(T value) override;
+
+		void differentiate(T derivative_factor=1) override ;
 };
 
 template <template <typename> class OP, typename T>
@@ -89,5 +94,6 @@ class Op: public Node<T>{
 		void differentiate(T derivative_factor=1) override;
 };
 
+}
 
 #endif //NODE_H
