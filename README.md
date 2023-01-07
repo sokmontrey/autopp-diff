@@ -1,2 +1,4 @@
-# autopp-diff
-A C++ automatic differentiation library written from scratch. Please note that this was created in the purpose of studying.
+# Node-Flow-Cpp
+A Computational graph library written from scratch in C++. This library supported automatic differentiation.
+
+(Please note that this was created in the purpose of studying)
