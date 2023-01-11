@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 
-namespace node{
+namespace Node{
 
 enum NODE_TYPE{
 	VARIABLE = 1,
@@ -18,7 +18,7 @@ enum NODE_TYPE{
 
 //Base class for other type of Node such as Var, Const, and Op
 template <typename T>
-class Node{
+class BaseNode{
 	protected:
 		NODE_TYPE _type;
 
@@ -26,7 +26,7 @@ class Node{
 		T _d_value = T();
 
 	public:
-		Node();
+		BaseNode();
 
 		virtual void setValue(T new_value);
 		virtual void operator=(T value);
@@ -42,7 +42,7 @@ class Node{
 
 
 template <typename T>
-class Var: public Node<T>{
+class Var: public BaseNode<T>{
 	public:
 		Var();
 		Var(T value);
@@ -53,7 +53,7 @@ class Var: public Node<T>{
 };
 
 template <typename T>
-class Const: public Node<T>{
+class Const: public BaseNode<T>{
 	public:
 		Const();
 		Const(T value);
@@ -65,26 +65,26 @@ class Const: public Node<T>{
 };
 
 template <template <typename> class OP, typename T>
-class Op: public Node<T>{
+class Op: public BaseNode<T>{
 	private:
-		std::shared_ptr<Node<T>> _a;
-		std::shared_ptr<Node<T>> _b;
+		std::shared_ptr<BaseNode<T>> _a;
+		std::shared_ptr<BaseNode<T>> _b;
 
 	public:
 		//Both arguments are normal object
 		//	OR there is only one argument that is a normal object
-		Op(Node<T>* a, Node<T>* b=nullptr);
+		Op(BaseNode<T>* a, BaseNode<T>* b=nullptr);
 
 		//One of the arguments is a temporary object
 		//	a is a temp object
 		//	OR there is only a and a is a temporary object
-		Op(Node<T>&& a, Node<T>* b=nullptr);
+		Op(BaseNode<T>&& a, BaseNode<T>* b=nullptr);
 
 		//	b is a temp object
-		Op(Node<T>* a, Node<T>&& b);
+		Op(BaseNode<T>* a, BaseNode<T>&& b);
 
 		//Both arguments are temporary
-		Op(Node<T>&& a, Node<T>&& b);
+		Op(BaseNode<T>&& a, BaseNode<T>&& b);
 
 		void setValue(T new_value) override;
 		void operator=(T value);

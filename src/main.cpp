@@ -21,6 +21,7 @@ int main(){
 	Op<Add, double> a1(&p, &m);
 	Op<Add, double> a2(&a1, &s);
 	Op<Cos, double> f(&a2);
+
 	std::cout << f.evaluate() << "\n";
 
 	f.differentiate();

@@ -1,41 +1,41 @@
 #include "node.h"
 
-using namespace node;
+using namespace Node;
 
 /*___________NODE___________*/
 
 template <typename T>
-Node<T>::Node() = default;
+BaseNode<T>::BaseNode() = default;
 
 template <typename T>
-void Node<T>::setValue(T new_value){
+void BaseNode<T>::setValue(T new_value){
 	this->_value = new_value;
 }
 
 template <typename T>
-void Node<T>::operator=(T value){
+void BaseNode<T>::operator=(T value){
 	this->_value = value;
 }
 
 template <typename T>
-T Node<T>::evaluate(){
+T BaseNode<T>::evaluate(){
 	return this->_value;
 }
 
 template <typename T>
-void Node<T>::differentiate(T derivative_factor){ }
+void BaseNode<T>::differentiate(T derivative_factor){ }
 
 template <typename T>
-T Node<T>::getValue(){
+T BaseNode<T>::getValue(){
 	return this->_value;
 }
 template <typename T>
-T Node<T>::getDValue(){
+T BaseNode<T>::getDValue(){
 	return this->_d_value;
 }
 
 template <typename T>
-NODE_TYPE Node<T>::getType(){
+NODE_TYPE BaseNode<T>::getType(){
 	return this->_type;
 }
 
@@ -91,40 +91,40 @@ void Const<T>::differentiate(T derivative_factor) {  }
 //Both arguments are normal object
 //	OR there is only one argument that is a normal object
 template <template <typename> class OP, typename T>
-Op<OP,T>::Op(Node<T>* a, Node<T>* b) {
+Op<OP,T>::Op(BaseNode<T>* a, BaseNode<T>* b) {
 	this->_type = OPERATOR;
 
-	this->_a = std::shared_ptr<Node<T>>(a);
-	this->_b = std::shared_ptr<Node<T>>(b);
+	this->_a = std::shared_ptr<BaseNode<T>>(a);
+	this->_b = std::shared_ptr<BaseNode<T>>(b);
 }
 
 //One of the arguments is a temporary object
 //	a is a temp object
 //	OR there is only a and a is a temporary object
 template <template <typename> class OP, typename T>
-Op<OP, T>::Op(Node<T>&& a, Node<T>* b) {
+Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>* b) {
 	this->_type = OPERATOR;
 
-	this->_a = std::make_shared<Node<T>>(std::move(a));
-	this->_b = std::shared_ptr<Node<T>>(b);
+	this->_a = std::make_shared<BaseNode<T>>(std::move(a));
+	this->_b = std::shared_ptr<BaseNode<T>>(b);
 }
 
 //	b is a temp object
 template <template <typename> class OP, typename T>
-Op<OP, T>::Op(Node<T>* a, Node<T>&& b) {
+Op<OP, T>::Op(BaseNode<T>* a, BaseNode<T>&& b) {
 	this->_type = OPERATOR;
 
-	this->_a = std::shared_ptr<Node<T>>(a);
-	this->_b = std::make_shared<Node<T>>(std::move(b));
+	this->_a = std::shared_ptr<BaseNode<T>>(a);
+	this->_b = std::make_shared<BaseNode<T>>(std::move(b));
 }
 
 //Both arguments are temporary
 template <template <typename> class OP, typename T>
-Op<OP, T>::Op(Node<T>&& a, Node<T>&& b) {
+Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>&& b) {
 	this->_type = OPERATOR;
 
-	this->_a = std::make_shared<Node<T>>(std::move(a));
-	this->_b = std::make_shared<Node<T>>(std::move(b));
+	this->_a = std::make_shared<BaseNode<T>>(std::move(a));
+	this->_b = std::make_shared<BaseNode<T>>(std::move(b));
 }
 
 template <template <typename> class OP, typename T>
