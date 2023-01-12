@@ -5,7 +5,13 @@ using namespace Node;
 /*___________NODE___________*/
 
 template <typename T>
-BaseNode<T>::BaseNode() = default;
+BaseNode<T>::BaseNode(){
+	if constexpr(std::is_class<T>::value) {
+		this->_data_type = CLASS;
+	} else {
+		this->_data_type = PRIMITIVE;
+	}
+}
 
 template <typename T>
 void BaseNode<T>::setValue(T new_value){
@@ -35,18 +41,23 @@ T BaseNode<T>::getDValue(){
 }
 
 template <typename T>
-NODE_TYPE BaseNode<T>::getType(){
-	return this->_type;
+NODE_TYPE BaseNode<T>::getNodeType(){
+	return this->_node_type;
+}
+
+template <typename T>
+DATA_TYPE BaseNode<T>::getDataType(){
+	return this->_data_type;
 }
 
 /*___________VAR___________*/
 
 template <typename T>
-Var<T>::Var() = default;
+Var<T>::Var():BaseNode<T>(){}
 
 template <typename T>
-Var<T>::Var(T value){
-	this->_type = VARIABLE;
+Var<T>::Var(T value):BaseNode<T>(){
+	this->_node_type = VARIABLE;
 	this->_value = value;
 }
 
@@ -64,11 +75,11 @@ void Var<T>::differentiate(T derivative_factor){
 /*___________CONST___________*/
 
 template <typename T>
-Const<T>::Const() = default;
+Const<T>::Const():BaseNode<T>(){};
 
 template <typename T>
-Const<T>::Const(T value){
-	this->_type = CONSTANT;
+Const<T>::Const(T value):BaseNode<T>(){
+	this->_node_type = CONSTANT;
 	this->_value = value;
 }
 
@@ -91,8 +102,8 @@ void Const<T>::differentiate(T derivative_factor) {  }
 //Both arguments are normal object
 //	OR there is only one argument that is a normal object
 template <template <typename> class OP, typename T>
-Op<OP,T>::Op(BaseNode<T>* a, BaseNode<T>* b) {
-	this->_type = OPERATOR;
+Op<OP,T>::Op(BaseNode<T>* a, BaseNode<T>* b):BaseNode<T>() {
+	this->_node_type = OPERATOR;
 
 	this->_a = std::shared_ptr<BaseNode<T>>(a);
 	this->_b = std::shared_ptr<BaseNode<T>>(b);
@@ -102,8 +113,8 @@ Op<OP,T>::Op(BaseNode<T>* a, BaseNode<T>* b) {
 //	a is a temp object
 //	OR there is only a and a is a temporary object
 template <template <typename> class OP, typename T>
-Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>* b) {
-	this->_type = OPERATOR;
+Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>* b):BaseNode<T>() {
+	this->_node_type = OPERATOR;
 
 	this->_a = std::make_shared<BaseNode<T>>(std::move(a));
 	this->_b = std::shared_ptr<BaseNode<T>>(b);
@@ -111,8 +122,8 @@ Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>* b) {
 
 //	b is a temp object
 template <template <typename> class OP, typename T>
-Op<OP, T>::Op(BaseNode<T>* a, BaseNode<T>&& b) {
-	this->_type = OPERATOR;
+Op<OP, T>::Op(BaseNode<T>* a, BaseNode<T>&& b):BaseNode<T>() {
+	this->_node_type = OPERATOR;
 
 	this->_a = std::shared_ptr<BaseNode<T>>(a);
 	this->_b = std::make_shared<BaseNode<T>>(std::move(b));
@@ -120,8 +131,8 @@ Op<OP, T>::Op(BaseNode<T>* a, BaseNode<T>&& b) {
 
 //Both arguments are temporary
 template <template <typename> class OP, typename T>
-Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>&& b) {
-	this->_type = OPERATOR;
+Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>&& b):BaseNode<T>() {
+	this->_node_type = OPERATOR;
 
 	this->_a = std::make_shared<BaseNode<T>>(std::move(a));
 	this->_b = std::make_shared<BaseNode<T>>(std::move(b));
@@ -157,19 +168,19 @@ void Op<OP, T>::differentiate(T derivative_factor) {
 	this->_d_value += derivative_factor;
 
 	if(_b){
-		if(_a->getType() != CONSTANT){
+		if(_a->getNodeType() != CONSTANT){
 			_a->differentiate( derivative_factor * 
 				OP<T>::differentiate(true, _a->getValue(), _b->getValue()) 
 			);
 		}
 
-		if(_b->getType() != CONSTANT){
+		if(_b->getNodeType() != CONSTANT){
 			_b->differentiate( derivative_factor * 
 				OP<T>::differentiate(false, _a->getValue(), _b->getValue())
 			);
 		}
 	}else{
-		if(_a->getType() != CONSTANT){
+		if(_a->getNodeType() != CONSTANT){
 			_a->differentiate( derivative_factor * 
 				OP<T>::differentiate(true, _a->getValue()) 
 			);

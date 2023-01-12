@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+#include "./operator.cpp"
 
 namespace Node{
 
@@ -13,6 +14,11 @@ enum NODE_TYPE{
 	OPERATOR = 3,
 };
 
+enum DATA_TYPE{
+	CLASS = 0,
+	PRIMITIVE = 1,
+};
+
 //TODO: deconstructor
 //TODO: check type of T then assign if Premitive or Other (Matric, etc)
 
@@ -20,7 +26,8 @@ enum NODE_TYPE{
 template <typename T>
 class BaseNode{
 	protected:
-		NODE_TYPE _type;
+		NODE_TYPE _node_type;
+		DATA_TYPE _data_type;
 
 		T _value;
 		T _d_value = T();
@@ -37,7 +44,8 @@ class BaseNode{
 		T getValue();
 		T getDValue();
 
-		NODE_TYPE getType();
+		NODE_TYPE getNodeType();
+		DATA_TYPE getDataType();
 };
 
 

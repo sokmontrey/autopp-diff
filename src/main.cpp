@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include "./node.cpp"
-#include "./operator.cpp"
 
-//TODO:Use operator overload to create Operator
+//TRIED:Use operator overload to create Operator
+//	complicated pointer. Might need to overload the operator multiple time
 //TODO: split code into organized files structure
 //TODO: support other data type
 //	such as custom matrix operation
@@ -13,20 +13,21 @@
 
 int main(){
 	Var<double> x = 5;
-	Const<double> c = 2;
-
-	Op<Sin, double> s(&x);
-	Op<Pow, double> p(&x, &c);
-	Op<Mul, double> m(&x, &c);
-	Op<Add, double> a1(&p, &m);
-	Op<Add, double> a2(&a1, &s);
-	Op<Cos, double> f(&a2);
-
+	Var<double> w = 2;
+	Var<double> b = 3;
+	
+	Op<ReLU, double> f(
+		new Op<Add, double>(
+			new Op<Mul, double>(&x, &w),
+			&b
+		)
+	);
+	
 	std::cout << f.evaluate() << "\n";
 
 	f.differentiate();
 
-	std::cout << x.getDValue() << "\n";
+	std::cout << w.getDValue() << "\n";
 
 	return 0;
 }
