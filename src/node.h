@@ -12,11 +12,7 @@ enum NODE_TYPE{
 	VARIABLE = 1,
 	CONSTANT = 2,
 	OPERATOR = 3,
-};
-
-enum DATA_TYPE{
-	CLASS = 0,
-	PRIMITIVE = 1,
+	MATRIX = 4
 };
 
 //TODO: deconstructor
@@ -27,13 +23,12 @@ template <typename T>
 class BaseNode{
 	protected:
 		NODE_TYPE _node_type;
-		DATA_TYPE _data_type;
 
 		T _value;
-		T _d_value = T();
+		T _d_value;
 
 	public:
-		BaseNode();
+		BaseNode(NODE_TYPE node_type);
 
 		virtual void setValue(T new_value);
 		virtual void operator=(T value);
@@ -45,9 +40,17 @@ class BaseNode{
 		T getDValue();
 
 		NODE_TYPE getNodeType();
-		DATA_TYPE getDataType();
 };
 
+template <typename T, std::size_t ROW, std::size_t COL>
+class Matrix: public BaseNode<T>{
+	private:
+		T _data[ROW * COL];
+	public:
+		Matrix();
+		Matrix(T init_value);
+		Matrix(double min_random, double max_random, double seed=0);
+};
 
 template <typename T>
 class Var: public BaseNode<T>{
@@ -72,7 +75,7 @@ class Const: public BaseNode<T>{
 		void differentiate(T derivative_factor=1) override ;
 };
 
-template <template <typename> class OP, typename T>
+template <typename T, template <typename> class OP>
 class Op: public BaseNode<T>{
 	private:
 		std::shared_ptr<BaseNode<T>> _a;

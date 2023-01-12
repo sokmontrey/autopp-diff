@@ -5,12 +5,8 @@ using namespace Node;
 /*___________NODE___________*/
 
 template <typename T>
-BaseNode<T>::BaseNode(){
-	if constexpr(std::is_class<T>::value) {
-		this->_data_type = CLASS;
-	} else {
-		this->_data_type = PRIMITIVE;
-	}
+BaseNode<T>::BaseNode(NODE_TYPE node_type) {
+	this->_node_type = node_type;
 }
 
 template <typename T>
@@ -45,19 +41,51 @@ NODE_TYPE BaseNode<T>::getNodeType(){
 	return this->_node_type;
 }
 
-template <typename T>
-DATA_TYPE BaseNode<T>::getDataType(){
-	return this->_data_type;
+/*___________MATRIX___________*/
+
+template <typename T, std::size_t ROW, std::size_t COL>
+Matrix<T, ROW, COL>::Matrix():BaseNode<T>(MATRIX) {}
+
+template <typename T, std::size_t ROW, std::size_t COL>
+Matrix<T, ROW, COL>::Matrix(T init_value)
+	:BaseNode<T>(MATRIX){
+	
+	for(size_t r=0; r<ROW; r++){
+		for(size_t c=0; c<COL; c++){
+			this->_data[c * ROW + r] = init_value;
+		}
+	}
+}
+//TODO: split to math or util file or something
+double generate_random_double(double min_random, double max_random, double seed) {
+    constexpr unsigned int a = 1103515245;
+    constexpr unsigned int c = 12345;
+    constexpr unsigned int m = 1u << 31;
+    seed = fmod(seed * a + c, m);
+    const double d = double(seed) / m;
+    return min_random + (max_random - min_random) * d;
+}
+
+template <typename T, std::size_t ROW, std::size_t COL>
+Matrix<T, ROW, COL>::Matrix(double min_random, double max_random, double seed)
+	:BaseNode<T>(MATRIX){
+	
+	for(size_t r=0; r<ROW; r++){
+		for(size_t c=0; c<COL; c++){
+			this->_data[c * ROW + r] = generate_random_double(min_random, max_random, seed);
+		}
+	}
 }
 
 /*___________VAR___________*/
 
 template <typename T>
-Var<T>::Var():BaseNode<T>(){}
+Var<T>::Var():BaseNode<T>(VARIABLE) { }
 
 template <typename T>
-Var<T>::Var(T value):BaseNode<T>(){
-	this->_node_type = VARIABLE;
+Var<T>::Var(T value):
+	BaseNode<T>(VARIABLE){
+
 	this->_value = value;
 }
 
@@ -75,11 +103,10 @@ void Var<T>::differentiate(T derivative_factor){
 /*___________CONST___________*/
 
 template <typename T>
-Const<T>::Const():BaseNode<T>(){};
+Const<T>::Const() : BaseNode<T>(CONSTANT){ };
 
 template <typename T>
-Const<T>::Const(T value):BaseNode<T>(){
-	this->_node_type = CONSTANT;
+Const<T>::Const(T value):BaseNode<T>(CONSTANT){
 	this->_value = value;
 }
 
@@ -101,9 +128,9 @@ void Const<T>::differentiate(T derivative_factor) {  }
 
 //Both arguments are normal object
 //	OR there is only one argument that is a normal object
-template <template <typename> class OP, typename T>
-Op<OP,T>::Op(BaseNode<T>* a, BaseNode<T>* b):BaseNode<T>() {
-	this->_node_type = OPERATOR;
+template <typename T, template <typename> class OP>
+Op<T, OP>::Op(BaseNode<T>* a, BaseNode<T>* b):
+	BaseNode<T>(OPERATOR) {
 
 	this->_a = std::shared_ptr<BaseNode<T>>(a);
 	this->_b = std::shared_ptr<BaseNode<T>>(b);
@@ -112,45 +139,45 @@ Op<OP,T>::Op(BaseNode<T>* a, BaseNode<T>* b):BaseNode<T>() {
 //One of the arguments is a temporary object
 //	a is a temp object
 //	OR there is only a and a is a temporary object
-template <template <typename> class OP, typename T>
-Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>* b):BaseNode<T>() {
-	this->_node_type = OPERATOR;
+template <typename T, template <typename> class OP>
+Op<T, OP>::Op(BaseNode<T>&& a, BaseNode<T>* b):
+	BaseNode<T>(OPERATOR) {
 
 	this->_a = std::make_shared<BaseNode<T>>(std::move(a));
 	this->_b = std::shared_ptr<BaseNode<T>>(b);
 }
 
 //	b is a temp object
-template <template <typename> class OP, typename T>
-Op<OP, T>::Op(BaseNode<T>* a, BaseNode<T>&& b):BaseNode<T>() {
-	this->_node_type = OPERATOR;
+template <typename T, template <typename> class OP>
+Op<T, OP>::Op(BaseNode<T>* a, BaseNode<T>&& b):
+	BaseNode<T>(OPERATOR) {
 
 	this->_a = std::shared_ptr<BaseNode<T>>(a);
 	this->_b = std::make_shared<BaseNode<T>>(std::move(b));
 }
 
 //Both arguments are temporary
-template <template <typename> class OP, typename T>
-Op<OP, T>::Op(BaseNode<T>&& a, BaseNode<T>&& b):BaseNode<T>() {
-	this->_node_type = OPERATOR;
+template <typename T, template <typename> class OP>
+Op<T, OP>::Op(BaseNode<T>&& a, BaseNode<T>&& b):
+	BaseNode<T>(OPERATOR) {
 
 	this->_a = std::make_shared<BaseNode<T>>(std::move(a));
 	this->_b = std::make_shared<BaseNode<T>>(std::move(b));
 }
 
-template <template <typename> class OP, typename T>
-void Op<OP, T>::setValue(T new_value) {
+template <typename T, template <typename> class OP>
+void Op<T, OP>::setValue(T new_value) {
 	//throw: modifying Operator's value doesn't affect anything
 	std::cout << "Warning: Op immut" << "\n";
 }
 
-template <template <typename> class OP, typename T>
-void Op<OP, T>::operator=(T value) {
+template <typename T, template <typename> class OP>
+void Op<T, OP>::operator=(T value) {
 	this->setValue(value);
 }
 
-template <template <typename> class OP, typename T>
-T Op<OP, T>::evaluate() {
+template <typename T, template <typename> class OP>
+T Op<T, OP>::evaluate() {
 	//reset derivative value because
 	//	when taking the derivative _d_value will be += to chain_value
 	this->_d_value = T();
@@ -163,8 +190,8 @@ T Op<OP, T>::evaluate() {
 	return this->_value;
 }
 
-template <template <typename> class OP, typename T>
-void Op<OP, T>::differentiate(T derivative_factor) {
+template <typename T, template <typename> class OP>
+void Op<T, OP>::differentiate(T derivative_factor) {
 	this->_d_value += derivative_factor;
 
 	if(_b){

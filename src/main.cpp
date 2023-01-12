@@ -12,22 +12,8 @@
 //TODO: error handling
 
 int main(){
-	Var<double> x = 5;
-	Var<double> w = 2;
-	Var<double> b = 3;
-	
-	Op<ReLU, double> f(
-		new Op<Add, double>(
-			new Op<Mul, double>(&x, &w),
-			&b
-		)
-	);
-	
-	std::cout << f.evaluate() << "\n";
-
-	f.differentiate();
-
-	std::cout << w.getDValue() << "\n";
+	Var<int> x = 10;
+	Matrix<double, 2, 3> a(1);
 
 	return 0;
 }
