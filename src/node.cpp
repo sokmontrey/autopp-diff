@@ -56,23 +56,21 @@ Matrix<T, ROW, COL>::Matrix(T init_value)
 		}
 	}
 }
-//TODO: split to math or util file or something
-double generate_random_double(double min_random, double max_random, double seed) {
-    constexpr unsigned int a = 1103515245;
-    constexpr unsigned int c = 12345;
-    constexpr unsigned int m = 1u << 31;
-    seed = fmod(seed * a + c, m);
-    const double d = double(seed) / m;
-    return min_random + (max_random - min_random) * d;
-}
 
 template <typename T, std::size_t ROW, std::size_t COL>
 Matrix<T, ROW, COL>::Matrix(double min_random, double max_random, double seed)
 	:BaseNode<T>(MATRIX){
 	
-	for(size_t r=0; r<ROW; r++){
-		for(size_t c=0; c<COL; c++){
-			this->_data[c * ROW + r] = generate_random_double(min_random, max_random, seed);
+	for(size_t row=0; row<ROW; row++){
+		for(size_t col=0; col<COL; col++){
+			constexpr unsigned int a = 1103515245;
+			constexpr unsigned int c = 12345;
+			constexpr unsigned int m = 1u << 31;
+			seed = fmod(seed * a + c, m);
+			const T d = T(seed) / m;
+
+			this->_data[col * ROW + row] = min_random +
+				(max_random - min_random) * d;
 		}
 	}
 }
