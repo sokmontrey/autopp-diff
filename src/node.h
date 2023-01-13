@@ -15,10 +15,11 @@ enum NODE_TYPE{
 	MATRIX = 4
 };
 
-//TODO: deconstructor
-//TODO: check type of T then assign if Premitive or Other (Matric, etc)
-
-//Base class for other type of Node such as Var, Const, and Op
+/* 
+ *
+ * Base class for other type of Node such as Var, Const, and Op
+ *
+ */
 template <typename T>
 class BaseNode{
 	protected:
@@ -42,6 +43,7 @@ class BaseNode{
 		NODE_TYPE getNodeType();
 };
 
+/*
 template <typename T, std::size_t ROW, std::size_t COL>
 class Matrix: public BaseNode<T>{
 	private:
@@ -51,6 +53,7 @@ class Matrix: public BaseNode<T>{
 		Matrix(T init_value);
 		Matrix(double min_random, double max_random, double seed=0);
 };
+*/
 
 template <typename T>
 class Var: public BaseNode<T>{

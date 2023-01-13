@@ -42,6 +42,7 @@ NODE_TYPE BaseNode<T>::getNodeType(){
 }
 
 /*___________MATRIX___________*/
+/*
 
 template <typename T, std::size_t ROW, std::size_t COL>
 Matrix<T, ROW, COL>::Matrix():BaseNode<T>(MATRIX) {}
@@ -74,6 +75,7 @@ Matrix<T, ROW, COL>::Matrix(double min_random, double max_random, double seed)
 		}
 	}
 }
+*/
 
 /*___________VAR___________*/
 
