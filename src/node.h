@@ -16,9 +16,7 @@ enum NODE_TYPE{
 };
 
 /* 
- *
  * Base class for other type of Node such as Var, Const, and Op
- *
  */
 template <typename T>
 class BaseNode{
