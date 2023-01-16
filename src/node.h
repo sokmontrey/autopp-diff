@@ -12,7 +12,6 @@ enum NODE_TYPE{
 	VARIABLE = 1,
 	CONSTANT = 2,
 	OPERATOR = 3,
-	MATRIX = 4
 };
 
 /* 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <random>
 #include "./node.cpp"
 
 //TRIED:Use operator overload to create Operator
@@ -8,49 +9,80 @@
 //TODO: higher degree of derivative
 //TODO: error handling
 
-template <template <typename> class TENSOR_T, typename T>
+enum TENSOR_TYPE{
+	SCALAR = 1,
+	VECTOR = 2,
+	MATRIX = 3
+};
+
+template <typename T, size_t T_SIZE>
 class Tensor{
+	protected:
+		T _data[T_SIZE];
+
+		TENSOR_TYPE _tensor_type;
 	public:
-		Tensor() = default;
+		Tensor(TENSOR_TYPE tensor_type): _tensor_type(tensor_type) { }
 
-		virtual TENSOR_T<T> operator+(const TENSOR_T<T> &other) const {
-			return TENSOR_T<T>(this->_value + other.getValue());
-		}
-
-		virtual TENSOR_T<double> toDouble() const {
-			return TENSOR_T<double>(this->_value);
-		} 
-		virtual TENSOR_T<int> toInt() const {
-			return TENSOR_T<int>(this->_value);
-		}
+		T getValue() const { return this->_data[0]; }
 };
 
 template <typename T>
-class Scalar: public Tensor<Scalar, T>{
-	private:
-		T _value;
-
+class Scalar: public Tensor<T, 1>{
 	public:
-		Scalar(T initial_value){
-			this->_value = initial_value;
+		Scalar(): Tensor<T, 1>(SCALAR) {}
+		Scalar(T initial_value) : Tensor<T, 1>(SCALAR){
+			this->_data[0] = initial_value;
 		}
 
-		T getValue() const {
-			return this->_value;
-		}
-		T operator()() const {
-			return this->_value;
+		T getValue() const { return this->_data[0]; }
+};
+
+template <typename T, size_t ROWS, size_t COLS>
+class Matrix: public Tensor<T, ROWS * COLS>{
+	public:
+		Matrix(): Tensor<T, ROWS * COLS>(MATRIX) {}
+
+		Matrix(T initial_value): Tensor<T, ROWS * COLS>(MATRIX) {
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					this->_data[index(row, col)] = initial_value;
+				}
+			}
 		}
 
+		Matrix(double min_random, double max_random, double seed)
+		: Tensor<T, ROWS * COLS>(MATRIX) {
+			std::srand(seed);
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					this->_data[index(row, col)] = (double)std::rand()/RAND_MAX*(max_random-min_random)+min_random;
+				}
+			}
+		}
 
+		T& getValue(size_t row, size_t col) {
+			return this->_data[index(row, col)];
+		}
+
+		void print(){
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					std::cout << this->_data[index(row, col)] << " ";
+				}
+				std::cout << "\n";
+			}
+		}
+
+		size_t index(size_t row, size_t col){
+			//column-major indexing
+			return row * COLS + col;
+		}
 };
 
 int main(){
-
-	Scalar<double> a = 29.19;
-	Scalar<int> b = 20;
-
-	std::cout << (a + b.toDouble())() << "\n";
+	Matrix<double, 1, 4> a(-5, 5, 0);
+	a.print();
 
 	return 0;
 }
