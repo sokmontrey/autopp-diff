@@ -18,13 +18,29 @@ enum TENSOR_TYPE{
 template <typename T, size_t T_SIZE>
 class Tensor{
 	protected:
-		T _data[T_SIZE];
+		T _data[T_SIZE] = {0};
 
 		TENSOR_TYPE _tensor_type;
 	public:
 		Tensor(TENSOR_TYPE tensor_type): _tensor_type(tensor_type) { }
 
-		T getValue() const { return this->_data[0]; }
+		virtual T getValue(size_t index=0) const { return this->_data[index]; }
+		virtual T& operator()(size_t index=0) { return this->_data[index]; }
+		virtual void setValue(T value) { this->_data[0] = value; }
+		/*
+
+		virtual void print() const {
+
+		}
+
+		Tensor operator+(Tensor &other){
+			Tensor<T, T_SIZE> result;
+			for(size_t i=0; i<T_SIZE; i++){
+				result(i) = this->_data[i] + other.getValue(i);
+			}
+			return result;
+		}
+		*/
 };
 
 template <typename T>
@@ -35,7 +51,7 @@ class Scalar: public Tensor<T, 1>{
 			this->_data[0] = initial_value;
 		}
 
-		T getValue() const { return this->_data[0]; }
+		T getValue() const override { return this->_data[0]; }
 };
 
 template <typename T, size_t ROWS, size_t COLS>
@@ -69,14 +85,19 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 			}
 		}
 
+		//TODO: override getValue with no arguments
 		T getValue(size_t row, size_t col) {
 			return this->_data[index(row, col)];
+		}
+		T setValue(size_t row, size_t col, T value){
+			this->_data[index(row, col)] = value;
 		}
 
 		T& operator()(size_t row, size_t col){
 			return this->_data[index(row, col)];
 		}
 
+		/*
 		void print(){
 			std::cout << "\n";
 			for(size_t row=0; row<ROWS; row++){
@@ -87,6 +108,7 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 			}
 			std::cout << "\n";
 		}
+		*/
 
 		size_t index(size_t row, size_t col){
 			//column-major indexing
@@ -95,11 +117,9 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 };
 
 int main(){
-	Matrix<double, 1, 4> a(-5, 5, 0);
-	a.print();
+	Matrix<double, 1, 4> a(2);
 
-	Matrix<double, 2,3> b({{1,2,3}, {4,5,6}});
-	b.print();
+	Matrix<double, 1, 4> b(5);
 
 	return 0;
 }
