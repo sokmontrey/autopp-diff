@@ -61,17 +61,31 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 			}
 		}
 
-		T& getValue(size_t row, size_t col) {
+		Matrix(T (&&arr)[ROWS][COLS]): Tensor<T, ROWS*COLS>(MATRIX){
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					this->_data[index(row, col)] = arr[row][col];
+				}
+			}
+		}
+
+		T getValue(size_t row, size_t col) {
+			return this->_data[index(row, col)];
+		}
+
+		T& operator()(size_t row, size_t col){
 			return this->_data[index(row, col)];
 		}
 
 		void print(){
+			std::cout << "\n";
 			for(size_t row=0; row<ROWS; row++){
 				for(size_t col=0; col<COLS; col++){
 					std::cout << this->_data[index(row, col)] << " ";
 				}
 				std::cout << "\n";
 			}
+			std::cout << "\n";
 		}
 
 		size_t index(size_t row, size_t col){
@@ -83,6 +97,9 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 int main(){
 	Matrix<double, 1, 4> a(-5, 5, 0);
 	a.print();
+
+	Matrix<double, 2,3> b({{1,2,3}, {4,5,6}});
+	b.print();
 
 	return 0;
 }
