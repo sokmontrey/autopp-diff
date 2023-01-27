@@ -115,8 +115,8 @@ class Tensor{
 
 		virtual void printShape() const {
 			std::cout << "\n";
-			for(size_t i=0; i<DIMENSION; i++){
-				std::cout << this->_shape[i] << (i < (DIMENSION-1) ? " * ": "");
+			for(size_t axis=0; axis<DIMENSION; axis++){
+				std::cout << this->_shape[axis] << (axis < (DIMENSION-1) ? " * ": "");
 			}
 			std::cout << "\n";
 		}
