@@ -179,11 +179,19 @@ class Scalar: public Tensor<T, 1, 0>{
 			this->_data[0] = initial_value;
 		}
 
-		T getValue() const { return this->_data[0]; }
-		void setValue(T new_value) { this->_data[0] = new_value; }
+		T getValue() const { 
+			return this->_data[0]; 
+		}
+		void setValue(T new_value) { 
+			this->_data[0] = new_value; 
+		}
 
-		T& operator()() { return this->_data[0]; }
-		void operator=(T new_value){ this->_data[0] = new_value; }
+		T& operator()() { 
+			return this->_data[0]; 
+		}
+		void operator=(T new_value){ 
+			this->_data[0] = new_value; 
+		}
 
 		void print() const override {
 			std::cout << "\n" << this->_data[0] << "\n";
@@ -201,26 +209,44 @@ class Vector: public Tensor<T, LENGTH, 1>{
 			return indexes[0];
 		}
 	public:
+		//constructor for predefined vector value 
 		Vector(T (&&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, false){
 			for(size_t i=0; i<LENGTH; i++){
 				this->_data[i] = arr[i];
 			}
 		} 
+		//constructor for initializing the whole vector to a common value
 		Vector(T initial_value): Tensor<T, LENGTH, 1>({LENGTH}, false){
 			this->initDefault(initial_value);
 		}
+		//contructor for assigning random number to each element of the vector
 		Vector(double min_range, double max_range, double seed): Tensor<T, LENGTH, 1>({LENGTH}, false){
 			this->initRandom(min_range, max_range, seed);
+		}
+
+		T getValue(size_t index) const {
+			return this->_data[index];
+		}
+		void setValue(size_t index, T new_value){
+			this->_data[index] = new_value;
+		}
+
+		T& operator()(size_t index){
+			return this->_data[index];
+		}
+		void operator=(Vector &other){
+			//TODO: match size
+			for(size_t i=0; i<LENGTH; i++){
+				this->_data[i] = other(i);
+			}
 		}
 };
 
 int main(){
-	Tensor<double, 6, 2> a({2, 3});
+	Vector<double, 3> a(-10, 10, 1);
+	a.print();
 
-	Scalar<double> b(10);
-
-	Vector<double, 3> c(-10, 10, 1);
-	c.print();
+	a.printShape();
 
 	return 0;
 }
