@@ -9,69 +9,6 @@
 //TODO: higher degree of derivative
 //TODO: error handling
 
-/*
-
-template <typename T, size_t ROWS, size_t COLS>
-class Matrix: public Tensor<T, ROWS * COLS>{
-	public:
-		Matrix(): Tensor<T, ROWS * COLS>(MATRIX) {}
-
-		Matrix(T initial_value): Tensor<T, ROWS * COLS>(MATRIX) {
-			for(size_t row=0; row<ROWS; row++){
-				for(size_t col=0; col<COLS; col++){
-					this->_data[index(row, col)] = initial_value;
-				}
-			}
-		}
-
-		Matrix(double min_random, double max_random, double seed)
-		: Tensor<T, ROWS * COLS>(MATRIX) {
-			std::srand(seed);
-			for(size_t row=0; row<ROWS; row++){
-				for(size_t col=0; col<COLS; col++){
-					this->_data[index(row, col)] = (double)std::rand()/RAND_MAX*(max_random-min_random)+min_random;
-				}
-			}
-		}
-
-		Matrix(T (&&arr)[ROWS][COLS]): Tensor<T, ROWS*COLS>(MATRIX){
-			for(size_t row=0; row<ROWS; row++){
-				for(size_t col=0; col<COLS; col++){
-					this->_data[index(row, col)] = arr[row][col];
-				}
-			}
-		}
-
-		//TODO: override getValue with no arguments
-		T getValue(size_t row, size_t col) {
-			return this->_data[index(row, col)];
-		}
-		T setValue(size_t row, size_t col, T value){
-			this->_data[index(row, col)] = value;
-		}
-
-		T& operator()(size_t row, size_t col){
-			return this->_data[index(row, col)];
-		}
-
-		void print(){
-			std::cout << "\n";
-			for(size_t row=0; row<ROWS; row++){
-				for(size_t col=0; col<COLS; col++){
-					std::cout << this->_data[index(row, col)] << " ";
-				}
-				std::cout << "\n";
-			}
-			std::cout << "\n";
-		}
-
-		size_t index(size_t row, size_t col){
-			//column-major indexing
-			return row * COLS + col;
-		}
-};
-
-*/
 
 //TODO: make TENSOR even more general for n-dimension object
 
@@ -94,7 +31,7 @@ class Tensor{
 		size_t _shape[DIMENSION];
 		size_t _indexing_multiplyer[DIMENSION];
 
-		virtual size_t _indexing(size_t (&indexes)[DIMENSION]){
+		virtual size_t _indexing(size_t (&indexes)[DIMENSION]) const {
 			size_t index = 0;
 			for(size_t i=0; i<DIMENSION; i++){
 				index += this->_indexing_multiplyer[i] * indexes[i];
@@ -171,10 +108,11 @@ class Tensor{
 template <typename T>
 class Scalar: public Tensor<T, 1, 0>{
 	private:
-		size_t _indexing(size_t (&indexes)[0]) override {
+		size_t _indexing(size_t (&indexes)[0]) const override {
 			return 0;
 		}
 	public:
+		Scalar(): Tensor<T, 1, 0>({}, false){}
 		Scalar(T initial_value): Tensor<T, 1, 0>({}, false){
 			this->_data[0] = initial_value;
 		}
@@ -205,10 +143,11 @@ class Scalar: public Tensor<T, 1, 0>{
 template <typename T, size_t LENGTH>
 class Vector: public Tensor<T, LENGTH, 1>{
 	private:
-		size_t _indexing(size_t (&indexes)[1]) override {
+		size_t _indexing(size_t (&indexes)[1]) const override {
 			return indexes[0];
 		}
 	public:
+		Vector(): Tensor<T, LENGTH, 1>({LENGTH}, false){}
 		//constructor for predefined vector value 
 		Vector(T (&&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, false){
 			for(size_t i=0; i<LENGTH; i++){
@@ -241,7 +180,6 @@ class Vector: public Tensor<T, LENGTH, 1>{
 			}
 		}
 };
-
 int main(){
 	Vector<double, 3> a(-10, 10, 1);
 	a.print();
