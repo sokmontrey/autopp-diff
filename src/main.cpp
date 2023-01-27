@@ -21,6 +21,7 @@
  * 4 set of 3 set of 10 elements
  * Or in other word, 4 set of 3, and in each one there are 10 elements.
  *
+ * axis 0 (zero) is the outer most dimension
  */
 
 template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
@@ -49,15 +50,15 @@ class Tensor{
 				this->_indexing_multiplyer[DIMENSION-1] = 1;
 
 				size_t last_indexing_multiplyer = 1;
-				for(size_t i=1; i<DIMENSION; i++){
+				for(size_t axis=1; axis<DIMENSION; axis++){
 					//transfer shape data from the argument to _shape 
 					//while initiallizing index_multiplyer
 					//to save iteration time
-					this->_shape[i] = shape[i];
+					this->_shape[axis] = shape[axis];
 
 					//{ A*B*...*N-1, A*B*...*N-2, A*B, A }
-					last_indexing_multiplyer *= shape[DIMENSION-i];
-					this->_indexing_multiplyer[DIMENSION-i-1] = last_indexing_multiplyer;
+					last_indexing_multiplyer *= shape[DIMENSION-axis];
+					this->_indexing_multiplyer[DIMENSION-axis-1] = last_indexing_multiplyer;
 				}
 			}
 		}
@@ -97,6 +98,11 @@ class Tensor{
 
 		size_t getTotalSize() const {
 			return T_SIZE;
+		}
+
+		//param: axis 0 is the outer most dimension axis
+		size_t getSize(size_t axis){
+			return this->_shape[axis];
 		}
 
 		virtual void print() const {
@@ -173,9 +179,11 @@ class Vector: public Tensor<T, LENGTH, 1>{
 		Vector(double min_range, double max_range, double seed): Tensor<T, LENGTH, 1>({LENGTH}, false){
 			this->initRandom(min_range, max_range, seed);
 		}
-
 		T getValue(size_t index) const {
 			return this->_data[index];
+		}
+		size_t getLength() {
+			return this->getSize(0);
 		}
 		void setValue(size_t index, T new_value){
 			this->_data[index] = new_value;
@@ -257,6 +265,8 @@ int main(){
 	a.print();
 
 	a.printShape();
+
+	std::cout << a.getLength() << "\n";
 
 	return 0;
 }
