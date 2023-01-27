@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <random>
+#include <algorithm>
 #include "./node.cpp"
 
 //TRIED:Use operator overload to create Operator
@@ -15,34 +16,7 @@ enum TENSOR_TYPE{
 	MATRIX = 3
 };
 
-template <typename T, size_t T_SIZE>
-class Tensor{
-	protected:
-		T _data[T_SIZE] = {0};
-
-		TENSOR_TYPE _tensor_type;
-	public:
-		Tensor(TENSOR_TYPE tensor_type): _tensor_type(tensor_type) { }
-
-		virtual T getValue(size_t index=0) const { return this->_data[index]; }
-		virtual T& operator()(size_t index=0) { return this->_data[index]; }
-		virtual void setValue(T value) { this->_data[0] = value; }
-		/*
-
-		virtual void print() const {
-
-		}
-
-		Tensor operator+(Tensor &other){
-			Tensor<T, T_SIZE> result;
-			for(size_t i=0; i<T_SIZE; i++){
-				result(i) = this->_data[i] + other.getValue(i);
-			}
-			return result;
-		}
-		*/
-};
-
+/*
 template <typename T>
 class Scalar: public Tensor<T, 1>{
 	public:
@@ -97,7 +71,6 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 			return this->_data[index(row, col)];
 		}
 
-		/*
 		void print(){
 			std::cout << "\n";
 			for(size_t row=0; row<ROWS; row++){
@@ -108,7 +81,6 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 			}
 			std::cout << "\n";
 		}
-		*/
 
 		size_t index(size_t row, size_t col){
 			//column-major indexing
@@ -116,10 +88,88 @@ class Matrix: public Tensor<T, ROWS * COLS>{
 		}
 };
 
-int main(){
-	Matrix<double, 1, 4> a(2);
+*/
 
-	Matrix<double, 1, 4> b(5);
+//TODO: make TENSOR even more general for n-dimension object
+
+/*
+ *
+ * shape is 1D array that from right to left, 
+ * represent the size from the largest to the smallest dimension respectively
+ * Example: {4, 3, 10}
+ * In this case, the Tensor is 3 dimension which has
+ * 4 set of 3 set of 10 elements
+ * Or in other word, 4 set of 3, and in each one there are 10 elements.
+ *
+ */
+
+template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
+class Tensor{
+	protected:
+		T _data[T_SIZE] = {0};
+
+		size_t _shape[DIMENSION];
+		size_t _indexing_multiplyer[DIMENSION];
+
+		virtual size_t _indexing(size_t (&indexes)[DIMENSION]){
+			size_t index = 0;
+			for(size_t i=0; i<DIMENSION; i++){
+				index += this->_indexing_multiplyer[i] * indexes[i];
+			}
+			return index;
+		}
+
+	public:
+		Tensor(size_t (&&shape)[DIMENSION] = {1},
+				bool is_define_indexing_multiplyer=true){
+
+			this->_shape[0] = shape[0];
+			this->_indexing_multiplyer[DIMENSION-1] = 1;
+
+			if(is_define_indexing_multiplyer){
+				size_t last_indexing_multiplyer = 1;
+				for(size_t i=1; i<DIMENSION; i++){
+					//transfer shape data from the argument to _shape 
+					//while initiallizing index_multiplyer
+					//to save iteration time
+					this->_shape[i] = shape[i];
+
+					//{ A*B*...*N-1, A*B*...*N-2, A*B, A }
+					last_indexing_multiplyer *= shape[DIMENSION-i];
+					this->_indexing_multiplyer[DIMENSION-i-1] = last_indexing_multiplyer;
+				}
+			}
+		}
+
+		void setValue(T value, size_t index=0){
+			this->_data[index] = value;
+		}
+		void setValue(T value, size_t (&&indexes)[DIMENSION]){
+			this->_data[this->_indexing(indexes)] = value;
+		}
+
+		T getValue(size_t index=0){
+			return this->_data[index];
+		}
+		T getValue(size_t (&&indexes)[DIMENSION]){
+			return this->getValue(this->_indexing(indexes));
+		}
+
+		virtual void print() const {
+			std::cout << "\n";
+			for(size_t i=0; i<T_SIZE; i++){
+				std::cout << this->_data[i] << " ";
+			}
+			std::cout << "\n";
+		}
+};
+
+int main(){
+	Tensor<double, 63, 2> a({2, 3});
+	a.initDefault(10);
+
+	a.print();
+	std::cout << a.getValue({1,2});
 
 	return 0;
 }
