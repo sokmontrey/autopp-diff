@@ -128,11 +128,12 @@ class Tensor{
 		void initDefault(T initial_value){
 			std::fill(this->_data, this->_data + T_SIZE, initial_value);
 		}
-		void initRandom(double min_random, double max_random, double seed){
+		void initRandom(double min_range, double max_range, double seed){
 			std::srand(seed);
 			for(size_t i=0; i<T_SIZE; i++){
-					this->_data[i] = (double)std::rand()/
-						RAND_MAX*(max_random-min_random)+min_random;
+					this->_data[i] = (T) ( 
+							(double)std::rand()/ RAND_MAX*(max_range-min_range)+min_range
+							);
 			}
 		}
 
@@ -169,6 +170,10 @@ class Tensor{
 
 template <typename T>
 class Scalar: public Tensor<T, 1, 0>{
+	private:
+		size_t _indexing(size_t (&indexes)[0]) override {
+			return 0;
+		}
 	public:
 		Scalar(T initial_value): Tensor<T, 1, 0>({}, false){
 			this->_data[0] = initial_value;
@@ -189,12 +194,33 @@ class Scalar: public Tensor<T, 1, 0>{
 		}
 };
 
+template <typename T, size_t LENGTH>
+class Vector: public Tensor<T, LENGTH, 1>{
+	private:
+		size_t _indexing(size_t (&indexes)[1]) override {
+			return indexes[0];
+		}
+	public:
+		Vector(T (&&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, false){
+			for(size_t i=0; i<LENGTH; i++){
+				this->_data[i] = arr[i];
+			}
+		} 
+		Vector(T initial_value): Tensor<T, LENGTH, 1>({LENGTH}, false){
+			this->initDefault(initial_value);
+		}
+		Vector(double min_range, double max_range, double seed): Tensor<T, LENGTH, 1>({LENGTH}, false){
+			this->initRandom(min_range, max_range, seed);
+		}
+};
+
 int main(){
 	Tensor<double, 6, 2> a({2, 3});
 
 	Scalar<double> b(10);
 
-	b.print();
+	Vector<double, 3> c(-10, 10, 1);
+	c.print();
 
 	return 0;
 }
