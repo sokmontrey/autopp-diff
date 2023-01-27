@@ -103,7 +103,7 @@ class Tensor{
 		}
 
 	public:
-		Tensor(size_t (&&shape)[DIMENSION] = {1},
+		Tensor(size_t (&&shape)[DIMENSION] = {},
 				bool is_define_indexing_multiplyer=true){
 
 			this->_shape[0] = shape[0];
@@ -157,12 +157,20 @@ class Tensor{
 			}
 			std::cout << "\n";
 		}
+
+		virtual void printShape() const {
+			std::cout << "\n";
+			for(size_t i=0; i<DIMENSION; i++){
+				std::cout << this->_shape[i] << (i < (DIMENSION-1) ? " * ": "");
+			}
+			std::cout << "\n";
+		}
 };
 
 template <typename T>
-class Scalar: public Tensor<T, 1, 1>{
+class Scalar: public Tensor<T, 1, 0>{
 	public:
-		Scalar(T initial_value): Tensor<T, 1, 1>({1}, false){
+		Scalar(T initial_value): Tensor<T, 1, 0>({}, false){
 			this->_data[0] = initial_value;
 		}
 
@@ -172,8 +180,12 @@ class Scalar: public Tensor<T, 1, 1>{
 		T& operator()() { return this->_data[0]; }
 		void operator=(T new_value){ this->_data[0] = new_value; }
 
-		void print() const override{
+		void print() const override {
 			std::cout << "\n" << this->_data[0] << "\n";
+		}
+
+		void printShape() const override {
+			std::cout << "\n0\n";
 		}
 };
 
