@@ -141,6 +141,18 @@ class Tensor{
 			}
 		}
 
+		void initDefault(T initial_value){
+			std::fill(this->_data, this->_data + T_SIZE, initial_value);
+		}
+
+		void initRandom(double min_random, double max_random, double seed){
+			std::srand(seed);
+			for(size_t i=0; i<T_SIZE; i++){
+					this->_data[i] = (double)std::rand()/
+						RAND_MAX*(max_random-min_random)+min_random;
+			}
+		}
+
 		void setValue(T value, size_t index=0){
 			this->_data[index] = value;
 		}
@@ -165,11 +177,11 @@ class Tensor{
 };
 
 int main(){
-	Tensor<double, 63, 2> a({2, 3});
-	a.initDefault(10);
+	Tensor<double, 6, 2> a({2, 3});
+	a.initRandom(-1, 1, 1);
 
 	a.print();
-	std::cout << a.getValue({1,2});
+	std::cout << a.getValue({1,1});
 
 	return 0;
 }
