@@ -88,6 +88,17 @@ class Tensor{
 			return this->getValue(this->_indexing(indexes));
 		}
 
+		void operator=(Tensor &other){
+			//match T_SIZE
+			for(size_t i=0; i<T_SIZE; i++){
+				this->_data[i] = other.getValue(i);
+			}
+		}
+
+		size_t getTotalSize() const {
+			return T_SIZE;
+		}
+
 		virtual void print() const {
 			std::cout << "\n";
 			for(size_t i=0; i<T_SIZE; i++){
@@ -180,6 +191,67 @@ class Vector: public Tensor<T, LENGTH, 1>{
 			}
 		}
 };
+/*
+template <typename T, size_t ROWS, size_t COLS>
+class Matrix: public Tenor<T ROWS * COLS, 2>{
+	public:
+		Matrix(): Tensor<T, ROWS * COLS>(MATRIX) {}
+
+		Matrix(T initial_value): Tensor<T, ROWS * COLS>(MATRIX) {
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					this->_data[index(row, col)] = initial_value;
+				}
+			}
+		}
+
+		Matrix(double min_random, double max_random, double seed)
+		: Tensor<T, ROWS * COLS>(MATRIX) {
+			std::srand(seed);
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					this->_data[index(row, col)] = (double)std::rand()/RAND_MAX*(max_random-min_random)+min_random;
+				}
+			}
+		}
+
+		Matrix(T (&&arr)[ROWS][COLS]): Tensor<T, ROWS*COLS>(MATRIX){
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					this->_data[index(row, col)] = arr[row][col];
+				}
+			}
+		}
+
+		//TODO: override getValue with no arguments
+		T getValue(size_t row, size_t col) {
+			return this->_data[index(row, col)];
+		}
+		T setValue(size_t row, size_t col, T value){
+			this->_data[index(row, col)] = value;
+		}
+
+		T& operator()(size_t row, size_t col){
+			return this->_data[index(row, col)];
+		}
+
+		void print(){
+			std::cout << "\n";
+			for(size_t row=0; row<ROWS; row++){
+				for(size_t col=0; col<COLS; col++){
+					std::cout << this->_data[index(row, col)] << " ";
+				}
+				std::cout << "\n";
+			}
+			std::cout << "\n";
+		}
+
+		size_t index(size_t row, size_t col){
+			//column-major indexing
+			return row * COLS + col;
+		}
+};
+*/
 int main(){
 	Vector<double, 3> a(-10, 10, 1);
 	a.print();
