@@ -6,27 +6,10 @@
 
 //TRIED:Use operator overload to create Operator
 //	complicated pointer. Might need to overload the operator multiple time
-//TODO: make data type into class instead.
 //TODO: higher degree of derivative
 //TODO: error handling
 
-enum TENSOR_TYPE{
-	SCALAR = 1,
-	VECTOR = 2,
-	MATRIX = 3
-};
-
 /*
-template <typename T>
-class Scalar: public Tensor<T, 1>{
-	public:
-		Scalar(): Tensor<T, 1>(SCALAR) {}
-		Scalar(T initial_value) : Tensor<T, 1>(SCALAR){
-			this->_data[0] = initial_value;
-		}
-
-		T getValue() const override { return this->_data[0]; }
-};
 
 template <typename T, size_t ROWS, size_t COLS>
 class Matrix: public Tensor<T, ROWS * COLS>{
@@ -124,9 +107,10 @@ class Tensor{
 				bool is_define_indexing_multiplyer=true){
 
 			this->_shape[0] = shape[0];
-			this->_indexing_multiplyer[DIMENSION-1] = 1;
 
 			if(is_define_indexing_multiplyer){
+				this->_indexing_multiplyer[DIMENSION-1] = 1;
+
 				size_t last_indexing_multiplyer = 1;
 				for(size_t i=1; i<DIMENSION; i++){
 					//transfer shape data from the argument to _shape 
@@ -144,7 +128,6 @@ class Tensor{
 		void initDefault(T initial_value){
 			std::fill(this->_data, this->_data + T_SIZE, initial_value);
 		}
-
 		void initRandom(double min_random, double max_random, double seed){
 			std::srand(seed);
 			for(size_t i=0; i<T_SIZE; i++){
@@ -153,10 +136,10 @@ class Tensor{
 			}
 		}
 
-		void setValue(T value, size_t index=0){
+		void setValue(size_t index, T value){
 			this->_data[index] = value;
 		}
-		void setValue(T value, size_t (&&indexes)[DIMENSION]){
+		void setValue(size_t (&&indexes)[DIMENSION], T value){
 			this->_data[this->_indexing(indexes)] = value;
 		}
 
@@ -176,12 +159,30 @@ class Tensor{
 		}
 };
 
+template <typename T>
+class Scalar: public Tensor<T, 1, 1>{
+	public:
+		Scalar(T initial_value): Tensor<T, 1, 1>({1}, false){
+			this->_data[0] = initial_value;
+		}
+
+		T getValue() const { return this->_data[0]; }
+		void setValue(T new_value) { this->_data[0] = new_value; }
+
+		T& operator()() { return this->_data[0]; }
+		void operator=(T new_value){ this->_data[0] = new_value; }
+
+		void print() const override{
+			std::cout << "\n" << this->_data[0] << "\n";
+		}
+};
+
 int main(){
 	Tensor<double, 6, 2> a({2, 3});
-	a.initRandom(-1, 1, 1);
 
-	a.print();
-	std::cout << a.getValue({1,1});
+	Scalar<double> b(10);
+
+	b.print();
 
 	return 0;
 }
