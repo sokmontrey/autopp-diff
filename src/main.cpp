@@ -1,8 +1,6 @@
 #include <iostream>
-#include <cmath>
-#include <random>
-#include <algorithm>
 #include "./node.cpp"
+#include "./tensor.cpp"
 
 //TRIED:Use operator overload to create Operator
 //	complicated pointer. Might need to overload the operator multiple time
@@ -12,6 +10,8 @@
 //TODO: make TENSOR even more general for n-dimension object
 //TODO: getDimension
 //
+
+/*
 template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
@@ -254,6 +254,7 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 			}
 		}
 };
+*/
 
 int main(){
 	Matrix<double, 2, 3> a({{1,2,3}, {4,5,6}});

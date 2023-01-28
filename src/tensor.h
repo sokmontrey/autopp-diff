@@ -5,7 +5,6 @@
 #include <random>
 #include <algorithm>
 
-
 /*
  *
  * shape is 1D array that from right to left, 
@@ -83,12 +82,13 @@ class Vector: public Tensor<T, LENGTH, 1>{
         Vector(T initial_value);
         Vector(double min_range, double max_range, double seed);
         T getValue(size_t (&&indexes)[1]) const override;
-        size_t getLength();
+        size_t getLength() const;
         void setValue(size_t (&&indexes)[1], T value) override;
         T& operator()(size_t index);
         void operator=(Vector &other);
 };
 
+//TODO: getRow, getCol
 template <typename T, size_t ROWS, size_t COLS>
 class Matrix: public Tensor<T, ROWS * COLS, 2>{
 	private:
