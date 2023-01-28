@@ -69,23 +69,23 @@ class Tensor{
 		void initRandom(double min_range, double max_range, double seed){
 			std::srand(seed);
 			for(size_t i=0; i<T_SIZE; i++){
-					this->_data[i] = (T) ( 
-							(double)std::rand()/ RAND_MAX*(max_range-min_range)+min_range
+					this->_data[i] = (T)( 
+							(double)std::rand()/RAND_MAX*(max_range-min_range)+min_range
 							);
 			}
 		}
 
-		void setValue(size_t index, T value){
+		virtual void setValue(size_t index, T value){
 			this->_data[index] = value;
 		}
-		void setValue(size_t (&&indexes)[DIMENSION], T value){
+		virtual void setValue(size_t (&&indexes)[DIMENSION], T value){
 			this->_data[this->_indexing(indexes)] = value;
 		}
 
-		T getValue(size_t index=0){
+		virtual T getValue(size_t index=0) const {
 			return this->_data[index];
 		}
-		T getValue(size_t (&&indexes)[DIMENSION]){
+		virtual T getValue(size_t (&&indexes)[DIMENSION]) const {
 			return this->getValue(this->_indexing(indexes));
 		}
 
@@ -179,14 +179,15 @@ class Vector: public Tensor<T, LENGTH, 1>{
 		Vector(double min_range, double max_range, double seed): Tensor<T, LENGTH, 1>({LENGTH}, false){
 			this->initRandom(min_range, max_range, seed);
 		}
-		T getValue(size_t index) const {
-			return this->_data[index];
+		T getValue(size_t (&&indexes)[1]) const override {
+			return this->_data[indexes[0]];
 		}
 		size_t getLength() {
 			return this->getSize(0);
 		}
-		void setValue(size_t index, T new_value){
-			this->_data[index] = new_value;
+
+		void setValue(size_t (&&indexes)[1], T value) override {
+			this->_data[indexes[0]] = value;
 		}
 
 		T& operator()(size_t index){
@@ -260,6 +261,7 @@ class Matrix: public Tenor<T ROWS * COLS, 2>{
 		}
 };
 */
+
 int main(){
 	Vector<double, 3> a(-10, 10, 1);
 	a.print();
