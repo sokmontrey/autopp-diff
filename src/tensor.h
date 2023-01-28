@@ -41,7 +41,7 @@
  *
  */
 
-template <+++typename T, size_t T_SIZE=1, size_t DIMENSION=1>
+template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
 		T _data[T_SIZE] = {0};
@@ -93,6 +93,7 @@ class Scalar: public Tensor<T, 1, 0>{
 	public:
 		Scalar();
 		Scalar(T initial_value);
+		Scalar(double min_range, double max_range, double seed);
 
 		/*----------Getter----------*/
 		T getValue() const;
@@ -108,7 +109,6 @@ class Scalar: public Tensor<T, 1, 0>{
 		void print() const override;
 		void printShape() const override;
 };
-//TODO: random scalar
 
 /*
  * Vector: an extention of Tensor with 1 dimension

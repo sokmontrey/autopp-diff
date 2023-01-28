@@ -19,6 +19,9 @@ int main(){
 	b.print();
 	b.printShape();
 
+	Scalar<double> c(-1, 1, 1);
+	c.print();
+
 	return 0;
 }
 

@@ -125,6 +125,11 @@ template <typename T>
 Scalar<T>::Scalar(T initial_value): Tensor<T, 1, 0>({}, false){
 	this->_data[0] = initial_value;
 }
+template <typename T>
+Scalar<T>::Scalar(double min_range, double max_range, double seed)
+: Tensor<T, 1, 0>({}, false){
+	this->initRandom(min_range, max_range, seed);
+}
 
 /*----------Getter----------*/
 template <typename T>
@@ -150,7 +155,7 @@ void Scalar<T>::operator=(T new_value){
 /*----------Print----------*/
 template <typename T>
 void Scalar<T>::print() const {
-	std::cout << "\n[ " << this->_data[0] << "\n";
+	std::cout << "\n" << this->_data[0] << "\n";
 }
 
 template <typename T>
