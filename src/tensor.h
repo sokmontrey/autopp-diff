@@ -35,9 +35,11 @@ class Tensor{
 		void initDefault(T initial_value);
 		void initRandom(double min_range, double max_range, double seed);
 
+		/*----------Setter----------*/
 		virtual void setValue(size_t index, T value);
 		virtual void setValue(size_t (&&indexes)[DIMENSION], T value);
 
+		/*----------Getter----------*/
 		virtual T getValue(size_t index=0) const;
 		virtual T getValue(size_t (&&indexes)[DIMENSION]) const;
 
@@ -47,9 +49,10 @@ class Tensor{
 		size_t getDimension() const;
 
 
+		/*----------Operator Overload----------*/
 		void operator=(Tensor &other);
 
-
+		/*----------Print----------*/
 		virtual void print() const;
 		virtual void printShape() const;
 };
@@ -62,12 +65,17 @@ class Scalar: public Tensor<T, 1, 0>{
 		Scalar();
 		Scalar(T initial_value);
 
+		/*----------Getter----------*/
 		T getValue() const;
+
+		/*----------Setter----------*/
 		void setValue(T new_value);
 
+		/*----------Operator Overload----------*/
 		T& operator()();
 		void operator=(T new_value);
 
+		/*----------Print----------*/
 		void print() const override;
 		void printShape() const override;
 };
@@ -81,9 +89,15 @@ class Vector: public Tensor<T, LENGTH, 1>{
         Vector(T (&&arr)[LENGTH]);
         Vector(T initial_value);
         Vector(double min_range, double max_range, double seed);
+
+		/*----------Getter----------*/
         T getValue(size_t (&&indexes)[1]) const override;
         size_t getLength() const;
+
+		/*----------Setter----------*/
         void setValue(size_t (&&indexes)[1], T value) override;
+
+		/*----------Operator Overload----------*/
         T& operator()(size_t index);
         void operator=(Vector &other);
 };
@@ -99,14 +113,22 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		Matrix(T initial_value);
 		Matrix(double min_range, double max_range, double seed);
 		Matrix(T (&&arr)[ROWS][COLS]);
+
+		/*----------Getter----------*/
 		T getValue(size_t (&&indexes)[2]) const override;
 		T getValue(size_t row, size_t col) const;
 		size_t getRow() const;
 		size_t getCol() const;
+
+		/*----------Setter----------*/
 		void setValue(size_t (&&indexes)[2], T value) override;
 		void setValue(size_t row, size_t col, T value);
+
+		/*----------Operator Overload----------*/
 		T& operator()(size_t row, size_t col);
 		void operator=(Matrix &other);
+
+		/*----------Print----------*/
 		void print() const override;
 };
 
