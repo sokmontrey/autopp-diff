@@ -9,8 +9,8 @@
 //TODO: higher degree of derivative
 //TODO: error handling
 
-
 //TODO: make TENSOR even more general for n-dimension object
+//TODO: getDimension
 
 /*
  *
@@ -22,6 +22,7 @@
  * Or in other word, 4 set of 3, and in each one there are 10 elements.
  *
  * axis 0 (zero) is the outer most dimension
+ *
  */
 
 template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
@@ -200,75 +201,73 @@ class Vector: public Tensor<T, LENGTH, 1>{
 			}
 		}
 };
-/*
+
 template <typename T, size_t ROWS, size_t COLS>
-class Matrix: public Tenor<T ROWS * COLS, 2>{
+class Matrix: public Tensor<T, ROWS * COLS, 2>{
+	private:
+		//sacrificed the generalization of being able to change the tensor 1d structure in memory
+		//for performance
+		size_t _indexing(size_t (&indexes)[2]) const override {
+			return indexes[0] * ROWS + indexes[1];
+		}
+		size_t _indexing(size_t row, size_t col) const {
+			return row * ROWS + col;
+		}
 	public:
-		Matrix(): Tensor<T, ROWS * COLS>(MATRIX) {}
-
-		Matrix(T initial_value): Tensor<T, ROWS * COLS>(MATRIX) {
+		Matrix(): Tensor<T, ROWS * COLS, 2>({ROWS, COLS}, false) {}
+		Matrix(T initial_value): Tensor<T, ROWS * COLS, 2>({ROWS, COLS}, false) {
+			this->initDefault(initial_value);
+		}
+		Matrix(double min_range, double max_range, double seed)
+		: Tensor<T, ROWS * COLS, 2>({ROWS, COLS}, false) {
+			this->initRandom(min_range, max_range, seed);
+		}
+		Matrix(T (&&arr)[ROWS][COLS]): Tensor<T, ROWS*COLS, 2>({ROWS, COLS}, false){
 			for(size_t row=0; row<ROWS; row++){
 				for(size_t col=0; col<COLS; col++){
-					this->_data[index(row, col)] = initial_value;
+					this->_data[this->_indexing(row, col)] = arr[row][col];
 				}
 			}
 		}
-
-		Matrix(double min_random, double max_random, double seed)
-		: Tensor<T, ROWS * COLS>(MATRIX) {
-			std::srand(seed);
-			for(size_t row=0; row<ROWS; row++){
-				for(size_t col=0; col<COLS; col++){
-					this->_data[index(row, col)] = (double)std::rand()/RAND_MAX*(max_random-min_random)+min_random;
-				}
-			}
+		T getValue(size_t (&&indexes)[2]) const override {
+			return this->_data[this->_indexing(indexes)];
+		}
+		T getValue(size_t row, size_t col) const {
+			return this->_data[this->_indexing(row, col)];
 		}
 
-		Matrix(T (&&arr)[ROWS][COLS]): Tensor<T, ROWS*COLS>(MATRIX){
-			for(size_t row=0; row<ROWS; row++){
-				for(size_t col=0; col<COLS; col++){
-					this->_data[index(row, col)] = arr[row][col];
-				}
-			}
+		void setValue(size_t (&&indexes)[2], T value) override {
+			this->_data[this->_indexing(indexes)] = value;
 		}
-
-		//TODO: override getValue with no arguments
-		T getValue(size_t row, size_t col) {
-			return this->_data[index(row, col)];
-		}
-		T setValue(size_t row, size_t col, T value){
-			this->_data[index(row, col)] = value;
+		void setValue(size_t row, size_t col, T value) {
+			this->_data[this->_indexing(row, col)] = value;
 		}
 
 		T& operator()(size_t row, size_t col){
-			return this->_data[index(row, col)];
+			return this->_data[this->_indexing(row, col)];
 		}
 
-		void print(){
+		void operator=(Matrix &other){
+			//TODO: match size
+			for(size_t i=0; i<this->getTotalSize; i++){
+				this->_data[i] = other.getValue(i);
+			}
+		}
+		void print() const override{
 			std::cout << "\n";
 			for(size_t row=0; row<ROWS; row++){
 				for(size_t col=0; col<COLS; col++){
-					std::cout << this->_data[index(row, col)] << " ";
+					std::cout << this->_data[this->_indexing(row, col)] << " ";
 				}
 				std::cout << "\n";
 			}
-			std::cout << "\n";
-		}
-
-		size_t index(size_t row, size_t col){
-			//column-major indexing
-			return row * COLS + col;
 		}
 };
-*/
 
 int main(){
-	Vector<double, 3> a(-10, 10, 1);
+	Matrix<double, 2, 3> a({{1,2,3}, {4,5,6}});
+	std::cout << a(1,1) << "\n";
 	a.print();
-
-	a.printShape();
-
-	std::cout << a.getLength() << "\n";
 
 	return 0;
 }
