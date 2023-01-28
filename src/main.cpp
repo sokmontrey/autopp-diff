@@ -11,20 +11,7 @@
 
 //TODO: make TENSOR even more general for n-dimension object
 //TODO: getDimension
-
-/*
- *
- * shape is 1D array that from right to left, 
- * represent the size from the largest to the smallest dimension respectively
- * Example: {4, 3, 10}
- * In this case, the Tensor is 3 dimension which has
- * 4 set of 3 set of 10 elements
- * Or in other word, 4 set of 3, and in each one there are 10 elements.
- *
- * axis 0 (zero) is the outer most dimension
- *
- */
-
+//
 template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
@@ -102,8 +89,12 @@ class Tensor{
 		}
 
 		//param: axis 0 is the outer most dimension axis
-		size_t getSize(size_t axis){
+		size_t getSize(size_t axis) const {
 			return this->_shape[axis];
+		}
+
+		size_t getDimension() const {
+			return DIMENSION;
 		}
 
 		virtual void print() const {
