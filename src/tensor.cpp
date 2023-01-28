@@ -239,6 +239,16 @@ T Matrix<T, ROWS, COLS>::getValue(size_t row, size_t col) const {
 }
 
 template <typename T, size_t ROWS, size_t COLS>
+size_t Matrix<T, ROWS, COLS>::getRow() const {
+	return ROWS;
+}
+
+template <typename T, size_t ROWS, size_t COLS>
+size_t Matrix<T, ROWS, COLS>::getCol() const {
+	return COLS;
+}
+
+template <typename T, size_t ROWS, size_t COLS>
 void Matrix<T, ROWS, COLS>::setValue(size_t (&&indexes)[2], T value) {
 	this->_data[this->_indexing(indexes)] = value;
 }

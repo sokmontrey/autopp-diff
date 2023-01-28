@@ -41,14 +41,14 @@ class Tensor{
 		virtual T getValue(size_t index=0) const;
 		virtual T getValue(size_t (&&indexes)[DIMENSION]) const;
 
-		void operator=(Tensor &other);
-
 		size_t getTotalSize() const;
-
 		//param: axis 0 is the outer most dimension axis
 		size_t getSize(size_t axis) const;
-
 		size_t getDimension() const;
+
+
+		void operator=(Tensor &other);
+
 
 		virtual void print() const;
 		virtual void printShape() const;
@@ -101,6 +101,8 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		Matrix(T (&&arr)[ROWS][COLS]);
 		T getValue(size_t (&&indexes)[2]) const override;
 		T getValue(size_t row, size_t col) const;
+		size_t getRow() const;
+		size_t getCol() const;
 		void setValue(size_t (&&indexes)[2], T value) override;
 		void setValue(size_t row, size_t col, T value);
 		T& operator()(size_t row, size_t col);
