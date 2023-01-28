@@ -17,7 +17,6 @@ int main(){
 	Tensor<double, 4, 1> b({4});
 	b.initRandom(-1, 1, 1);
 	b.print();
-
 	b.printShape();
 
 	return 0;
