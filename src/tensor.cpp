@@ -17,7 +17,6 @@ Tensor<T, T_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define
 
 	this->_shape[0] = shape[0];
 
-	if(is_define_indexing_multiplyer){
 		this->_indexing_multiplyer[DIMENSION-1] = 1;
 
 		size_t last_indexing_multiplyer = 1;
@@ -27,11 +26,12 @@ Tensor<T, T_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define
 			//to save iteration time
 			this->_shape[axis] = shape[axis];
 
-			//{ A*B*...*N-1, A*B*...*N-2, A*B, A }
-			last_indexing_multiplyer *= shape[DIMENSION-axis];
-			this->_indexing_multiplyer[DIMENSION-axis-1] = last_indexing_multiplyer;
+			if(is_define_indexing_multiplyer){
+				//{ A*B*...*N-1, A*B*...*N-2, A*B, A }
+				last_indexing_multiplyer *= shape[DIMENSION-axis];
+				this->_indexing_multiplyer[DIMENSION-axis-1] = last_indexing_multiplyer;
+			}
 		}
-	}
 }
 
 template <typename T, size_t T_SIZE, size_t DIMENSION>
@@ -97,20 +97,20 @@ void Tensor<T, T_SIZE, DIMENSION>::operator=(Tensor &other){
 /*----------Print----------*/
 template <typename T, size_t T_SIZE, size_t DIMENSION>
 void Tensor<T, T_SIZE, DIMENSION>::print() const {
-	std::cout << "\n";
+	std::cout << "\n[ ";
 	for(size_t i=0; i<T_SIZE; i++){
 		std::cout << this->_data[i] << " ";
 	}
-	std::cout << "\n";
+	std::cout << "]\n";
 }
 
 template <typename T, size_t T_SIZE, size_t DIMENSION>
 void Tensor<T, T_SIZE, DIMENSION>::printShape() const {
-	std::cout << "\n";
+	std::cout << "\nShape: [ ";
 	for(size_t axis=0; axis<DIMENSION; axis++){
 		std::cout << this->_shape[axis] << (axis < (DIMENSION-1) ? " * ": "");
 	}
-	std::cout << "\n";
+	std::cout << " ]\n";
 }
 /*----------Scalar----------*/
 
@@ -150,12 +150,12 @@ void Scalar<T>::operator=(T new_value){
 /*----------Print----------*/
 template <typename T>
 void Scalar<T>::print() const {
-	std::cout << "\n" << this->_data[0] << "\n";
+	std::cout << "\n[ " << this->_data[0] << "\n";
 }
 
 template <typename T>
 void Scalar<T>::printShape() const {
-	std::cout << "\n0\n";
+	std::cout << "\nShape: [ 0 ]\n";
 }
 
 /*----------Vector----------*/
@@ -292,11 +292,12 @@ void Matrix<T, ROWS, COLS>::operator=(Matrix &other){
 /*----------Print----------*/
 template <typename T, size_t ROWS, size_t COLS>
 void Matrix<T, ROWS, COLS>::print() const {
-	std::cout << "\n";
+	std::cout << "\n[";
 	for(size_t row=0; row<ROWS; row++){
+		std::cout << (row==0?"[ ":" [ ");
 		for(size_t col=0; col<COLS; col++){
 			std::cout << this->_data[this->_indexing(row, col)] << " ";
 		}
-		std::cout << "\n";
+		std::cout << "]" << (row>=ROWS-1 ? "]\n" : "\n");
 	}
 }

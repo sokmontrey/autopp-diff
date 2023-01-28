@@ -18,6 +18,16 @@
  *
  */
 
+/*
+ *
+ * Tensor: Base class for creating n-dimensional array.
+ *
+ * Data is stored in as row-major 1D array.
+ * ⎡ a b c ⎤ -> [a, b, c, d, e, f]
+ * ⎣ d e f ⎦
+ *
+ */
+
 template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
