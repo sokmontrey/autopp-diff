@@ -16,6 +16,15 @@ template <typename OBJECT_TYPE>
 OBJECT_TYPE& Node<OBJECT_TYPE>::getDerivativeObject(){
 	return this->_derivative_object;
 }
+template <typename OBJECT_TYPE>
+void Node<OBJECT_TYPE>::setObject(OBJECT_TYPE &object){
+	this->_object = object;
+}
+template <typename OBJECT_TYPE>
+void Node<OBJECT_TYPE>::operator=(OBJECT_TYPE &object){
+	this->setObject(object);
+}
+
 /*
 template <typename T>
 BaseNode<T>::BaseNode(NODE_TYPE node_type) {

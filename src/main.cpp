@@ -13,7 +13,7 @@
 int main(){
 	Node<Matrix<double, 2, 3>> a_node(-1,1,1);
 	Matrix<double, 2,3> b(1);
-	Node<Matrix<double, 2, 3>> b_node(b);
+	Node<Matrix<double, 2, 3>> b_node;
 
 	return 0;
 }

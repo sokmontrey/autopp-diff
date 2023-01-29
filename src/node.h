@@ -11,14 +11,21 @@ class Node{
 		OBJECT_TYPE _object;
 		OBJECT_TYPE _derivative_object;
 	public:
+		Node() = default;
+
 		template <typename... Args>
 		Node(Args&&... args);
 
 		//create copy data from a predefined object
 		Node(OBJECT_TYPE &predefined_object);
 
+		/*----------Getter----------*/
 		OBJECT_TYPE& getObject();
-		OBJECT_TYPE& getDerivativeObject();
+		virtual OBJECT_TYPE& getDerivativeObject();
+
+		/*----------Setter----------*/
+		virtual void setObject(OBJECT_TYPE &object);
+		void operator=(OBJECT_TYPE &object);
 };
 
 /*
