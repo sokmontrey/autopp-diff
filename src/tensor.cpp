@@ -2,8 +2,8 @@
 
 /*----------Tensor----------*/
 
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-size_t Tensor<T, T_SIZE, DIMENSION>::_indexing(size_t (&indexes)[DIMENSION]) const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+size_t Tensor<T, TOTAL_SIZE, DIMENSION>::_indexing(size_t (&indexes)[DIMENSION]) const {
 	size_t index = 0;
 	for(size_t i=0; i<DIMENSION; i++){
 		index += this->_indexing_multiplyer[i] * indexes[i];
@@ -12,8 +12,8 @@ size_t Tensor<T, T_SIZE, DIMENSION>::_indexing(size_t (&indexes)[DIMENSION]) con
 }
 
 /*----------Constructor----------*/
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-Tensor<T, T_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define_indexing_multiplyer){
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+Tensor<T, TOTAL_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define_indexing_multiplyer){
 
 	this->_shape[0] = shape[0];
 
@@ -34,14 +34,19 @@ Tensor<T, T_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define
 		}
 }
 
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::initDefault(T initial_value){
-	std::fill(this->_data, this->_data + T_SIZE, initial_value);
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::initFromArray(T (&arr)[TOTAL_SIZE]){
+
 }
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::initRandom(double min_range, double max_range, double seed){
+
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::initDefault(T initial_value){
+	std::fill(this->_data, this->_data + TOTAL_SIZE, initial_value);
+}
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::initRandom(double min_range, double max_range, double seed){
 	std::srand(seed);
-	for(size_t i=0; i<T_SIZE; i++){
+	for(size_t i=0; i<TOTAL_SIZE; i++){
 			this->_data[i] = (T)( 
 					(double)std::rand()/RAND_MAX*(max_range-min_range)+min_range
 					);
@@ -50,62 +55,62 @@ void Tensor<T, T_SIZE, DIMENSION>::initRandom(double min_range, double max_range
 
 /*----------Setter----------*/
 
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::setValue(size_t index, T value){
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::setValue(size_t index, T value){
 	this->_data[index] = value;
 }
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::setValue(size_t (&&indexes)[DIMENSION], T value){
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::setValue(size_t (&&indexes)[DIMENSION], T value){
 	this->_data[this->_indexing(indexes)] = value;
 }
 
 /*----------Getter----------*/
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-T Tensor<T, T_SIZE, DIMENSION>::getValue(size_t index) const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+T Tensor<T, TOTAL_SIZE, DIMENSION>::getValue(size_t index) const {
 	return this->_data[index];
 }
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-T Tensor<T, T_SIZE, DIMENSION>::getValue(size_t (&&indexes)[DIMENSION]) const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+T Tensor<T, TOTAL_SIZE, DIMENSION>::getValue(size_t (&&indexes)[DIMENSION]) const {
 	return this->getValue(this->_indexing(indexes));
 }
 
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-size_t Tensor<T, T_SIZE, DIMENSION>::getTotalSize() const {
-	return T_SIZE;
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getTotalSize() const {
+	return TOTAL_SIZE;
 }
 
 //param: axis 0 is the outer most dimension axis
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-size_t Tensor<T, T_SIZE, DIMENSION>::getSize(size_t axis) const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getSize(size_t axis) const {
 	return this->_shape[axis];
 }
 
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-size_t Tensor<T, T_SIZE, DIMENSION>::getDimension() const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getDimension() const {
 	return DIMENSION;
 }
 
 /*----------Operator Overload----------*/
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::operator=(Tensor &other){
-	//match T_SIZE
-	for(size_t i=0; i<T_SIZE; i++){
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::operator=(Tensor &other){
+	//matchTOTAL_SIZE 
+	for(size_t i=0; i<TOTAL_SIZE; i++){
 		this->_data[i] = other.getValue(i);
 	}
 }
 
 /*----------Print----------*/
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::print() const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::print() const {
 	std::cout << "\n[ ";
-	for(size_t i=0; i<T_SIZE; i++){
+	for(size_t i=0; i<TOTAL_SIZE; i++){
 		std::cout << this->_data[i] << " ";
 	}
 	std::cout << "]\n";
 }
 
-template <typename T, size_t T_SIZE, size_t DIMENSION>
-void Tensor<T, T_SIZE, DIMENSION>::printShape() const {
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::printShape() const {
 	std::cout << "\nShape: [ ";
 	for(size_t axis=0; axis<DIMENSION; axis++){
 		std::cout << this->_shape[axis] << (axis < (DIMENSION-1) ? " * ": "");

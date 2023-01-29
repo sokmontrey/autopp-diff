@@ -10,7 +10,7 @@
  * 		Tensor can be 1D (Scalar), 2D (Vector), 3D (Matrix), ..., ND.
  *
  * Tensor<typename T, 
- * 		size_t T_SIZE, 
+ * 		size_t TOTAL_SIZE, 
  * 		size_t DIMENSION
  * 	>(
  * 		size_t (&&shape)[DIMENSION], //temporary array
@@ -19,7 +19,7 @@
  *
  * Params:
  * 		T: data type (int, double, long, short...)
- * 		T_SIZE: total size of elements in the tensor.
+ * 		TOTAL_SIZE: total size of elements in the tensor.
  * 			This can be calculated by multiply all the size of each axis
  * 			S1 * S2 * S3 * ... * Sn
  * 		DIMENSION: Total number of dimension or axis
@@ -41,10 +41,10 @@
  *
  */
 
-template <typename T, size_t T_SIZE=1, size_t DIMENSION=1>
+template <typename T, size_t TOTAL_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
-		T _data[T_SIZE] = {0};
+		T _data[TOTAL_SIZE] = {0};
 
 		size_t _shape[DIMENSION];
 		size_t _indexing_multiplyer[DIMENSION];
@@ -54,6 +54,9 @@ class Tensor{
 	public:
 		Tensor(size_t (&&shape)[DIMENSION] = {},
 				bool is_define_indexing_multiplyer=true);
+
+		void initFromArray(T (&arr)[TOTAL_SIZE]);
+		void initFromArray(T(&&arr)[TOTAL_SIZE]);
 
 		void initDefault(T initial_value);
 		void initRandom(double min_range, double max_range, double seed);
@@ -132,9 +135,9 @@ class Vector: public Tensor<T, LENGTH, 1>{
         size_t _indexing(size_t (&indexes)[1]) const override;
     public:
         Vector();
-        Vector(T (&&arr)[LENGTH]);
         Vector(T initial_value);
         Vector(double min_range, double max_range, double seed=1);
+        Vector(T (&&arr)[LENGTH]);
 
 		/*----------Getter----------*/
         T getValue(size_t (&&indexes)[1]) const override;

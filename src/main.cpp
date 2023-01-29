@@ -9,7 +9,6 @@
 //
 //TODO: generalize all the Tensor constructor
 int main(){
-
 	return 0;
 }
 
