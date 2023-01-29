@@ -1,7 +1,21 @@
 #include "node.h"
 
+template <typename OBJECT_TYPE>
+template <typename... Args>
+Node<OBJECT_TYPE>::Node(Args&&... args): _object(std::forward<Args>(args)...){ }
 
-
+template <typename OBJECT_TYPE>
+Node<OBJECT_TYPE>::Node(OBJECT_TYPE &predefined_object){
+	this->_object = predefined_object;
+}
+template <typename OBJECT_TYPE>
+OBJECT_TYPE& Node<OBJECT_TYPE>::getObject(){
+	return this->_object;
+}
+template <typename OBJECT_TYPE>
+OBJECT_TYPE& Node<OBJECT_TYPE>::getDerivativeObject(){
+	return this->_derivative_object;
+}
 /*
 template <typename T>
 BaseNode<T>::BaseNode(NODE_TYPE node_type) {

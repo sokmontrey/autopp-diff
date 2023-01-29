@@ -4,7 +4,22 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
-#include "./operator.cpp"
+
+template <typename OBJECT_TYPE>
+class Node{
+	protected:
+		OBJECT_TYPE _object;
+		OBJECT_TYPE _derivative_object;
+	public:
+		template <typename... Args>
+		Node(Args&&... args);
+
+		//create copy data from a predefined object
+		Node(OBJECT_TYPE &predefined_object);
+
+		OBJECT_TYPE& getObject();
+		OBJECT_TYPE& getDerivativeObject();
+};
 
 /*
 enum NODE_TYPE{
