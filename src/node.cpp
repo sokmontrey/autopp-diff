@@ -1,9 +1,8 @@
 #include "node.h"
 
-using namespace Node;
 
-/*___________NODE___________*/
 
+/*
 template <typename T>
 BaseNode<T>::BaseNode(NODE_TYPE node_type) {
 	this->_node_type = node_type;
@@ -41,8 +40,6 @@ NODE_TYPE BaseNode<T>::getNodeType(){
 	return this->_node_type;
 }
 
-/*___________VAR___________*/
-
 template <typename T>
 Var<T>::Var():BaseNode<T>(VARIABLE) { }
 
@@ -63,8 +60,6 @@ template <typename T>
 void Var<T>::differentiate(T derivative_factor){
 	this->_d_value += derivative_factor;
 }
-
-/*___________CONST___________*/
 
 template <typename T>
 Const<T>::Const() : BaseNode<T>(CONSTANT){ };
@@ -87,8 +82,6 @@ void Const<T>::operator=(T value) {
 
 template <typename T>
 void Const<T>::differentiate(T derivative_factor) {  } 
-
-/*___________OP___________*/
 
 //Both arguments are normal object
 //	OR there is only one argument that is a normal object
@@ -178,3 +171,4 @@ void Op<T, OP>::differentiate(T derivative_factor) {
 		}
 	}
 }
+*/

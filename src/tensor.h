@@ -97,6 +97,8 @@ class Scalar: public Tensor<T, 1, 0>{
 		Scalar();
 		Scalar(T initial_value);
 		Scalar(double min_range, double max_range, double seed=1);
+		Scalar(T(&&arr)[1]);
+		Scalar(T (&arr)[1]);
 
 		/*----------Getter----------*/
 		T getValue() const;
@@ -137,7 +139,8 @@ class Vector: public Tensor<T, LENGTH, 1>{
         Vector();
         Vector(T initial_value);
         Vector(double min_range, double max_range, double seed=1);
-        Vector(T (&&arr)[LENGTH]);
+        Vector(T(&&arr)[LENGTH]);
+		Vector(T (&arr)[LENGTH]);
 
 		/*----------Getter----------*/
         T getValue(size_t (&&indexes)[1]) const override;
@@ -176,7 +179,8 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		Matrix();
 		Matrix(T initial_value);
 		Matrix(double min_range, double max_range, double seed=1);
-		Matrix(T (&&arr)[ROWS][COLS]);
+		Matrix(T(&&arr)[ROWS][COLS]);
+		Matrix(T (&arr)[ROWS][COLS]);
 
 		/*----------Getter----------*/
 		T getValue(size_t (&&indexes)[2]) const override;

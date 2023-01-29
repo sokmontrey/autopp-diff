@@ -144,6 +144,14 @@ Scalar<T>::Scalar(double min_range, double max_range, double seed)
 : Tensor<T, 1, 0>({}, false){
 	this->initRandom(min_range, max_range, seed);
 }
+template <typename T>
+Scalar<T>::Scalar(T (&arr)[1]) : Tensor<T, 1, 0>({}, false){
+	this->_data[0] = arr[0];
+}
+template <typename T>
+Scalar<T>::Scalar(T(&&arr)[1]) : Tensor<T, 1, 0>({}, false){
+	this->_data[0] = arr[0];
+}
 
 /*----------Getter----------*/
 template <typename T>
@@ -186,13 +194,7 @@ size_t Vector<T, LENGTH>::_indexing(size_t (&indexes)[1]) const {
 /*----------Constructor----------*/
 template <typename T, size_t LENGTH>
 Vector<T, LENGTH>::Vector(): Tensor<T, LENGTH, 1>({LENGTH}, false){}
-//for predefined vector value 
-template <typename T, size_t LENGTH>
-Vector<T, LENGTH>::Vector(T (&&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, false){
-	for(size_t i=0; i<LENGTH; i++){
-		this->_data[i] = arr[i];
-	}
-} 
+
 //for initializing the whole vector to a common value
 template <typename T, size_t LENGTH>
 Vector<T, LENGTH>::Vector(T initial_value): Tensor<T, LENGTH, 1>({LENGTH}, false){
@@ -203,6 +205,20 @@ template <typename T, size_t LENGTH>
 Vector<T, LENGTH>::Vector(double min_range, double max_range, double seed): Tensor<T, LENGTH, 1>({LENGTH}, false){
 	this->initRandom(min_range, max_range, seed);
 }
+//for predefined vector value using temporary array
+template <typename T, size_t LENGTH>
+Vector<T, LENGTH>::Vector(T(&&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, false){
+	for(size_t i=0; i<LENGTH; i++){
+		this->_data[i] = arr[i];
+	}
+} 
+//for predefined vector value using reference of an array
+template <typename T, size_t LENGTH>
+Vector<T, LENGTH>::Vector(T (&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, false){
+	for(size_t i=0; i<LENGTH; i++){
+		this->_data[i] = arr[i];
+	}
+} 
 
 /*----------Getter----------*/
 template <typename T, size_t LENGTH>
@@ -258,7 +274,17 @@ Matrix<T, ROWS, COLS>::Matrix(double min_range, double max_range, double seed)
 	this->initRandom(min_range, max_range, seed);
 }
 template <typename T, size_t ROWS, size_t COLS>
-Matrix<T, ROWS, COLS>::Matrix(T (&&arr)[ROWS][COLS]): Tensor<T, ROWS*COLS, 2>({ROWS, COLS}, false){
+Matrix<T, ROWS, COLS>::Matrix(T(&&arr)[ROWS][COLS])
+: Tensor<T, ROWS*COLS, 2>({ROWS, COLS}, false){
+	for(size_t row=0; row<ROWS; row++){
+		for(size_t col=0; col<COLS; col++){
+			this->_data[this->_indexing(row, col)] = arr[row][col];
+		}
+	}
+}
+template <typename T, size_t ROWS, size_t COLS>
+Matrix<T, ROWS, COLS>::Matrix(T (&arr)[ROWS][COLS])
+: Tensor<T, ROWS*COLS, 2>({ROWS, COLS}, false){
 	for(size_t row=0; row<ROWS; row++){
 		for(size_t col=0; col<COLS; col++){
 			this->_data[this->_indexing(row, col)] = arr[row][col];
