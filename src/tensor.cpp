@@ -102,7 +102,7 @@ size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getDimension() const {
 /*----------Operator Overload----------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 void Tensor<T, TOTAL_SIZE, DIMENSION>::operator=(Tensor &other){
-	//matchTOTAL_SIZE 
+	//match TOTAL_SIZE 
 	for(size_t i=0; i<TOTAL_SIZE; i++){
 		this->_data[i] = other.getValue(i);
 	}
@@ -241,13 +241,6 @@ template <typename T, size_t LENGTH>
 T& Vector<T, LENGTH>::operator()(size_t index){
 	return this->_data[index];
 }
-template <typename T, size_t LENGTH>
-void Vector<T, LENGTH>::operator=(Vector &other){
-	//TODO: match size
-	for(size_t i=0; i<LENGTH; i++){
-		this->_data[i] = other(i);
-	}
-}
 
 /*----------Matrix----------*/
 
@@ -325,14 +318,6 @@ void Matrix<T, ROWS, COLS>::setValue(size_t row, size_t col, T value) {
 template <typename T, size_t ROWS, size_t COLS>
 T& Matrix<T, ROWS, COLS>::operator()(size_t row, size_t col){
 	return this->_data[this->_indexing(row, col)];
-}
-
-template <typename T, size_t ROWS, size_t COLS>
-void Matrix<T, ROWS, COLS>::operator=(Matrix &other){
-	//TODO: match size
-	for(size_t i=0; i<this->getTotalSize; i++){
-		this->_data[i] = other.getValue(i);
-	}
 }
 /*----------Print----------*/
 template <typename T, size_t ROWS, size_t COLS>

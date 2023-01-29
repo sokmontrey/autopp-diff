@@ -151,7 +151,6 @@ class Vector: public Tensor<T, LENGTH, 1>{
 
 		/*----------Operator Overload----------*/
         T& operator()(size_t index);
-        void operator=(Vector &other);
 };
 
 /*
@@ -194,7 +193,6 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 
 		/*----------Operator Overload----------*/
 		T& operator()(size_t row, size_t col);
-		void operator=(Matrix &other);
 
 		/*----------Print----------*/
 		void print() const override;

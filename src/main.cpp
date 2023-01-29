@@ -17,6 +17,9 @@ class Node{
 	public:
 		template <typename... Args>
 		Node(Args&&... args): _object(std::forward<Args>(args)...) { }
+		Node(OBJECT_TYPE &object){
+			this->_object = object;
+		}
 };
 
 int main(){
