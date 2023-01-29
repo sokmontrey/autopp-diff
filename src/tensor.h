@@ -93,7 +93,7 @@ class Scalar: public Tensor<T, 1, 0>{
 	public:
 		Scalar();
 		Scalar(T initial_value);
-		Scalar(double min_range, double max_range, double seed);
+		Scalar(double min_range, double max_range, double seed=1);
 
 		/*----------Getter----------*/
 		T getValue() const;
@@ -172,7 +172,7 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 	public:
 		Matrix();
 		Matrix(T initial_value);
-		Matrix(double min_range, double max_range, double seed);
+		Matrix(double min_range, double max_range, double seed=1);
 		Matrix(T (&&arr)[ROWS][COLS]);
 
 		/*----------Getter----------*/

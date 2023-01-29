@@ -41,42 +41,6 @@ NODE_TYPE BaseNode<T>::getNodeType(){
 	return this->_node_type;
 }
 
-/*___________MATRIX___________*/
-/*
-
-template <typename T, std::size_t ROW, std::size_t COL>
-Matrix<T, ROW, COL>::Matrix():BaseNode<T>(MATRIX) {}
-
-template <typename T, std::size_t ROW, std::size_t COL>
-Matrix<T, ROW, COL>::Matrix(T init_value)
-	:BaseNode<T>(MATRIX){
-	
-	for(size_t r=0; r<ROW; r++){
-		for(size_t c=0; c<COL; c++){
-			this->_data[c * ROW + r] = init_value;
-		}
-	}
-}
-
-template <typename T, std::size_t ROW, std::size_t COL>
-Matrix<T, ROW, COL>::Matrix(double min_random, double max_random, double seed)
-	:BaseNode<T>(MATRIX){
-	
-	for(size_t row=0; row<ROW; row++){
-		for(size_t col=0; col<COL; col++){
-			constexpr unsigned int a = 1103515245;
-			constexpr unsigned int c = 12345;
-			constexpr unsigned int m = 1u << 31;
-			seed = fmod(seed * a + c, m);
-			const T d = T(seed) / m;
-
-			this->_data[col * ROW + row] = min_random +
-				(max_random - min_random) * d;
-		}
-	}
-}
-*/
-
 /*___________VAR___________*/
 
 template <typename T>
