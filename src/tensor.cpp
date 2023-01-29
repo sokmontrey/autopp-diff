@@ -36,7 +36,16 @@ Tensor<T, TOTAL_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_de
 
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 void Tensor<T, TOTAL_SIZE, DIMENSION>::initFromArray(T (&arr)[TOTAL_SIZE]){
-
+	for(size_t i=0; i<TOTAL_SIZE; i++){
+		this->_data[i] = arr[i];
+	}
+}
+//duplicate the method to improve performance
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+void Tensor<T, TOTAL_SIZE, DIMENSION>::initFromArray(T(&&arr)[TOTAL_SIZE]){
+	for(size_t i=0; i<TOTAL_SIZE; i++){
+		this->_data[i] = arr[i];
+	}
 }
 
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>

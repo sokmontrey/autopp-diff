@@ -6,17 +6,13 @@
 #include <iostream>
 #include "./operator.cpp"
 
-namespace Node{
-
+/*
 enum NODE_TYPE{
 	VARIABLE = 1,
 	CONSTANT = 2,
 	OPERATOR = 3,
 };
 
-/* 
- * Base class for other type of Node such as Var, Const, and Op
- */
 template <typename T>
 class BaseNode{
 	protected:
@@ -92,7 +88,5 @@ class Op: public BaseNode<T>{
 
 		void differentiate(T derivative_factor=1) override;
 };
-
-}
-
+*/
 #endif //NODE_H
