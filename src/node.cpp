@@ -8,6 +8,7 @@ template <typename OBJECT_TYPE>
 Node<OBJECT_TYPE>::Node(OBJECT_TYPE &predefined_object){
 	this->_object = predefined_object;
 }
+/*----------Getter----------*/
 template <typename OBJECT_TYPE>
 OBJECT_TYPE& Node<OBJECT_TYPE>::getObject(){
 	return this->_object;
@@ -17,6 +18,11 @@ OBJECT_TYPE& Node<OBJECT_TYPE>::getDerivativeObject(){
 	return this->_derivative_object;
 }
 template <typename OBJECT_TYPE>
+NODE_TYPE Node<OBJECT_TYPE>::getNodeType(){
+	return this->_node_type;
+}
+/*----------Setter----------*/
+template <typename OBJECT_TYPE>
 void Node<OBJECT_TYPE>::setObject(OBJECT_TYPE &object){
 	this->_object = object;
 }
@@ -24,7 +30,10 @@ template <typename OBJECT_TYPE>
 void Node<OBJECT_TYPE>::operator=(OBJECT_TYPE &object){
 	this->setObject(object);
 }
-
+template <typename OBJECT_TYPE>
+void Node<OBJECT_TYPE>::setNodeType(NODE_TYPE node_type){
+	this->_node_type = node_type;
+}
 /*
 template <typename T>
 BaseNode<T>::BaseNode(NODE_TYPE node_type) {

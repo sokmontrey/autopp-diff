@@ -5,9 +5,17 @@
 #include <stdexcept>
 #include <iostream>
 
+enum NODE_TYPE{
+	VARIABLE = 1,
+	CONSTANT = 2,
+	OPERATOR = 3,
+};
+
 template <typename OBJECT_TYPE>
 class Node{
 	protected:
+		NODE_TYPE _node_type;
+
 		OBJECT_TYPE _object;
 		OBJECT_TYPE _derivative_object;
 	public:
@@ -22,18 +30,15 @@ class Node{
 		/*----------Getter----------*/
 		OBJECT_TYPE& getObject();
 		virtual OBJECT_TYPE& getDerivativeObject();
+		NODE_TYPE getNodeType();
 
 		/*----------Setter----------*/
 		virtual void setObject(OBJECT_TYPE &object);
 		void operator=(OBJECT_TYPE &object);
+		void setNodeType(NODE_TYPE node_type);
 };
 
 /*
-enum NODE_TYPE{
-	VARIABLE = 1,
-	CONSTANT = 2,
-	OPERATOR = 3,
-};
 
 template <typename T>
 class BaseNode{
