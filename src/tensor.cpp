@@ -269,15 +269,19 @@ Matrix<T, ROWS, COLS>::Matrix(double min_range, double max_range, double seed)
 template <typename T, size_t ROWS, size_t COLS>
 Matrix<T, ROWS, COLS>::Matrix(T(&&arr)[ROWS][COLS])
 : Tensor<T, ROWS*COLS, 2>({ROWS, COLS}, false){
-	for(size_t row=0; row<ROWS; row++){
-		for(size_t col=0; col<COLS; col++){
-			this->_data[this->_indexing(row, col)] = arr[row][col];
-		}
-	}
+	this->initFromArray(arr);
 }
 template <typename T, size_t ROWS, size_t COLS>
 Matrix<T, ROWS, COLS>::Matrix(T (&arr)[ROWS][COLS])
 : Tensor<T, ROWS*COLS, 2>({ROWS, COLS}, false){
+	this->initFromArray(arr);
+}
+template <typename T, size_t ROWS, size_t COLS>
+void Matrix<T, ROWS, COLS>::initFromArray(T(&&arr)[ROWS][COLS]){
+	this->initFromArray(arr);
+}
+template <typename T, size_t ROWS, size_t COLS>
+void Matrix<T, ROWS, COLS>::initFromArray(T(&arr)[ROWS][COLS]){
 	for(size_t row=0; row<ROWS; row++){
 		for(size_t col=0; col<COLS; col++){
 			this->_data[this->_indexing(row, col)] = arr[row][col];

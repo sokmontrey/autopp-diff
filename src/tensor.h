@@ -181,6 +181,9 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		Matrix(T(&&arr)[ROWS][COLS]);
 		Matrix(T (&arr)[ROWS][COLS]);
 
+		void initFromArray(T(&&arr)[ROWS][COLS]);
+		void initFromArray(T (&arr)[ROWS][COLS]);
+
 		/*----------Getter----------*/
 		T getValue(size_t (&&indexes)[2]) const override;
 		T getValue(size_t row, size_t col) const;

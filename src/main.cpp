@@ -15,6 +15,8 @@ int main(){
 	Matrix<double, 2,3> b(1);
 	Node<Matrix<double, 2, 3>> b_node;
 
+	Node<Matrix<double, 2, 3>> c_node;
+
 	return 0;
 }
 
