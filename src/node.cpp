@@ -35,14 +35,20 @@ template <typename OBJECT_TYPE>
 void Node<OBJECT_TYPE>::setNodeType(NODE_TYPE node_type){
 	this->_node_type = node_type;
 }
+
 /*----------Var----------*/
+
 template <typename OBJECT_TYPE>
 template <typename... Args>
-Var<OBJECT_TYPE>::Var(Args&&... args): Node<OBJECT_TYPE>(std::forward<Args>(args)...) {}
+Var<OBJECT_TYPE>::Var(Args&&... args): Node<OBJECT_TYPE>(std::forward<Args>(args)...) { 
+	this->setNodeType(VARIABLE);
+}
 
 template <typename OBJECT_TYPE>
 Var<OBJECT_TYPE>::Var(OBJECT_TYPE &predefined_object)
-: Node<OBJECT_TYPE>(predefined_object) {}
+: Node<OBJECT_TYPE>(predefined_object) {
+	this->setNodeType(VARIABLE);
+}
 
 /*
 template <typename T>

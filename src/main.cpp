@@ -12,7 +12,6 @@
 
 int main(){
 	Var<Matrix<double, 2,3>> a;
-	a.getObject().initRandom(-1,1,1);
 
 	return 0;
 }
