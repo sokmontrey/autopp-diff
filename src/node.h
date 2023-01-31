@@ -38,31 +38,18 @@ class Node{
 		void setNodeType(NODE_TYPE node_type);
 };
 
-/*
-
-template <typename T>
-class BaseNode{
-	protected:
-		NODE_TYPE _node_type;
-
-		T _value;
-		T _d_value;
-
+template <typename OBJECT_TYPE>
+class Var: public Node<OBJECT_TYPE>{
 	public:
-		BaseNode(NODE_TYPE node_type);
+		Var() = default;
 
-		virtual void setValue(T new_value);
-		virtual void operator=(T value);
+		template <typename... Args>
+		Var(Args&&... args);
 
-		virtual T evaluate();
-		virtual void differentiate(T derivative_factor=1);
-
-		T getValue();
-		T getDValue();
-
-		NODE_TYPE getNodeType();
+		Var(OBJECT_TYPE &predefined_object);
 };
 
+/*
 template <typename T>
 class Var: public BaseNode<T>{
 	public:

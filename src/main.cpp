@@ -11,11 +11,8 @@
 //TODO: generalize all the Tensor constructor
 
 int main(){
-	Node<Matrix<double, 2, 3>> a_node(-1,1,1);
-	Matrix<double, 2,3> b(1);
-	Node<Matrix<double, 2, 3>> b_node;
-
-	Node<Matrix<double, 2, 3>> c_node;
+	Var<Matrix<double, 2,3>> a;
+	a.getObject().initRandom(-1,1,1);
 
 	return 0;
 }
