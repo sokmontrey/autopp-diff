@@ -11,13 +11,16 @@ enum NODE_TYPE{
 	OPERATOR = 3,
 };
 
-template <typename OBJECT_TYPE>
+template <typename TENSOR_TYPE>
 class Node{
 	protected:
-		NODE_TYPE _node_type;
+		NODE_TYPE _node_type = VARIABLE;
 
-		OBJECT_TYPE _object;
-		OBJECT_TYPE _derivative_object;
+		TENSOR_TYPE _object;
+		TENSOR_TYPE _derivative_object;
+
+		virtual void _differentiate(TENSOR_TYPE&derivative_factor);
+
 	public:
 		Node() = default;
 
@@ -25,28 +28,61 @@ class Node{
 		Node(Args&&... args);
 
 		//create copy data from a predefined object
-		Node(OBJECT_TYPE &predefined_object);
+		Node(TENSOR_TYPE&predefined_object);
+
+		/*----------Compute----------*/
+		virtual TENSOR_TYPE& evaluate();
 
 		/*----------Getter----------*/
-		OBJECT_TYPE& getObject();
-		virtual OBJECT_TYPE& getDerivativeObject();
+		TENSOR_TYPE& getObject();
+		virtual TENSOR_TYPE& getDerivativeObject();
 		NODE_TYPE getNodeType();
 
 		/*----------Setter----------*/
-		virtual void setObject(OBJECT_TYPE &object);
-		void operator=(OBJECT_TYPE &object);
-		void setNodeType(NODE_TYPE node_type);
+		virtual void setObject(TENSOR_TYPE&object);
+		void operator=(TENSOR_TYPE&object);
 };
 
-template <typename OBJECT_TYPE>
-class Var: public Node<OBJECT_TYPE>{
+template <typename TENSOR_TYPE>
+class Var: public Node<TENSOR_TYPE>{
+	using Node<TENSOR_TYPE>::Node;
+	private:
+		NODE_TYPE _node_type = VARIABLE;
+};
+
+/*
+ * The object in Constant Node can still be change.
+ * Const Node referred to the mathematical term, 
+ * an object that when take the derivative with respect to with is zero
+ */
+template <typename TENSOR_TYPE>
+class Const: public Node<TENSOR_TYPE>{
+	using Node<TENSOR_TYPE>::Node;
+	private:
+		NODE_TYPE _node_type = CONSTANT;
+};
+
+template <typename TENSOR_TYPE, typename FUNCTION>
+class Op: public Node<TENSOR_TYPE>{
+	private:
+		std::shared_ptr<Node<TENSOR_TYPE>> _node_a;
+		std::shared_ptr<Node<TENSOR_TYPE>> _node_b;
+
 	public:
-		Var() = default;
+		//Both arguments are normal object
+		//	OR there is only one argument that is a normal object
+		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b=nullptr);
 
-		template <typename... Args>
-		Var(Args&&... args);
+		//One of the arguments is a temporary object
+		//	a is a temp object
+		//	OR there is only a and a is a temporary object
+		Op(Node<TENSOR_TYPE> &&node_a,Node<TENSOR_TYPE> *node_b=nullptr);
 
-		Var(OBJECT_TYPE &predefined_object);
+		//	b is a temp object
+		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> &&node_b);
+
+		//Both arguments are temporary
+		Op(Node<TENSOR_TYPE>&&node_a, Node<TENSOR_TYPE> &&node_b);
 };
 
 /*
