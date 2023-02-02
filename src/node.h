@@ -30,15 +30,15 @@ class Node{
 		//create copy data from a predefined object
 		Node(TENSOR_TYPE&predefined_object);
 
-		/*----------Compute----------*/
+		/*------------------------------Compute------------------------------*/
 		virtual TENSOR_TYPE& evaluate();
 
-		/*----------Getter----------*/
+		/*------------------------------Getter------------------------------*/
 		TENSOR_TYPE& getObject();
 		virtual TENSOR_TYPE& getDerivativeObject();
 		NODE_TYPE getNodeType();
 
-		/*----------Setter----------*/
+		/*------------------------------Setter------------------------------*/
 		virtual void setObject(TENSOR_TYPE&object);
 		void operator=(TENSOR_TYPE&object);
 };

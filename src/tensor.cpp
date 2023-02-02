@@ -1,6 +1,6 @@
 #include "tensor.h"
 
-/*----------Tensor----------*/
+/*------------------------------Tensor------------------------------*/
 
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 size_t Tensor<T, TOTAL_SIZE, DIMENSION>::_indexing(size_t (&indexes)[DIMENSION]) const {
@@ -11,7 +11,7 @@ size_t Tensor<T, TOTAL_SIZE, DIMENSION>::_indexing(size_t (&indexes)[DIMENSION])
 	return index;
 }
 
-/*----------Constructor----------*/
+/*------------------------------Constructor------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 Tensor<T, TOTAL_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define_indexing_multiplyer){
 
@@ -62,7 +62,7 @@ void Tensor<T, TOTAL_SIZE, DIMENSION>::initRandom(double min_range, double max_r
 	}
 }
 
-/*----------Setter----------*/
+/*------------------------------Setter------------------------------*/
 
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 void Tensor<T, TOTAL_SIZE, DIMENSION>::setValue(size_t index, T value){
@@ -73,7 +73,7 @@ void Tensor<T, TOTAL_SIZE, DIMENSION>::setValue(size_t (&&indexes)[DIMENSION], T
 	this->_data[this->_indexing(indexes)] = value;
 }
 
-/*----------Getter----------*/
+/*------------------------------Getter------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 T Tensor<T, TOTAL_SIZE, DIMENSION>::getValue(size_t index) const {
 	return this->_data[index];
@@ -99,7 +99,7 @@ size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getDimension() const {
 	return DIMENSION;
 }
 
-/*----------Operator Overload----------*/
+/*------------------------------Operator Overload------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 void Tensor<T, TOTAL_SIZE, DIMENSION>::operator=(Tensor &other){
 	//match TOTAL_SIZE & dimension & shape
@@ -108,7 +108,7 @@ void Tensor<T, TOTAL_SIZE, DIMENSION>::operator=(Tensor &other){
 	}
 }
 
-/*----------Print----------*/
+/*------------------------------Print------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 void Tensor<T, TOTAL_SIZE, DIMENSION>::print() const {
 	std::cout << "\n[ ";
@@ -126,13 +126,13 @@ void Tensor<T, TOTAL_SIZE, DIMENSION>::printShape() const {
 	}
 	std::cout << " ]\n";
 }
-/*----------Scalar----------*/
+/*------------------------------Scalar------------------------------*/
 
 template <typename T>
 size_t Scalar<T>::_indexing(size_t (&indexes)[0]) const {
 	return 0;
 }
-/*----------Constructor----------*/
+/*------------------------------Constructor------------------------------*/
 template <typename T>
 Scalar<T>::Scalar(): Tensor<T, 1, 0>({}, false){}
 template <typename T>
@@ -153,18 +153,18 @@ Scalar<T>::Scalar(T(&&arr)[1]) : Tensor<T, 1, 0>({}, false){
 	this->_data[0] = arr[0];
 }
 
-/*----------Getter----------*/
+/*------------------------------Getter------------------------------*/
 template <typename T>
 T Scalar<T>::getValue() const { 
 	return this->_data[0]; 
 }
-/*----------Setter----------*/
+/*------------------------------Setter------------------------------*/
 template <typename T>
 void Scalar<T>::setValue(T new_value) { 
 	this->_data[0] = new_value; 
 }
 
-/*----------Operator Overload----------*/
+/*------------------------------Operator Overload------------------------------*/
 template <typename T>
 T& Scalar<T>::operator()() { 
 	return this->_data[0]; 
@@ -174,7 +174,7 @@ void Scalar<T>::operator=(T new_value){
 	this->_data[0] = new_value; 
 }
 
-/*----------Print----------*/
+/*------------------------------Print------------------------------*/
 template <typename T>
 void Scalar<T>::print() const {
 	std::cout << "\n" << this->_data[0] << "\n";
@@ -185,13 +185,13 @@ void Scalar<T>::printShape() const {
 	std::cout << "\nShape: [ 0 ]\n";
 }
 
-/*----------Vector----------*/
+/*------------------------------Vector------------------------------*/
 
 template <typename T, size_t LENGTH>
 size_t Vector<T, LENGTH>::_indexing(size_t (&indexes)[1]) const {
 	return indexes[0];
 }
-/*----------Constructor----------*/
+/*------------------------------Constructor------------------------------*/
 template <typename T, size_t LENGTH>
 Vector<T, LENGTH>::Vector(): Tensor<T, LENGTH, 1>({LENGTH}, false){}
 
@@ -220,7 +220,7 @@ Vector<T, LENGTH>::Vector(T (&arr)[LENGTH]): Tensor<T, LENGTH, 1>({LENGTH}, fals
 	}
 } 
 
-/*----------Getter----------*/
+/*------------------------------Getter------------------------------*/
 template <typename T, size_t LENGTH>
 T Vector<T, LENGTH>::getValue(size_t (&&indexes)[1]) const {
 	return this->_data[indexes[0]];
@@ -230,19 +230,19 @@ size_t Vector<T, LENGTH>::getLength() const {
 	return this->getSize(0);
 }
 
-/*----------Setter----------*/
+/*------------------------------Setter------------------------------*/
 template <typename T, size_t LENGTH>
 void Vector<T, LENGTH>::setValue(size_t (&&indexes)[1], T value) {
 	this->_data[indexes[0]] = value;
 }
 
-/*----------Operator Overload----------*/
+/*------------------------------Operator Overload------------------------------*/
 template <typename T, size_t LENGTH>
 T& Vector<T, LENGTH>::operator()(size_t index){
 	return this->_data[index];
 }
 
-/*----------Matrix----------*/
+/*------------------------------Matrix------------------------------*/
 
 template <typename T, size_t ROWS, size_t COLS>
 //sacrificed the generalization of being able to change the tensor 1d structure in memory
@@ -254,7 +254,7 @@ template <typename T, size_t ROWS, size_t COLS>
 size_t Matrix<T, ROWS, COLS>::_indexing(size_t row, size_t col) const {
 	return row * ROWS + col;
 }
-/*----------Constructor----------*/
+/*------------------------------Constructor------------------------------*/
 template <typename T, size_t ROWS, size_t COLS>
 Matrix<T, ROWS, COLS>::Matrix(): Tensor<T, ROWS * COLS, 2>({ROWS, COLS}, false) {}
 template <typename T, size_t ROWS, size_t COLS>
@@ -288,7 +288,7 @@ void Matrix<T, ROWS, COLS>::initFromArray(T(&arr)[ROWS][COLS]){
 		}
 	}
 }
-/*----------Getter----------*/
+/*------------------------------Getter------------------------------*/
 template <typename T, size_t ROWS, size_t COLS>
 T Matrix<T, ROWS, COLS>::getValue(size_t (&&indexes)[2]) const {
 	return this->_data[this->_indexing(indexes)];
@@ -308,7 +308,7 @@ size_t Matrix<T, ROWS, COLS>::getCol() const {
 	return COLS;
 }
 
-/*----------Setter----------*/
+/*------------------------------Setter------------------------------*/
 template <typename T, size_t ROWS, size_t COLS>
 void Matrix<T, ROWS, COLS>::setValue(size_t (&&indexes)[2], T value) {
 	this->_data[this->_indexing(indexes)] = value;
@@ -318,12 +318,12 @@ void Matrix<T, ROWS, COLS>::setValue(size_t row, size_t col, T value) {
 	this->_data[this->_indexing(row, col)] = value;
 }
 
-/*----------Operator Overload----------*/
+/*------------------------------Operator Overload------------------------------*/
 template <typename T, size_t ROWS, size_t COLS>
 T& Matrix<T, ROWS, COLS>::operator()(size_t row, size_t col){
 	return this->_data[this->_indexing(row, col)];
 }
-/*----------Print----------*/
+/*------------------------------Print------------------------------*/
 template <typename T, size_t ROWS, size_t COLS>
 void Matrix<T, ROWS, COLS>::print() const {
 	std::cout << "\n[";

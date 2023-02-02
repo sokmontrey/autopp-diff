@@ -1,6 +1,6 @@
 #include "node.h"
 
-/*----------Node----------*/
+/*------------------------------Node------------------------------*/
 template <typename TENSOR_TYPE>
 template <typename... Args>
 Node<TENSOR_TYPE>::Node(Args&&... args): _object(std::forward<Args>(args)...){ }
@@ -10,7 +10,7 @@ Node<TENSOR_TYPE>::Node(TENSOR_TYPE&predefined_object){
 	this->_object = predefined_object;
 }
 
-/*----------Compute----------*/
+/*------------------------------Compute------------------------------*/
 template <typename TENSOR_TYPE>
 TENSOR_TYPE& Node<TENSOR_TYPE>::evaluate(){
 	return this->_object;
@@ -21,7 +21,7 @@ void Node<TENSOR_TYPE>::_differentiate(TENSOR_TYPE &derivative_factor){
 	//TODO;
 }
 
-/*----------Getter----------*/
+/*------------------------------Getter------------------------------*/
 template <typename TENSOR_TYPE>
 TENSOR_TYPE& Node<TENSOR_TYPE>::getObject(){
 	return this->_object;
@@ -34,7 +34,7 @@ template <typename TENSOR_TYPE>
 NODE_TYPE Node<TENSOR_TYPE>::getNodeType(){
 	return this->_node_type;
 }
-/*----------Setter----------*/
+/*------------------------------Setter------------------------------*/
 template <typename TENSOR_TYPE>
 void Node<TENSOR_TYPE>::setObject(TENSOR_TYPE &object){
 	this->_object = object;
@@ -44,7 +44,7 @@ void Node<TENSOR_TYPE>::operator=(TENSOR_TYPE &object){
 	this->setObject(object);
 }
 
-/*----------Operator----------*/
+/*------------------------------Operator------------------------------*/
 
 //Both arguments are normal object
 //	OR there is only one argument that is a normal object

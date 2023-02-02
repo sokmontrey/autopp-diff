@@ -61,11 +61,11 @@ class Tensor{
 		void initDefault(T initial_value);
 		void initRandom(double min_range, double max_range, double seed);
 
-		/*----------Setter----------*/
+		/*------------------------------Setter------------------------------*/
 		virtual void setValue(size_t index, T value);
 		virtual void setValue(size_t (&&indexes)[DIMENSION], T value);
 
-		/*----------Getter----------*/
+		/*------------------------------Getter------------------------------*/
 		virtual T getValue(size_t index=0) const;
 		virtual T getValue(size_t (&&indexes)[DIMENSION]) const;
 
@@ -75,10 +75,10 @@ class Tensor{
 		size_t getDimension() const;
 
 
-		/*----------Operator Overload----------*/
+		/*------------------------------Operator Overload------------------------------*/
 		void operator=(Tensor &other);
 
-		/*----------Print----------*/
+		/*------------------------------Print------------------------------*/
 		virtual void print() const;
 		virtual void printShape() const;
 };
@@ -100,17 +100,17 @@ class Scalar: public Tensor<T, 1, 0>{
 		Scalar(T(&&arr)[1]);
 		Scalar(T (&arr)[1]);
 
-		/*----------Getter----------*/
+		/*------------------------------Getter------------------------------*/
 		T getValue() const;
 
-		/*----------Setter----------*/
+		/*------------------------------Setter------------------------------*/
 		void setValue(T new_value);
 
-		/*----------Operator Overload----------*/
+		/*------------------------------Operator Overload------------------------------*/
 		T& operator()();
 		void operator=(T new_value);
 
-		/*----------Print----------*/
+		/*------------------------------Print------------------------------*/
 		void print() const override;
 		void printShape() const override;
 };
@@ -142,14 +142,14 @@ class Vector: public Tensor<T, LENGTH, 1>{
         Vector(T(&&arr)[LENGTH]);
 		Vector(T (&arr)[LENGTH]);
 
-		/*----------Getter----------*/
+		/*------------------------------Getter------------------------------*/
         T getValue(size_t (&&indexes)[1]) const override;
         size_t getLength() const;
 
-		/*----------Setter----------*/
+		/*------------------------------Setter------------------------------*/
         void setValue(size_t (&&indexes)[1], T value) override;
 
-		/*----------Operator Overload----------*/
+		/*------------------------------Operator Overload------------------------------*/
         T& operator()(size_t index);
 };
 
@@ -184,20 +184,20 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		void initFromArray(T(&&arr)[ROWS][COLS]);
 		void initFromArray(T (&arr)[ROWS][COLS]);
 
-		/*----------Getter----------*/
+		/*------------------------------Getter------------------------------*/
 		T getValue(size_t (&&indexes)[2]) const override;
 		T getValue(size_t row, size_t col) const;
 		size_t getRow() const;
 		size_t getCol() const;
 
-		/*----------Setter----------*/
+		/*------------------------------Setter------------------------------*/
 		void setValue(size_t (&&indexes)[2], T value) override;
 		void setValue(size_t row, size_t col, T value);
 
-		/*----------Operator Overload----------*/
+		/*------------------------------Operator Overload------------------------------*/
 		T& operator()(size_t row, size_t col);
 
-		/*----------Print----------*/
+		/*------------------------------Print------------------------------*/
 		void print() const override;
 };
 
