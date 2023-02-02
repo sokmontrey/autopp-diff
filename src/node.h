@@ -49,6 +49,9 @@ class Var: public Node<TENSOR_TYPE>{
 	using Node<TENSOR_TYPE>::Node;
 	private:
 		NODE_TYPE _node_type = VARIABLE;
+
+		TENSOR_TYPE& evaluate() override;
+		void differentiate(TENSOR_TYPE& derivative_factor) override;
 };
 
 /*
@@ -88,6 +91,10 @@ class Op: public Node<TENSOR_TYPE>{
 
 		//Both arguments are temporary
 		Op(Node<TENSOR_TYPE>&&node_a, Node<TENSOR_TYPE> &&node_b);
+
+		/*-------------------------------Compute-----------------------------*/
+		TENSOR_TYPE& evaluate() override;
+		void differentiate(TENSOR_TYPE& derivative_factor) override {}
 };
 
 /*

@@ -95,6 +95,7 @@ class Scalar: public Tensor<T, 1, 0>{
 	public:
 		using Tensor<T, 1, 0>::getValue;
 		using Tensor<T, 1, 0>::setValue;
+		using Tensor<T, 1, 0>::operator();
 
 		Scalar();
 		Scalar(T initial_value);
@@ -139,6 +140,7 @@ class Vector: public Tensor<T, LENGTH, 1>{
     public:
 		using Tensor<T, LENGTH, 1>::getValue;
 		using Tensor<T, LENGTH, 1>::setValue;
+		using Tensor<T, LENGTH, 1>::operator();
 
         Vector();
         Vector(T initial_value);
@@ -179,6 +181,7 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		using Tensor<T, ROWS* COLS, 2>::getValue;
 		using Tensor<T, ROWS* COLS, 2>::setValue;
 		using Tensor<T, ROWS* COLS, 2>::initFromArray;
+		using Tensor<T, ROWS* COLS, 2>::operator();
 
 		Matrix();
 		Matrix(T initial_value);
