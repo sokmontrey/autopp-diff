@@ -41,7 +41,7 @@
  *
  */
 
-template <typename T, size_t TOTAL_SIZE=1, size_t DIMENSION=1>
+template <typename T=double, size_t TOTAL_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
 		T _data[TOTAL_SIZE] = {0};
@@ -62,21 +62,21 @@ class Tensor{
 		void initRandom(double min_range, double max_range, double seed);
 
 		/*------------------------------Setter------------------------------*/
-		virtual void setValue(size_t index, T value);
-		virtual void setValue(size_t (&&indexes)[DIMENSION], T value);
+		void setValue(size_t index, T value);
+		void setValue(size_t (&&indexes)[DIMENSION], T value);
 
 		/*------------------------------Getter------------------------------*/
-		virtual T getValue(size_t index=0) const;
-		virtual T getValue(size_t (&&indexes)[DIMENSION]) const;
+		T getValue(size_t index=0) const;
+		T getValue(size_t (&&indexes)[DIMENSION]) const;
 
 		size_t getTotalSize() const;
 		//param: axis 0 is the outer most dimension axis
 		size_t getSize(size_t axis) const;
 		size_t getDimension() const;
 
-
 		/*------------------------------Operator Overload------------------------------*/
 		void operator=(Tensor &other);
+        T& operator()(size_t index);
 
 		/*------------------------------Print------------------------------*/
 		virtual void print() const;
@@ -94,6 +94,9 @@ class Scalar: public Tensor<T, 1, 0>{
 	private:
 		size_t _indexing(size_t (&indexes)[0]) const override;
 	public:
+		using Tensor<T, 1, 0>::getValue;
+		using Tensor<T, 1, 0>::setValue;
+
 		Scalar();
 		Scalar(T initial_value);
 		Scalar(double min_range, double max_range, double seed=1);
@@ -136,6 +139,9 @@ class Vector: public Tensor<T, LENGTH, 1>{
     private:
         size_t _indexing(size_t (&indexes)[1]) const override;
     public:
+		using Tensor<T, LENGTH, 1>::getValue;
+		using Tensor<T, LENGTH, 1>::setValue;
+
         Vector();
         Vector(T initial_value);
         Vector(double min_range, double max_range, double seed=1);
@@ -143,14 +149,11 @@ class Vector: public Tensor<T, LENGTH, 1>{
 		Vector(T (&arr)[LENGTH]);
 
 		/*------------------------------Getter------------------------------*/
-        T getValue(size_t (&&indexes)[1]) const override;
+        T getValue(size_t (&&indexes)[1]) const;
         size_t getLength() const;
 
 		/*------------------------------Setter------------------------------*/
-        void setValue(size_t (&&indexes)[1], T value) override;
-
-		/*------------------------------Operator Overload------------------------------*/
-        T& operator()(size_t index);
+        void setValue(size_t (&&indexes)[1], T value);
 };
 
 /*
@@ -175,6 +178,10 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		size_t _indexing(size_t (&indexes)[2]) const override;
 		size_t _indexing(size_t row, size_t col) const;
 	public:
+		using Tensor<T, ROWS* COLS, 2>::getValue;
+		using Tensor<T, ROWS* COLS, 2>::setValue;
+		using Tensor<T, ROWS* COLS, 2>::initFromArray;
+
 		Matrix();
 		Matrix(T initial_value);
 		Matrix(double min_range, double max_range, double seed=1);
@@ -185,13 +192,13 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		void initFromArray(T (&arr)[ROWS][COLS]);
 
 		/*------------------------------Getter------------------------------*/
-		T getValue(size_t (&&indexes)[2]) const override;
+		T getValue(size_t (&&indexes)[2]) const;
 		T getValue(size_t row, size_t col) const;
 		size_t getRow() const;
 		size_t getCol() const;
 
 		/*------------------------------Setter------------------------------*/
-		void setValue(size_t (&&indexes)[2], T value) override;
+		void setValue(size_t (&&indexes)[2], T value);
 		void setValue(size_t row, size_t col, T value);
 
 		/*------------------------------Operator Overload------------------------------*/

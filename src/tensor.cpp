@@ -107,6 +107,10 @@ void Tensor<T, TOTAL_SIZE, DIMENSION>::operator=(Tensor &other){
 		this->_data[i] = other.getValue(i);
 	}
 }
+template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
+T& Tensor<T, TOTAL_SIZE, DIMENSION>::operator()(size_t index){
+	return this->_data[index];
+}
 
 /*------------------------------Print------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
@@ -236,11 +240,6 @@ void Vector<T, LENGTH>::setValue(size_t (&&indexes)[1], T value) {
 	this->_data[indexes[0]] = value;
 }
 
-/*------------------------------Operator Overload------------------------------*/
-template <typename T, size_t LENGTH>
-T& Vector<T, LENGTH>::operator()(size_t index){
-	return this->_data[index];
-}
 
 /*------------------------------Matrix------------------------------*/
 

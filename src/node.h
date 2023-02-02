@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+#include "./operator.cpp"
 
 enum NODE_TYPE{
 	VARIABLE = 1,
@@ -16,10 +17,9 @@ class Node{
 	protected:
 		NODE_TYPE _node_type = VARIABLE;
 
-		TENSOR_TYPE _object;
-		TENSOR_TYPE _derivative_object;
+		TENSOR_TYPE _tensor;
+		TENSOR_TYPE _derivative_tensor;
 
-		virtual void _differentiate(TENSOR_TYPE&derivative_factor);
 
 	public:
 		Node() = default;
@@ -27,20 +27,21 @@ class Node{
 		template <typename... Args>
 		Node(Args&&... args);
 
-		//create copy data from a predefined object
-		Node(TENSOR_TYPE&predefined_object);
+		//create copy data from a predefinedtensor 
+		Node(TENSOR_TYPE&predefined_tensor);
 
 		/*------------------------------Compute------------------------------*/
 		virtual TENSOR_TYPE& evaluate();
+		virtual void differentiate(TENSOR_TYPE&derivative_factor);
 
 		/*------------------------------Getter------------------------------*/
-		TENSOR_TYPE& getObject();
-		virtual TENSOR_TYPE& getDerivativeObject();
+		TENSOR_TYPE& getTensor();
+		virtual TENSOR_TYPE& getDerivativeTensor();
 		NODE_TYPE getNodeType();
 
 		/*------------------------------Setter------------------------------*/
-		virtual void setObject(TENSOR_TYPE&object);
-		void operator=(TENSOR_TYPE&object);
+		virtual void setTensor(TENSOR_TYPE&tensor);
+		void operator=(TENSOR_TYPE&tensor);
 };
 
 template <typename TENSOR_TYPE>
@@ -51,9 +52,9 @@ class Var: public Node<TENSOR_TYPE>{
 };
 
 /*
- * The object in Constant Node can still be change.
+ * The tensor in Constant Node can still be changed.
  * Const Node referred to the mathematical term, 
- * an object that when take the derivative with respect to with is zero
+ * an tensorthat when take the derivative with respect to with is zero
  */
 template <typename TENSOR_TYPE>
 class Const: public Node<TENSOR_TYPE>{
@@ -69,16 +70,16 @@ class Op: public Node<TENSOR_TYPE>{
 		std::shared_ptr<Node<TENSOR_TYPE>> _node_b;
 
 	public:
-		//Both arguments are normal object
-		//	OR there is only one argument that is a normal object
+		//Both arguments are normaltensor 
+		//	OR there is only one argument that is a normaltensor 
 		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b=nullptr);
 
-		//One of the arguments is a temporary object
-		//	a is a temp object
-		//	OR there is only a and a is a temporary object
+		//One of the arguments is a temporarytensor 
+		//	a is a temptensor 
+		//	OR there is only a and a is a temporarytensor 
 		Op(Node<TENSOR_TYPE> &&node_a,Node<TENSOR_TYPE> *node_b=nullptr);
 
-		//	b is a temp object
+		//	b is a temptensor 
 		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> &&node_b);
 
 		//Both arguments are temporary
@@ -116,16 +117,16 @@ class Op: public BaseNode<T>{
 		std::shared_ptr<BaseNode<T>> _b;
 
 	public:
-		//Both arguments are normal object
-		//	OR there is only one argument that is a normal object
+		//Both arguments are normaltensor 
+		//	OR there is only one argument that is a normaltensor 
 		Op(BaseNode<T>* a, BaseNode<T>* b=nullptr);
 
-		//One of the arguments is a temporary object
-		//	a is a temp object
-		//	OR there is only a and a is a temporary object
+		//One of the arguments is a temporarytensor 
+		//	a is a temptensor 
+		//	OR there is only a and a is a temporarytensor 
 		Op(BaseNode<T>&& a, BaseNode<T>* b=nullptr);
 
-		//	b is a temp object
+		//	b is a temptensor 
 		Op(BaseNode<T>* a, BaseNode<T>&& b);
 
 		//Both arguments are temporary

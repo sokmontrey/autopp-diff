@@ -3,32 +3,32 @@
 /*------------------------------Node------------------------------*/
 template <typename TENSOR_TYPE>
 template <typename... Args>
-Node<TENSOR_TYPE>::Node(Args&&... args): _object(std::forward<Args>(args)...){ }
+Node<TENSOR_TYPE>::Node(Args&&... args): _tensor(std::forward<Args>(args)...){ }
 
 template <typename TENSOR_TYPE>
-Node<TENSOR_TYPE>::Node(TENSOR_TYPE&predefined_object){
-	this->_object = predefined_object;
+Node<TENSOR_TYPE>::Node(TENSOR_TYPE&predefined_tensor){
+	this->_tensor= predefined_tensor;
 }
 
 /*------------------------------Compute------------------------------*/
 template <typename TENSOR_TYPE>
 TENSOR_TYPE& Node<TENSOR_TYPE>::evaluate(){
-	return this->_object;
+	return this->_tensor;
 }
 template <typename TENSOR_TYPE>
-void Node<TENSOR_TYPE>::_differentiate(TENSOR_TYPE &derivative_factor){
+void Node<TENSOR_TYPE>::differentiate(TENSOR_TYPE &derivative_factor){
 	std::cout << "NODE DIFFERENTIATE\n";
-	//TODO;
+	tns::Add::evaluate<TENSOR_TYPE>(this->_tensor, this->_tensor, derivative_factor);
 }
 
 /*------------------------------Getter------------------------------*/
 template <typename TENSOR_TYPE>
-TENSOR_TYPE& Node<TENSOR_TYPE>::getObject(){
-	return this->_object;
+TENSOR_TYPE& Node<TENSOR_TYPE>::getTensor(){
+	return this->_tensor;
 }
 template <typename TENSOR_TYPE>
-TENSOR_TYPE& Node<TENSOR_TYPE>::getDerivativeObject(){
-	return this->_derivative_object;
+TENSOR_TYPE& Node<TENSOR_TYPE>::getDerivativeTensor(){
+	return this->_derivative_tensor;
 }
 template <typename TENSOR_TYPE>
 NODE_TYPE Node<TENSOR_TYPE>::getNodeType(){
@@ -36,34 +36,34 @@ NODE_TYPE Node<TENSOR_TYPE>::getNodeType(){
 }
 /*------------------------------Setter------------------------------*/
 template <typename TENSOR_TYPE>
-void Node<TENSOR_TYPE>::setObject(TENSOR_TYPE &object){
-	this->_object = object;
+void Node<TENSOR_TYPE>::setTensor(TENSOR_TYPE &tensor){
+	this->_tensor= tensor;
 }
 template <typename TENSOR_TYPE>
-void Node<TENSOR_TYPE>::operator=(TENSOR_TYPE &object){
-	this->setObject(object);
+void Node<TENSOR_TYPE>::operator=(TENSOR_TYPE &tensor){
+	this->setTensor(tensor);
 }
 
 /*------------------------------Operator------------------------------*/
 
-//Both arguments are normal object
-//	OR there is only one argument that is a normal object
+//Both arguments are normaltensor 
+//	OR there is only one argument that is a normaltensor 
 template <typename TENSOR_TYPE, typename FUNCTION>
 Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b){
 	this->_node_a = std::shared_ptr<Node<TENSOR_TYPE>>(node_a);
 	this->_node_b = std::shared_ptr<Node<TENSOR_TYPE>>(node_b);
 }
 
-//One of the arguments is a temporary object
-//	a is a temp object
-//	OR there is only a and a is a temporary object
+//One of the arguments is a temporarytensor 
+//	a is a temptensor 
+//	OR there is only a and a is a temporarytensor 
 template <typename TENSOR_TYPE, typename FUNCTION>
 Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE>&& node_a, Node<TENSOR_TYPE>* node_b){
 	this->_node_a = std::make_shared<Node<TENSOR_TYPE>>(std::move(node_a));
 	this->_node_b = std::shared_ptr<Node<TENSOR_TYPE>>(node_b);
 }
 
-//	b is a temp object
+//	b is a temptensor 
 template <typename TENSOR_TYPE, typename FUNCTION>
 Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE>* node_a, Node<TENSOR_TYPE>&& node_b){
 	this->_node_a = std::shared_ptr<Node<TENSOR_TYPE>>(node_a);
@@ -157,8 +157,8 @@ void Const<T>::operator=(T value) {
 template <typename T>
 void Const<T>::differentiate(T derivative_factor) {  } 
 
-//Both arguments are normal object
-//	OR there is only one argument that is a normal object
+//Both arguments are normaltensor 
+//	OR there is only one argument that is a normaltensor 
 template <typename T, template <typename> class OP>
 Op<T, OP>::Op(BaseNode<T>* a, BaseNode<T>* b):
 	BaseNode<T>(OPERATOR) {
@@ -167,9 +167,9 @@ Op<T, OP>::Op(BaseNode<T>* a, BaseNode<T>* b):
 	this->_b = std::shared_ptr<BaseNode<T>>(b);
 }
 
-//One of the arguments is a temporary object
-//	a is a temp object
-//	OR there is only a and a is a temporary object
+//One of the arguments is a temporarytensor 
+//	a is a temptensor 
+//	OR there is only a and a is a temporarytensor 
 template <typename T, template <typename> class OP>
 Op<T, OP>::Op(BaseNode<T>&& a, BaseNode<T>* b):
 	BaseNode<T>(OPERATOR) {
@@ -178,7 +178,7 @@ Op<T, OP>::Op(BaseNode<T>&& a, BaseNode<T>* b):
 	this->_b = std::shared_ptr<BaseNode<T>>(b);
 }
 
-//	b is a temp object
+//	b is a temptensor 
 template <typename T, template <typename> class OP>
 Op<T, OP>::Op(BaseNode<T>* a, BaseNode<T>&& b):
 	BaseNode<T>(OPERATOR) {
