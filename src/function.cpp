@@ -1,52 +1,46 @@
-#ifndef OPERATOR_H
-#define OPERATOR_H
+#include "./function.h"
 
-#include <cmath>
+using namespace tns;
 
-//tns = tensor
-namespace tns{
-
-//TODO: match sizes
+/*-------------------------------Add-----------------------------*/
 template <typename TENSOR_TYPE>
-struct Add{
-	static TENSOR_TYPE evaluate(TENSOR_TYPE &a, TENSOR_TYPE &b){
-		TENSOR_TYPE result;
-		for(size_t i=0; i<result.getTotalSize(); i++){
-			result.setValue(i, a.getValue(i) + b.getValue(i));
-		}
-		return result;
+void Add<TENSOR_TYPE>::evaluateTo(
+		TENSOR_TYPE *to_be_assign,
+		TENSOR_TYPE *a,
+		TENSOR_TYPE *b
+){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, a->getValue(i) + b->getValue(i));
 	}
-	static void evaluateTo(
-			TENSOR_TYPE *to_be_assign, 
-			TENSOR_TYPE *a, 
-			TENSOR_TYPE *b=nullptr){
-
-		for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
-			to_be_assign->setValue(i, a->getValue(i) + b->getValue(i));
-		}
-	}
-};
-
-template <typename TENSOR_TYPE>
-struct ReLU{
-	static TENSOR_TYPE evaluate(TENSOR_TYPE &a){
-		TENSOR_TYPE result;
-		for(size_t i=0; i<result.getTotalSize(); i++){
-			result.setValue(i, a(i) > 0 ? a(i) : 0);
-		}
-		return result;
-	}
-	static void evaluateTo(
-			TENSOR_TYPE *to_be_assign, 
-			TENSOR_TYPE *a,
-			TENSOR_TYPE *b=nullptr){
-
-		for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
-			to_be_assign->setValue(i, a->getValue(i) > 0 ? a->getValue(i) : 0);
-		}
-	}
-};
-
 }
 
-#endif //OPERATOR_H
+template <typename TENSOR_TYPE>
+TENSOR_TYPE Add<TENSOR_TYPE>::evaluate(
+		TENSOR_TYPE &a,
+		TENSOR_TYPE &b
+){
+	TENSOR_TYPE result;
+	Add<TENSOR_TYPE>::evaluateTo(&result, &a, &b);
+	return result;
+}
+
+/*-------------------------------ReLU-----------------------------*/
+template <typename TENSOR_TYPE>
+void ReLU<TENSOR_TYPE>::evaluateTo(
+		TENSOR_TYPE *to_be_assign,
+		TENSOR_TYPE *a,
+		TENSOR_TYPE *b
+){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, a->getValue(i) > 0 ? a->getValue(i) : 0);
+	}
+}
+
+template <typename TENSOR_TYPE>
+TENSOR_TYPE ReLU<TENSOR_TYPE>::evaluate(
+		TENSOR_TYPE &a
+){
+	TENSOR_TYPE result;
+	ReLU<TENSOR_TYPE>::evaluateTo(&result, &a);
+	return result;
+}
