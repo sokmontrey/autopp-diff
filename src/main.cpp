@@ -1,7 +1,6 @@
 #include <iostream>
 #include "./tensor.cpp"
 #include "./node.cpp"
-#include "./operator.cpp"
 
 //TRIED:Use operator overload to create Operator
 //	complicated pointer. Might need to overload the operator multiple time

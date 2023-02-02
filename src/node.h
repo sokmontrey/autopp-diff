@@ -4,7 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
-#include "./operator.cpp"
+#include "./function.cpp"
 
 enum NODE_TYPE{
 	VARIABLE = 1,
