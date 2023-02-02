@@ -6,13 +6,14 @@ template <typename... Args>
 Node<TENSOR_TYPE>::Node(Args&&... args): _tensor(std::forward<Args>(args)...){ }
 
 template <typename TENSOR_TYPE>
-Node<TENSOR_TYPE>::Node(TENSOR_TYPE&predefined_tensor){
+Node<TENSOR_TYPE>::Node(TENSOR_TYPE &predefined_tensor){
 	this->_tensor= predefined_tensor;
 }
 
-/*------------------------------Compute------------------------------*/
+/*Compute------------------------------*/
 template <typename TENSOR_TYPE>
 TENSOR_TYPE& Node<TENSOR_TYPE>::evaluate(){
+	this->_derivative_tensor = TENSOR_TYPE();
 	return this->_tensor;
 }
 template <typename TENSOR_TYPE>
@@ -21,7 +22,7 @@ void Node<TENSOR_TYPE>::differentiate(TENSOR_TYPE &derivative_factor){
 	tns::Add::evaluate<TENSOR_TYPE>(this->_tensor, this->_tensor, derivative_factor);
 }
 
-/*------------------------------Getter------------------------------*/
+/*Getter------------------------------*/
 template <typename TENSOR_TYPE>
 TENSOR_TYPE& Node<TENSOR_TYPE>::getTensor(){
 	return this->_tensor;
@@ -34,7 +35,7 @@ template <typename TENSOR_TYPE>
 NODE_TYPE Node<TENSOR_TYPE>::getNodeType(){
 	return this->_node_type;
 }
-/*------------------------------Setter------------------------------*/
+/*Setter------------------------------*/
 template <typename TENSOR_TYPE>
 void Node<TENSOR_TYPE>::setTensor(TENSOR_TYPE &tensor){
 	this->_tensor= tensor;
@@ -43,6 +44,20 @@ template <typename TENSOR_TYPE>
 void Node<TENSOR_TYPE>::operator=(TENSOR_TYPE &tensor){
 	this->setTensor(tensor);
 }
+
+
+/*-------------------------------Variable-----------------------------*/
+
+/*-------------------------------Constant-----------------------------*/
+
+/*Compute-----------------------------*/
+template <typename TENSOR_TYPE>
+TENSOR_TYPE& Const<TENSOR_TYPE>::evaluate(){
+	return this->_tensor;
+}
+
+template <typename TENSOR_TYPE>
+void Const<TENSOR_TYPE>::differentiate(TENSOR_TYPE& derivative_factor){ }
 
 /*------------------------------Operator------------------------------*/
 

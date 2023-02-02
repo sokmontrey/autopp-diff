@@ -75,7 +75,6 @@ class Tensor{
 		size_t getDimension() const;
 
 		/*------------------------------Operator Overload------------------------------*/
-		void operator=(Tensor &other);
         T& operator()(size_t index);
 
 		/*------------------------------Print------------------------------*/
@@ -111,7 +110,6 @@ class Scalar: public Tensor<T, 1, 0>{
 
 		/*------------------------------Operator Overload------------------------------*/
 		T& operator()();
-		void operator=(T new_value);
 
 		/*------------------------------Print------------------------------*/
 		void print() const override;

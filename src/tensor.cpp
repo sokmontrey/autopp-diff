@@ -101,13 +101,6 @@ size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getDimension() const {
 
 /*------------------------------Operator Overload------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
-void Tensor<T, TOTAL_SIZE, DIMENSION>::operator=(Tensor &other){
-	//match TOTAL_SIZE & dimension & shape
-	for(size_t i=0; i<TOTAL_SIZE; i++){
-		this->_data[i] = other.getValue(i);
-	}
-}
-template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 T& Tensor<T, TOTAL_SIZE, DIMENSION>::operator()(size_t index){
 	return this->_data[index];
 }
@@ -172,10 +165,6 @@ void Scalar<T>::setValue(T new_value) {
 template <typename T>
 T& Scalar<T>::operator()() { 
 	return this->_data[0]; 
-}
-template <typename T>
-void Scalar<T>::operator=(T new_value){ 
-	this->_data[0] = new_value; 
 }
 
 /*------------------------------Print------------------------------*/

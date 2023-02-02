@@ -32,7 +32,7 @@ class Node{
 
 		/*------------------------------Compute------------------------------*/
 		virtual TENSOR_TYPE& evaluate();
-		virtual void differentiate(TENSOR_TYPE&derivative_factor);
+		virtual void differentiate(TENSOR_TYPE &derivative_factor);
 
 		/*------------------------------Getter------------------------------*/
 		TENSOR_TYPE& getTensor();
@@ -40,7 +40,7 @@ class Node{
 		NODE_TYPE getNodeType();
 
 		/*------------------------------Setter------------------------------*/
-		virtual void setTensor(TENSOR_TYPE&tensor);
+		virtual void setTensor(TENSOR_TYPE &tensor);
 		void operator=(TENSOR_TYPE&tensor);
 };
 
@@ -61,6 +61,10 @@ class Const: public Node<TENSOR_TYPE>{
 	using Node<TENSOR_TYPE>::Node;
 	private:
 		NODE_TYPE _node_type = CONSTANT;
+
+	public:
+		TENSOR_TYPE& evaluate() override;
+		void differentiate(TENSOR_TYPE& derivative_factor) override;
 };
 
 template <typename TENSOR_TYPE, typename FUNCTION>
