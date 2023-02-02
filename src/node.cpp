@@ -80,37 +80,11 @@ void Const<TENSOR_TYPE>::differentiate(TENSOR_TYPE& derivative_factor){ }
 
 /*------------------------------Operator------------------------------*/
 
-//Both arguments are normaltensor 
-//	OR there is only one argument that is a normaltensor 
 template <typename TENSOR_TYPE, typename FUNCTION>
 Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b){
-	this->_node_a = std::shared_ptr<Node<TENSOR_TYPE>>(node_a);
-	this->_node_b = std::shared_ptr<Node<TENSOR_TYPE>>(node_b);
+	this->_node_a = node_a;
+	this->_node_b = node_b;
 }
-
-//One of the arguments is a temporarytensor 
-//	a is a temptensor 
-//	OR there is only a and a is a temporarytensor 
-template <typename TENSOR_TYPE, typename FUNCTION>
-Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE>&& node_a, Node<TENSOR_TYPE>* node_b){
-	this->_node_a = std::make_shared<Node<TENSOR_TYPE>>(std::move(node_a));
-	this->_node_b = std::shared_ptr<Node<TENSOR_TYPE>>(node_b);
-}
-
-//	b is a temptensor 
-template <typename TENSOR_TYPE, typename FUNCTION>
-Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE>* node_a, Node<TENSOR_TYPE>&& node_b){
-	this->_node_a = std::shared_ptr<Node<TENSOR_TYPE>>(node_a);
-	this->_node_b = std::make_shared<Node<TENSOR_TYPE>>(std::move(node_b));
-}
-
-//Both arguments are temporary
-template <typename TENSOR_TYPE, typename FUNCTION>
-Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE>&& node_a, Node<TENSOR_TYPE>&& node_b){
-	this->_node_a = std::make_shared<Node<TENSOR_TYPE>>(std::move(node_a));
-	this->_node_b = std::make_shared<Node<TENSOR_TYPE>>(std::move(node_b));
-}
-
 
 /*Compute-----------------------------*/
 

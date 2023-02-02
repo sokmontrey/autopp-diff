@@ -15,6 +15,8 @@
 int main(){
 	Var<Matrix<double, 2,3>> a(-1, 1, 0);
 	Var<Matrix<double, 2,3>> b(-1, 1, 1);
+
+	Op<Matrix<double, 2,3>, tns::Add<Matrix<double, 2,3>>> f(&a, &b);
 	return 0;
 }
 

@@ -73,82 +73,16 @@ class Const: public Node<TENSOR_TYPE>{
 template <typename TENSOR_TYPE, typename FUNCTION>
 class Op: public Node<TENSOR_TYPE>{
 	private:
-		std::shared_ptr<Node<TENSOR_TYPE>> _node_a;
-		std::shared_ptr<Node<TENSOR_TYPE>> _node_b;
+		Node<TENSOR_TYPE> *_node_a;
+		Node<TENSOR_TYPE> *_node_b;
 
 	public:
-		//Both arguments are normaltensor 
-		//	OR there is only one argument that is a normaltensor 
+		Op() = default;
 		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b=nullptr);
-
-		//One of the arguments is a temporarytensor 
-		//	a is a temptensor 
-		//	OR there is only a and a is a temporarytensor 
-		Op(Node<TENSOR_TYPE> &&node_a,Node<TENSOR_TYPE> *node_b=nullptr);
-
-		//	b is a temptensor 
-		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> &&node_b);
-
-		//Both arguments are temporary
-		Op(Node<TENSOR_TYPE>&&node_a, Node<TENSOR_TYPE> &&node_b);
 
 		/*-------------------------------Compute-----------------------------*/
 		TENSOR_TYPE& evaluate() override;
 		void differentiate(TENSOR_TYPE& derivative_factor) override {}
 };
 
-/*
-template <typename T>
-class Var: public BaseNode<T>{
-	public:
-		Var();
-		Var(T value);
-
-		T evaluate() override ;
-
-		void differentiate(T derivative_factor=1);
-};
-
-template <typename T>
-class Const: public BaseNode<T>{
-	public:
-		Const();
-		Const(T value);
-
-		void setValue (T new_value) override;
-		void operator=(T value) override;
-
-		void differentiate(T derivative_factor=1) override ;
-};
-
-template <typename T, template <typename> class OP>
-class Op: public BaseNode<T>{
-	private:
-		std::shared_ptr<BaseNode<T>> _a;
-		std::shared_ptr<BaseNode<T>> _b;
-
-	public:
-		//Both arguments are normaltensor 
-		//	OR there is only one argument that is a normaltensor 
-		Op(BaseNode<T>* a, BaseNode<T>* b=nullptr);
-
-		//One of the arguments is a temporarytensor 
-		//	a is a temptensor 
-		//	OR there is only a and a is a temporarytensor 
-		Op(BaseNode<T>&& a, BaseNode<T>* b=nullptr);
-
-		//	b is a temptensor 
-		Op(BaseNode<T>* a, BaseNode<T>&& b);
-
-		//Both arguments are temporary
-		Op(BaseNode<T>&& a, BaseNode<T>&& b);
-
-		void setValue(T new_value) override;
-		void operator=(T value);
-
-		T evaluate() override;
-
-		void differentiate(T derivative_factor=1) override;
-};
-*/
 #endif //NODE_H
