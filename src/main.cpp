@@ -11,10 +11,12 @@
 //TODO: implement and test MatMul then differentiate
 
 int main(){
-	Var<Matrix<double, 2,3>> a(-1, 1, 0);
-	Var<Matrix<double, 2,3>> b(-1, 1, 0);
+	Var<Matrix<double, 2,3>> a;
+	a.getTensor().initFromArray({{1,2,3}, {4,5,6}});
+	Var<Matrix<double, 3,2>> b;
+	b.getTensor().initFromArray({{1,2}, {3,4}, {5,6}});
 
-	Op<Add, Matrix<double, 2,3>> f(&a, &b);
+	Op<MatMul, Matrix<double, 2,2>, Matrix<double, 2,3>, Matrix<double, 3,2>> f(&a, &b);
 
 	f.evaluate().print();
 

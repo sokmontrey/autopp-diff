@@ -48,6 +48,7 @@ class Tensor{
 		T _data[TOTAL_SIZE] = {0};
 
 		size_t _shape[DIMENSION];
+		//{ A*B*...*N-1, A*B*...*N-2, A*B, A, 1 }
 		size_t _indexing_multiplyer[DIMENSION];
 
 		virtual size_t _indexing(size_t (&indexes)[DIMENSION]) const;

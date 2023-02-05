@@ -28,7 +28,7 @@ class Node{
 		Node(Args&&... args);
 
 		//create copy data from a predefinedtensor 
-		Node(TT&predefined_tensor);
+		Node(TT &predefined_tensor);
 
 		/*------------------------------Compute------------------------------*/
 		virtual TT& evaluate();
@@ -74,8 +74,8 @@ template <template <typename, typename, typename> class FUNCTION,
 	typename TT, typename TA=TT, typename TB=TT>
 class Op: public Node<TT>{
 	private:
-		Node<TT> *_node_a;
-		Node<TT> *_node_b;
+		Node<TA> *_node_a;
+		Node<TB> *_node_b;
 	public:
 		Op() = default;
 		Op(Node<TA> *node_a, Node<TB> *node_b=nullptr);

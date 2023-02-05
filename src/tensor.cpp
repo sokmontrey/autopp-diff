@@ -2,6 +2,7 @@
 
 /*------------------------------Tensor------------------------------*/
 
+//TODO: check this if it correct?
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 size_t Tensor<T, TOTAL_SIZE, DIMENSION>::_indexing(size_t (&indexes)[DIMENSION]) const {
 	size_t index = 0;
@@ -16,22 +17,20 @@ template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 Tensor<T, TOTAL_SIZE, DIMENSION>::Tensor(size_t (&&shape)[DIMENSION], bool is_define_indexing_multiplyer){
 
 	this->_shape[0] = shape[0];
+	this->_indexing_multiplyer[DIMENSION-1] = 1;
 
-		this->_indexing_multiplyer[DIMENSION-1] = 1;
+	size_t last_indexing_multiplyer = 1;
+	for(size_t axis=1; axis<DIMENSION; axis++){
+		//transfer shape data from the argument to _shape 
+		//while initiallizing index_multiplyer
+		//to save iteration time
+		this->_shape[axis] = shape[axis];
 
-		size_t last_indexing_multiplyer = 1;
-		for(size_t axis=1; axis<DIMENSION; axis++){
-			//transfer shape data from the argument to _shape 
-			//while initiallizing index_multiplyer
-			//to save iteration time
-			this->_shape[axis] = shape[axis];
-
-			if(is_define_indexing_multiplyer){
-				//{ A*B*...*N-1, A*B*...*N-2, A*B, A }
-				last_indexing_multiplyer *= shape[DIMENSION-axis];
-				this->_indexing_multiplyer[DIMENSION-axis-1] = last_indexing_multiplyer;
-			}
+		if(is_define_indexing_multiplyer){
+			last_indexing_multiplyer *= shape[DIMENSION-axis];
+			this->_indexing_multiplyer[DIMENSION-axis-1] = last_indexing_multiplyer;
 		}
+	}
 }
 
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
@@ -236,11 +235,11 @@ template <typename T, size_t ROWS, size_t COLS>
 //sacrificed the generalization of being able to change the tensor 1d structure in memory
 //for performance
 size_t Matrix<T, ROWS, COLS>::_indexing(size_t (&indexes)[2]) const {
-	return indexes[0] * ROWS + indexes[1];
+	return indexes[0] * COLS + indexes[1];
 }
 template <typename T, size_t ROWS, size_t COLS>
 size_t Matrix<T, ROWS, COLS>::_indexing(size_t row, size_t col) const {
-	return row * ROWS + col;
+	return row * COLS + col;
 }
 /*------------------------------Constructor------------------------------*/
 template <typename T, size_t ROWS, size_t COLS>
