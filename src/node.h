@@ -82,7 +82,7 @@ class Op: public Node<TT>{
 
 		/*-------------------------------Compute-----------------------------*/
 		TT& evaluate() override;
-		void differentiate(TT& derivative_factor) override {}
+		void differentiate(TT &derivative_factor) override;
 };
 
 #endif //NODE_H
