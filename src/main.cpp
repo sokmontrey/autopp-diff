@@ -20,8 +20,8 @@ int main(){
 
 	f.evaluate().print();
 
-	Matrix<double, 2,3> de(1);
-	f.differentiate(de);
+	f.differentiate();
+	a.getDerivativeTensor().print();
 	return 0;
 }
 

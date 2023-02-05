@@ -17,11 +17,16 @@ TT& Node<TT>::evaluate(){
 	return this->_tensor;
 }
 template <typename TT>
-void Node<TT>::differentiate(TT&derivative_factor){
+void Node<TT>::differentiate(TT &derivative_factor){
 	tns::Add<TT>::evaluateTo(
 			&this->_derivative_tensor, 
 			&this->_derivative_tensor, 
 			&derivative_factor);
+}
+template <typename TT>
+void Node<TT>::differentiate(){
+	TT default_derivative_tensor(1);
+	this->differentiate(default_derivative_tensor);
 }
 
 /*Getter------------------------------*/

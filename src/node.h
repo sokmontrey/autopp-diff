@@ -32,7 +32,8 @@ class Node{
 
 		/*------------------------------Compute------------------------------*/
 		virtual TT& evaluate();
-		virtual void differentiate(TT&derivative_factor);
+		virtual void differentiate(TT &derivative_factor);
+		void differentiate();
 
 		/*------------------------------Getter------------------------------*/
 		TT& getTensor();
@@ -48,6 +49,8 @@ template <typename TT>
 class Var: public Node<TT>{
 	using Node<TT>::Node;
 	private:
+		using Node<TT>::differentiate;
+
 		NODE_TYPE _node_type = VARIABLE;
 
 		TT& evaluate() override;
@@ -66,6 +69,8 @@ class Const: public Node<TT>{
 		NODE_TYPE _node_type = CONSTANT;
 
 	public:
+		using Node<TT>::differentiate;
+
 		TT& evaluate() override;
 		void differentiate(TT& derivative_factor) override;
 };
@@ -77,6 +82,8 @@ class Op: public Node<TT>{
 		Node<TA> *_node_a;
 		Node<TB> *_node_b;
 	public:
+		using Node<TT>::differentiate;
+
 		Op() = default;
 		Op(Node<TA> *node_a, Node<TB> *node_b=nullptr);
 
