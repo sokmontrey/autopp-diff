@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 #include "./function.cpp"
+#include "./tensor.cpp"
 
 enum NODE_TYPE{
 	VARIABLE = 1,
@@ -19,7 +20,6 @@ class Node{
 
 		TENSOR_TYPE _tensor;
 		TENSOR_TYPE _derivative_tensor;
-
 
 	public:
 		Node() = default;
@@ -70,15 +70,19 @@ class Const: public Node<TENSOR_TYPE>{
 		void differentiate(TENSOR_TYPE& derivative_factor) override;
 };
 
-template <typename TENSOR_TYPE, typename FUNCTION>
+template < 
+	template <typename> class FUNCTION, 
+	typename TENSOR_TYPE, 
+	typename TENSOR_TYPE_A = TENSOR_TYPE, 
+	typename TENSOR_TYPE_B = TENSOR_TYPE
+>
 class Op: public Node<TENSOR_TYPE>{
 	private:
 		Node<TENSOR_TYPE> *_node_a;
 		Node<TENSOR_TYPE> *_node_b;
-
 	public:
 		Op() = default;
-		Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b=nullptr);
+		Op(Node<TENSOR_TYPE_A> *node_a, Node<TENSOR_TYPE_B> *node_b=nullptr);
 
 		/*-------------------------------Compute-----------------------------*/
 		TENSOR_TYPE& evaluate() override;

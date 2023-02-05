@@ -80,26 +80,38 @@ void Const<TENSOR_TYPE>::differentiate(TENSOR_TYPE& derivative_factor){ }
 
 /*------------------------------Operator------------------------------*/
 
-template <typename TENSOR_TYPE, typename FUNCTION>
-Op<TENSOR_TYPE, FUNCTION>::Op(Node<TENSOR_TYPE> *node_a, Node<TENSOR_TYPE> *node_b){
+template <
+	template <typename> class FUNCTION,
+	typename TENSOR_TYPE, 
+	typename TENSOR_TYPE_A,
+	typename TENSOR_TYPE_B
+>
+Op<FUNCTION, TENSOR_TYPE, TENSOR_TYPE_A, TENSOR_TYPE_B>
+::Op(Node<TENSOR_TYPE_A> *node_a, Node<TENSOR_TYPE_B> *node_b)
+: Node<TENSOR_TYPE>(){
 	this->_node_a = node_a;
 	this->_node_b = node_b;
 }
 
 /*Compute-----------------------------*/
 
-template <typename TENSOR_TYPE, typename FUNCTION>
-TENSOR_TYPE& Op<TENSOR_TYPE, FUNCTION>::evaluate(){
+template <
+	template <typename> class FUNCTION,
+	typename TENSOR_TYPE, 
+	typename TENSOR_TYPE_A,
+	typename TENSOR_TYPE_B
+>
+TENSOR_TYPE& Op<FUNCTION, TENSOR_TYPE, TENSOR_TYPE_A, TENSOR_TYPE_B>::evaluate(){
 	this->_derivative_tensor = TENSOR_TYPE();
 
 	if(this->_node_b){
-		FUNCTION::evaluateTo(
+		FUNCTION<TENSOR_TYPE>::evaluateTo(
 			&this->_tensor,
 			&this->_node_a->evaluate(),
 			&this->_node_b->evaluate()
 		);
 	}else{
-		FUNCTION::evaluateTo(
+		FUNCTION<TENSOR_TYPE>::evaluateTo(
 			&this->_tensor,
 			&this->_node_a->evaluate()
 		);

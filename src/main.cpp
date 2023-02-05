@@ -1,5 +1,4 @@
 #include <iostream>
-#include "./tensor.cpp"
 #include "./node.cpp"
 
 //TRIED:Use operator overload to create Operator
@@ -8,13 +7,16 @@
 //TODO: error handling
 //TODO: initFunction can be called only one
 //TODO: deconstructor
-
-//TODO: something is still going after Op. maybe because of there is no deconstructor
+//
+//TODO: implement and test MatMul then differentiate
 
 int main(){
-	Var<Matrix<double, 1,1>> a(2);
-	Var<Matrix<double, 1,1>> b(3);
-	Const<Matrix<double, 1,1>> c(20);
+	Var<Matrix<double, 2,3>> a(-1, 1, 0);
+	Var<Matrix<double, 2,3>> b(-1, 1, 0);
+
+	Op<Add, Matrix<double, 2,3>> f(&a, &b);
+
+	f.evaluate().print();
 
 	return 0;
 }
