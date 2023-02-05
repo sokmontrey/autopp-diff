@@ -1,50 +1,50 @@
 #include "node.h"
 
 /*------------------------------Node------------------------------*/
-template <typename TENSOR_TYPE>
+template <typename TT>
 template <typename... Args>
-Node<TENSOR_TYPE>::Node(Args&&... args): _tensor(std::forward<Args>(args)...){ }
+Node<TT>::Node(Args&&... args): _tensor(std::forward<Args>(args)...){ }
 
-template <typename TENSOR_TYPE>
-Node<TENSOR_TYPE>::Node(TENSOR_TYPE &predefined_tensor){
+template <typename TT>
+Node<TT>::Node(TT&predefined_tensor){
 	this->_tensor= predefined_tensor;
 }
 
 /*Compute------------------------------*/
-template <typename TENSOR_TYPE>
-TENSOR_TYPE& Node<TENSOR_TYPE>::evaluate(){
-	this->_derivative_tensor = TENSOR_TYPE();
+template <typename TT>
+TT& Node<TT>::evaluate(){
+	this->_derivative_tensor = TT();
 	return this->_tensor;
 }
-template <typename TENSOR_TYPE>
-void Node<TENSOR_TYPE>::differentiate(TENSOR_TYPE &derivative_factor){
+template <typename TT>
+void Node<TT>::differentiate(TT&derivative_factor){
 	std::cout << "NODE DIFFERENTIATE\n";
-	tns::Add<TENSOR_TYPE>::evaluateTo(
+	tns::Add<TT>::evaluateTo(
 			&this->_tensor, 
 			&this->_tensor, 
 			&derivative_factor);
 }
 
 /*Getter------------------------------*/
-template <typename TENSOR_TYPE>
-TENSOR_TYPE& Node<TENSOR_TYPE>::getTensor(){
+template <typename TT>
+TT& Node<TT>::getTensor(){
 	return this->_tensor;
 }
-template <typename TENSOR_TYPE>
-TENSOR_TYPE& Node<TENSOR_TYPE>::getDerivativeTensor(){
+template <typename TT>
+TT& Node<TT>::getDerivativeTensor(){
 	return this->_derivative_tensor;
 }
-template <typename TENSOR_TYPE>
-NODE_TYPE Node<TENSOR_TYPE>::getNodeType(){
+template <typename TT>
+NODE_TYPE Node<TT>::getNodeType(){
 	return this->_node_type;
 }
 /*Setter------------------------------*/
-template <typename TENSOR_TYPE>
-void Node<TENSOR_TYPE>::setTensor(TENSOR_TYPE &tensor){
+template <typename TT>
+void Node<TT>::setTensor(TT&tensor){
 	this->_tensor= tensor;
 }
-template <typename TENSOR_TYPE>
-void Node<TENSOR_TYPE>::operator=(TENSOR_TYPE &tensor){
+template <typename TT>
+void Node<TT>::operator=(TT&tensor){
 	this->setTensor(tensor);
 }
 
@@ -53,15 +53,15 @@ void Node<TENSOR_TYPE>::operator=(TENSOR_TYPE &tensor){
 
 
 /*Compute------------------------------*/
-template <typename TENSOR_TYPE>
-TENSOR_TYPE& Var<TENSOR_TYPE>::evaluate(){
-	this->_derivative_tensor = TENSOR_TYPE();
+template <typename TT>
+TT& Var<TT>::evaluate(){
+	this->_derivative_tensor = TT();
 	return this->_tensor;
 }
-template <typename TENSOR_TYPE>
-void Var<TENSOR_TYPE>::differentiate(TENSOR_TYPE &derivative_factor){
+template <typename TT>
+void Var<TT>::differentiate(TT&derivative_factor){
 	std::cout << "VAR DIFFERENTIATE\n";
-	tns::Add<TENSOR_TYPE>::evaluateTo(
+	tns::Add<TT>::evaluateTo(
 			&this->_tensor, 
 			&this->_tensor, 
 			&derivative_factor);
@@ -70,48 +70,40 @@ void Var<TENSOR_TYPE>::differentiate(TENSOR_TYPE &derivative_factor){
 /*-------------------------------Constant-----------------------------*/
 
 /*Compute-----------------------------*/
-template <typename TENSOR_TYPE>
-TENSOR_TYPE& Const<TENSOR_TYPE>::evaluate(){
+template <typename TT>
+TT& Const<TT>::evaluate(){
 	return this->_tensor;
 }
 
-template <typename TENSOR_TYPE>
-void Const<TENSOR_TYPE>::differentiate(TENSOR_TYPE& derivative_factor){ }
+template <typename TT>
+void Const<TT>::differentiate(TT& derivative_factor){ }
 
 /*------------------------------Operator------------------------------*/
 
-template <
-	template <typename> class FUNCTION,
-	typename TENSOR_TYPE, 
-	typename TENSOR_TYPE_A,
-	typename TENSOR_TYPE_B
->
-Op<FUNCTION, TENSOR_TYPE, TENSOR_TYPE_A, TENSOR_TYPE_B>
-::Op(Node<TENSOR_TYPE_A> *node_a, Node<TENSOR_TYPE_B> *node_b)
-: Node<TENSOR_TYPE>(){
+template <template <typename, typename, typename> class FUNCTION,
+	typename TT, typename TA, typename TB>
+Op<FUNCTION, TT, TA, TB>
+::Op(Node<TA> *node_a, Node<TB> *node_b)
+: Node<TT>(){
 	this->_node_a = node_a;
 	this->_node_b = node_b;
 }
 
 /*Compute-----------------------------*/
 
-template <
-	template <typename> class FUNCTION,
-	typename TENSOR_TYPE, 
-	typename TENSOR_TYPE_A,
-	typename TENSOR_TYPE_B
->
-TENSOR_TYPE& Op<FUNCTION, TENSOR_TYPE, TENSOR_TYPE_A, TENSOR_TYPE_B>::evaluate(){
-	this->_derivative_tensor = TENSOR_TYPE();
+template <template <typename, typename, typename> class FUNCTION,
+	typename TT, typename TA, typename TB>
+TT& Op<FUNCTION, TT, TA, TB>::evaluate(){
+	this->_derivative_tensor = TT();
 
 	if(this->_node_b){
-		FUNCTION<TENSOR_TYPE>::evaluateTo(
+		FUNCTION<TT, TA, TB>::evaluateTo(
 			&this->_tensor,
 			&this->_node_a->evaluate(),
 			&this->_node_b->evaluate()
 		);
 	}else{
-		FUNCTION<TENSOR_TYPE>::evaluateTo(
+		FUNCTION<TT,TA,TB>::evaluateTo(
 			&this->_tensor,
 			&this->_node_a->evaluate()
 		);

@@ -7,10 +7,10 @@
 namespace tns{
 
 //TODO: match sizes
-template <typename TENSOR_TYPE>
+template <typename TT, typename TA=TT, typename TB=TT>
 struct Add{
-	static void evaluateTo(TENSOR_TYPE *to_be_assign, TENSOR_TYPE *a, TENSOR_TYPE *b=nullptr);
-	static TENSOR_TYPE evaluate(TENSOR_TYPE &a, TENSOR_TYPE &b);
+	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
+	static TT evaluate(TA &a, TB &b);
 };
 
 }

@@ -13,13 +13,13 @@ enum NODE_TYPE{
 	OPERATOR = 3,
 };
 
-template <typename TENSOR_TYPE>
+template <typename TT>
 class Node{
 	protected:
 		NODE_TYPE _node_type = VARIABLE;
 
-		TENSOR_TYPE _tensor;
-		TENSOR_TYPE _derivative_tensor;
+		TT _tensor;
+		TT _derivative_tensor;
 
 	public:
 		Node() = default;
@@ -28,30 +28,30 @@ class Node{
 		Node(Args&&... args);
 
 		//create copy data from a predefinedtensor 
-		Node(TENSOR_TYPE&predefined_tensor);
+		Node(TT&predefined_tensor);
 
 		/*------------------------------Compute------------------------------*/
-		virtual TENSOR_TYPE& evaluate();
-		virtual void differentiate(TENSOR_TYPE &derivative_factor);
+		virtual TT& evaluate();
+		virtual void differentiate(TT&derivative_factor);
 
 		/*------------------------------Getter------------------------------*/
-		TENSOR_TYPE& getTensor();
-		virtual TENSOR_TYPE& getDerivativeTensor();
+		TT& getTensor();
+		virtual TT& getDerivativeTensor();
 		NODE_TYPE getNodeType();
 
 		/*------------------------------Setter------------------------------*/
-		virtual void setTensor(TENSOR_TYPE &tensor);
-		void operator=(TENSOR_TYPE&tensor);
+		virtual void setTensor(TT&tensor);
+		void operator=(TT&tensor);
 };
 
-template <typename TENSOR_TYPE>
-class Var: public Node<TENSOR_TYPE>{
-	using Node<TENSOR_TYPE>::Node;
+template <typename TT>
+class Var: public Node<TT>{
+	using Node<TT>::Node;
 	private:
 		NODE_TYPE _node_type = VARIABLE;
 
-		TENSOR_TYPE& evaluate() override;
-		void differentiate(TENSOR_TYPE& derivative_factor) override;
+		TT& evaluate() override;
+		void differentiate(TT& derivative_factor) override;
 };
 
 /*
@@ -59,34 +59,30 @@ class Var: public Node<TENSOR_TYPE>{
  * Const Node referred to the mathematical term, 
  * an tensorthat when take the derivative with respect to with is zero
  */
-template <typename TENSOR_TYPE>
-class Const: public Node<TENSOR_TYPE>{
-	using Node<TENSOR_TYPE>::Node;
+template <typename TT>
+class Const: public Node<TT>{
+	using Node<TT>::Node;
 	private:
 		NODE_TYPE _node_type = CONSTANT;
 
 	public:
-		TENSOR_TYPE& evaluate() override;
-		void differentiate(TENSOR_TYPE& derivative_factor) override;
+		TT& evaluate() override;
+		void differentiate(TT& derivative_factor) override;
 };
 
-template < 
-	template <typename> class FUNCTION, 
-	typename TENSOR_TYPE, 
-	typename TENSOR_TYPE_A = TENSOR_TYPE, 
-	typename TENSOR_TYPE_B = TENSOR_TYPE
->
-class Op: public Node<TENSOR_TYPE>{
+template <template <typename, typename, typename> class FUNCTION, 
+	typename TT, typename TA=TT, typename TB=TT>
+class Op: public Node<TT>{
 	private:
-		Node<TENSOR_TYPE> *_node_a;
-		Node<TENSOR_TYPE> *_node_b;
+		Node<TT> *_node_a;
+		Node<TT> *_node_b;
 	public:
 		Op() = default;
-		Op(Node<TENSOR_TYPE_A> *node_a, Node<TENSOR_TYPE_B> *node_b=nullptr);
+		Op(Node<TA> *node_a, Node<TB> *node_b=nullptr);
 
 		/*-------------------------------Compute-----------------------------*/
-		TENSOR_TYPE& evaluate() override;
-		void differentiate(TENSOR_TYPE& derivative_factor) override {}
+		TT& evaluate() override;
+		void differentiate(TT& derivative_factor) override {}
 };
 
 #endif //NODE_H

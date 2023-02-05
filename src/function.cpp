@@ -3,23 +3,16 @@
 using namespace tns;
 
 /*-------------------------------Add-----------------------------*/
-template <typename TENSOR_TYPE>
-void Add<TENSOR_TYPE>::evaluateTo(
-		TENSOR_TYPE *to_be_assign,
-		TENSOR_TYPE *a,
-		TENSOR_TYPE *b
-){
+template <typename TT, typename TA, typename TB>
+void Add<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
 		to_be_assign->setValue(i, a->getValue(i) + b->getValue(i));
 	}
 }
 
-template <typename TENSOR_TYPE>
-TENSOR_TYPE Add<TENSOR_TYPE>::evaluate(
-		TENSOR_TYPE &a,
-		TENSOR_TYPE &b
-){
-	TENSOR_TYPE result;
-	Add<TENSOR_TYPE>::evaluateTo(&result, &a, &b);
+template <typename TT, typename TA, typename TB>
+TT Add<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	Add<TT,TA,TB>::evaluateTo(&result, &a, &b);
 	return result;
 }
