@@ -9,6 +9,7 @@
 //TODO: deconstructor
 //
 //TODO: implement and test MatMul then differentiate
+//TODO: is taking derivative on Tensor called taking gradient instead?
 
 int main(){
 	Var<Matrix<double, 2, 3>> a;
@@ -22,6 +23,7 @@ int main(){
 
 	f.differentiate();
 	a.getDerivativeTensor().print();
+
 	return 0;
 }
 
