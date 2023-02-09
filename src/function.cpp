@@ -69,5 +69,7 @@ TT MatMul<TT,TA,TB>::evaluate(TA &a, TB &b){
 }
 template <typename TT, typename TA, typename TB>
 void MatMul<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign, TA *a, TB *b){
-	//TODO:
+	//TODO: formula: 
+	//	respect to A: MatMul(C, Transpose(A))
+	//	respect to B: MatMul(Transpose(B), C)
 }
