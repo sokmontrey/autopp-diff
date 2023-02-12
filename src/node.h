@@ -19,7 +19,8 @@ class Node{
 		NODE_TYPE _node_type = VARIABLE;
 
 		TT _tensor;
-		TT _derivative_tensor;
+		TT _derivative_tensor_a;
+		TT _derivative_tensor_b;
 
 	public:
 		Node() = default;
@@ -49,12 +50,10 @@ template <typename TT>
 class Var: public Node<TT>{
 	using Node<TT>::Node;
 	private:
-		using Node<TT>::differentiate;
-
 		NODE_TYPE _node_type = VARIABLE;
 
-		TT& evaluate() override;
-		void differentiate(TT& derivative_factor) override;
+	public:
+		using Node<TT>::differentiate;
 };
 
 /*
@@ -67,12 +66,8 @@ class Const: public Node<TT>{
 	using Node<TT>::Node;
 	private:
 		NODE_TYPE _node_type = CONSTANT;
-
 	public:
 		using Node<TT>::differentiate;
-
-		TT& evaluate() override;
-		void differentiate(TT& derivative_factor) override;
 };
 
 template <template <typename, typename, typename> class FUNCTION, 
@@ -82,6 +77,8 @@ class Op: public Node<TT>{
 		Node<TA> *_node_a;
 		Node<TB> *_node_b;
 	public:
+		//Nodes' differentiation method has no argument required
+		//this is for when the differentiate is called with no argument
 		using Node<TT>::differentiate;
 
 		Op() = default;
@@ -90,6 +87,10 @@ class Op: public Node<TT>{
 		/*-------------------------------Compute-----------------------------*/
 		TT& evaluate() override;
 		void differentiate(TT &derivative_factor) override;
+		
+		/*-------------------------------Getter-----------------------------*/
+		TT& getDerivativeTensorA();
+		TT& getDerivativeTensorB();
 };
 
 #endif //NODE_H

@@ -13,20 +13,23 @@ Node<TT>::Node(TT&predefined_tensor){
 /*Compute------------------------------*/
 template <typename TT>
 TT& Node<TT>::evaluate(){
-	this->_derivative_tensor = TT(0);
+	if(this->_node_type != CONSTANT) this->_derivative_tensor_a = TT(0);
+	if(this->_node_type == OPERATOR) this->_derivative_tensor_b = TT(0);
 	return this->_tensor;
 }
 template <typename TT>
 void Node<TT>::differentiate(TT &derivative_factor){
-	tns::Add<TT>::evaluateTo(
-			&this->_derivative_tensor, 
-			&this->_derivative_tensor, 
-			&derivative_factor);
+	if(this->_node_type != CONSTANT){
+		tns::Add<TT>::evaluateTo(
+				&this->_derivative_tensor_a, 
+				&this->_derivative_tensor_a, 
+				&derivative_factor);
+	}
 }
 template <typename TT>
 void Node<TT>::differentiate(){
-	TT default_derivative_tensor(1);
-	this->differentiate(default_derivative_tensor);
+	TT default_derivative_tensor_a(1);
+	this->differentiate(default_derivative_tensor_a);
 }
 
 /*Getter------------------------------*/
@@ -36,7 +39,7 @@ TT& Node<TT>::getTensor(){
 }
 template <typename TT>
 TT& Node<TT>::getDerivativeTensor(){
-	return this->_derivative_tensor;
+	return this->_derivative_tensor_a;
 }
 template <typename TT>
 NODE_TYPE Node<TT>::getNodeType(){
@@ -52,37 +55,11 @@ void Node<TT>::operator=(TT&tensor){
 	this->setTensor(tensor);
 }
 
-
 /*-------------------------------Variable-----------------------------*/
-
-
-/*Compute------------------------------*/
-template <typename TT>
-TT& Var<TT>::evaluate(){
-	this->_derivative_tensor = TT(0);
-	return this->_tensor;
-}
-template <typename TT>
-void Var<TT>::differentiate(TT&derivative_factor){
-	tns::Add<TT>::evaluateTo(
-			&this->_derivative_tensor, 
-			&this->_derivative_tensor, 
-			&derivative_factor);
-}
 
 /*-------------------------------Constant-----------------------------*/
 
-/*Compute-----------------------------*/
-template <typename TT>
-TT& Const<TT>::evaluate(){
-	return this->_tensor;
-}
-
-template <typename TT>
-void Const<TT>::differentiate(TT& derivative_factor){ }
-
 /*------------------------------Operator------------------------------*/
-
 template <template <typename, typename, typename> class FUNCTION,
 	typename TT, typename TA, typename TB>
 Op<FUNCTION, TT, TA, TB>
@@ -97,7 +74,7 @@ Op<FUNCTION, TT, TA, TB>
 template <template <typename, typename, typename> class FUNCTION,
 	typename TT, typename TA, typename TB>
 TT& Op<FUNCTION, TT, TA, TB>::evaluate(){
-	this->_derivative_tensor = TT(0);
+	this->_derivative_tensor_a = TT(0);
 
 	if(this->_node_b){
 		FUNCTION<TT, TA, TB>::evaluateTo(
@@ -118,33 +95,18 @@ TT& Op<FUNCTION, TT, TA, TB>::evaluate(){
 template <template <typename, typename, typename> class FUNCTION,
 		 typename TT, typename TA, typename TB>
 void Op<FUNCTION, TT, TA, TB>::differentiate(TT &derivative_factor){
-	//derivative_tensor += derivative_factor
-	tns::Add<TT>::evaluateTo(
-			&this->_derivative_tensor, 
-			&this->_derivative_tensor, 
-			&derivative_factor);
-
-	TT temp_a;
-
-	FUNCTION<TT, TA, TB>::differentiateTo(true, &temp_a, 
-			&this->_node_a->getTensor(),
-			&this->_node_b->getTensor());
-
-	tns::Mul<TT,TA,TB>::evaluateTo(&temp_a, &temp_a, &derivative_factor);
-
-	this->_node_a->differentiate(temp_a);
-
 	if(this->_node_b){
-		TT temp_b;
-
-		FUNCTION<TT, TA, TB>::differentiateTo(false, &temp_b, 
-				&this->_node_a->getTensor(),
-				&this->_node_b->getTensor());
-
-		tns::Mul<TT,TA,TB>::evaluateTo(&temp_b, &temp_b, &derivative_factor);
-
-		this->_node_b->differentiate(temp_b);
 	}
-	//TODO: Should temp_a and temp_b be deleted?
 }
 
+/*Getter-----------------------------*/
+template <template <typename, typename, typename> class FUNCTION,
+		 typename TT, typename TA, typename TB>
+TT& Op<FUNCTION, TT, TA, TB>::getDerivativeTensorA(){
+	return this->_derivative_tensor_a;
+}
+template <template <typename, typename, typename> class FUNCTION,
+		 typename TT, typename TA, typename TB>
+TT& Op<FUNCTION, TT, TA, TB>::getDerivativeTensorB(){
+	return this->_derivative_tensor_b;
+}
