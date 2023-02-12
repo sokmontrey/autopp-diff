@@ -6,6 +6,8 @@
 #include <iostream>
 #include "./function.cpp"
 
+//TODO: higher degree of derivative
+//
 enum NODE_TYPE{
 	VARIABLE = 1,
 	CONSTANT = 2,
