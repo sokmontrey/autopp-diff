@@ -21,7 +21,7 @@ struct Add{
 
 template <typename TT, typename TA=TT, typename TB=TT>
 struct Invert{
-	static TT evaluate(TA &a, TB &b);
+	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
 	static void differentiateTo(
 			TT *derivative_factor,
@@ -61,13 +61,13 @@ struct MatMul{
 
 template <typename TT, typename TA=TT, typename TB=TA>
 struct MatTranspose{
-	static TT evaluate(TA &a, TB &b);
+	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
 };
 
 template <typename TT, typename TA=TT, typename TB=TA>
 struct Sum{
-	static TT evaluate(TA &a, TB &b);
+	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
 	static void differentiateTo(
 			TT *derivative_factor,
@@ -88,7 +88,7 @@ struct ScalarPow{
 /*-------------------------------Activation-----------------------------*/
 template <typename TT, typename TA=TT, typename TB=TA>
 struct ReLU{
-	static TT evaluate(TA &a, TB &b);
+	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
 	static void differentiateTo(
 			TT *derivative_factor,
@@ -97,7 +97,7 @@ struct ReLU{
 };
 template <typename TT, typename TA=TT, typename TB=TA>
 struct Sigmoid{
-	static TT evaluate(TA &a, TB &b);
+	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
 	static void differentiateTo(
 			TT *derivative_factor,

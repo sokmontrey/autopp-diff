@@ -34,9 +34,9 @@ void Invert<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	}
 }
 template <typename TT, typename TA, typename TB>
-TT Invert<TT,TA,TB>::evaluate(TA &a, TB &b){
+TT Invert<TT,TA,TB>::evaluate(TA &a){
 	TT result;
-	Invert<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	Invert<TT,TA,TB>::evaluateTo(&result, &a);
 	return result;
 }
 template <typename TT, typename TA, typename TB>
@@ -148,9 +148,9 @@ void MatTranspose<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	}
 }
 template <typename TT, typename TA, typename TB>
-TT MatTranspose<TT,TA,TB>::evaluate(TA &a, TB &b){
+TT MatTranspose<TT,TA,TB>::evaluate(TA &a){
 	TT result;
-	MatTranspose<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	MatTranspose<TT,TA,TB>::evaluateTo(&result, &a);
 	return result;
 }
 
@@ -163,9 +163,9 @@ void Sum<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	}
 }
 template <typename TT, typename TA, typename TB>
-TT Sum<TT,TA,TB>::evaluate(TA &a, TB &b){
+TT Sum<TT,TA,TB>::evaluate(TA &a){
 	TT result;
-	Sum<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	Sum<TT,TA,TB>::evaluateTo(&result);
 	return result;
 }
 template <typename TT, typename TA, typename TB>
@@ -208,9 +208,9 @@ void ReLU<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	}
 }
 template <typename TT, typename TA, typename TB>
-TT ReLU<TT,TA,TB>::evaluate(TA &a, TB &b){
+TT ReLU<TT,TA,TB>::evaluate(TA &a){
 	TT result;
-	ReLU<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	ReLU<TT,TA,TB>::evaluateTo(&result, &a);
 	return result;
 }
 template <typename TT, typename TA, typename TB>
@@ -231,9 +231,9 @@ void Sigmoid<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	}
 }
 template <typename TT, typename TA, typename TB>
-TT Sigmoid<TT,TA,TB>::evaluate(TA &a, TB &b){
+TT Sigmoid<TT,TA,TB>::evaluate(TA &a){
 	TT result;
-	Sigmoid<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	Sigmoid<TT,TA,TB>::evaluateTo(&result, &a);
 	return result;
 }
 template <typename TT, typename TA, typename TB>
