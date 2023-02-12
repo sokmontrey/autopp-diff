@@ -107,6 +107,7 @@ void Op<FUNCTION, TT, TA, TB>::differentiate(TT &derivative_factor){
 			&this->_node_b->getTensor());
 
 	this->_node_a->differentiate(temp_a);
+	if(this->_node_b) this->_node_b->differentiate(temp_b);
 }
 template <template <typename, typename, typename> class FUNCTION,
 		 typename TT, typename TA, typename TB>

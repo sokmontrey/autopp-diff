@@ -75,23 +75,20 @@ void MatMul<TT,TA,TB>::differentiateTo(TT *derivative_factor,
 	//TODO: formula: 
 	//	respect to A: MatMul(C, Transpose(B))
 	//	respect to B: MatMul(Transpose(A), C)
-	//
 	
 	Matrix<double, b->getCol(), b->getRow()> transpose_b(0);
 	tns::MatTranspose<Matrix<double, b->getCol(), b->getRow()>, TB>
 		::evaluateTo(&transpose_b, b);
-	TA temp_a;
 	tns::MatMul<TA, TT, Matrix<double, b->getCol(), b->getRow()>>::evaluateTo(
-			&temp_a, 
+			to_be_assign_a, 
 			derivative_factor,
 			&transpose_b);
 
 	Matrix<double, a->getCol(), a->getRow()> transpose_a(0);
 	tns::MatTranspose<Matrix<double, a->getCol(), a->getRow()>, TA>
 		::evaluateTo(&transpose_a, a);
-	TB temp_b;
 	tns::MatMul<TB,Matrix<double, a->getCol(), a->getRow()>, TT>::evaluateTo(
-			&temp_b, 
+			to_be_assign_b, 
 			&transpose_a,
 			derivative_factor);
 }
@@ -112,3 +109,46 @@ TT MatTranspose<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 
+/*-------------------------------Sum-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void Sum<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	to_be_assign->setValue(0,0);
+	for(size_t i=0; i<a->getTotalSize(); i++){
+		to_be_assign->setValue(0, to_be_assign->getValue(0) + a->getValue(i));
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT Sum<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	Sum<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+template <typename TT, typename TA, typename TB>
+void Sum<TT,TA,TB>::differentiateTo(TT *derivative_factor,
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		to_be_assign_a->setValue(i, derivative_factor->getValue(0));
+	}
+}
+/*-------------------------------ReLU-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void ReLU<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, a->getValue(i)>0? a->getValue(i) : 0);
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT ReLU<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	ReLU<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+template <typename TT, typename TA, typename TB>
+void ReLU<TT,TA,TB>::differentiateTo(TT *derivative_factor,
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		to_be_assign_a->setValue(i, a->getValue(i)>0? derivative_factor->getValue(i) : 0);
+	}
+}
