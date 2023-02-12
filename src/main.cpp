@@ -12,17 +12,13 @@
 //TODO: is taking derivative on Tensor called taking gradient instead?
 
 int main(){
-	Var<Matrix<double, 2, 3>> a;
-	a.getTensor().initFromArray({{1,2,3}, {4,5,6}});
-	Var<Matrix<double, 2, 3>> b;
-	b.getTensor().initFromArray({{5,6,7}, {8,9,10}});
+	Var<Matrix<double, 3, 2>> w;
+	Var<Matrix<double, 2, 1>> x;
 
-	Op<Mul, Matrix<double, 2, 3>> f(&a, &b);
+	Op<tns::MatMul, Matrix<double, 3, 1>, Matrix<double, 3,2>, Matrix<double, 2,1>> f(&w,&x);
 
 	f.evaluate().print();
-
-	f.differentiate();
-	b.getDerivativeTensor().print();
+	Matrix<double, 3, 1> df({{1}, {1}, {1}});
 
 	return 0;
 }

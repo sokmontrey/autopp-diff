@@ -16,11 +16,14 @@ TT Add<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 template <typename TT, typename TA, typename TB>
-void Add<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign, 
-		TT *derivative_factor, TA *a, TB *b){
-	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+void Add<TT,TA,TB>::differentiateTo(TT *derivative_factor, 
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
 		//1 * derivative_factor
-		to_be_assign->setValue(i, derivative_factor->getValue(i));
+		to_be_assign_a->setValue(i, derivative_factor->getValue(i));
+		to_be_assign_b->setValue(i, derivative_factor->getValue(i));
 	}
 }
 /*-------------------------------Mul-----------------------------*/
@@ -37,17 +40,12 @@ TT Mul<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 template <typename TT, typename TA, typename TB>
-void Mul<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign, 
-		TT *derivative_factor,TA *a, TB *b){
-	//use if statement outside of for loop should improve in performence
-	if(is_a){
-		for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
-			to_be_assign->setValue(i, b->getValue(i) * derivative_factor->getValue(i));
-		}
-	}else{
-		for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
-			to_be_assign->setValue(i, a->getValue(i) * derivative_factor->getValue(i));
-		}
+void Mul<TT,TA,TB>::differentiateTo(TT *derivative_factor,
+		TA *to_be_assign_a, TB *to_be_assign_b,
+		TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		to_be_assign_a->setValue(i, b->getValue(i) * derivative_factor->getValue(i));
+		to_be_assign_b->setValue(i, a->getValue(i) * derivative_factor->getValue(i));
 	}
 }
 
@@ -71,9 +69,46 @@ TT MatMul<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 template <typename TT, typename TA, typename TB>
-void MatMul<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign,  
-		TT *derivative_factor,TA *a, TB *b){
+void MatMul<TT,TA,TB>::differentiateTo(TT *derivative_factor,
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
 	//TODO: formula: 
-	//	respect to A: MatMul(C, Transpose(A))
-	//	respect to B: MatMul(Transpose(B), C)
+	//	respect to A: MatMul(C, Transpose(B))
+	//	respect to B: MatMul(Transpose(A), C)
+	//
+	
+	Matrix<double, b->getCol(), b->getRow()> transpose_b(0);
+	tns::MatTranspose<Matrix<double, b->getCol(), b->getRow()>, TB>
+		::evaluateTo(&transpose_b, b);
+	TA temp_a;
+	tns::MatMul<TA, TT, Matrix<double, b->getCol(), b->getRow()>>::evaluateTo(
+			&temp_a, 
+			derivative_factor,
+			&transpose_b);
+
+	Matrix<double, a->getCol(), a->getRow()> transpose_a(0);
+	tns::MatTranspose<Matrix<double, a->getCol(), a->getRow()>, TA>
+		::evaluateTo(&transpose_a, a);
+	TB temp_b;
+	tns::MatMul<TB,Matrix<double, a->getCol(), a->getRow()>, TT>::evaluateTo(
+			&temp_b, 
+			&transpose_a,
+			derivative_factor);
 }
+
+/*-------------------------------MatTranspose-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void MatTranspose<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t r=0; r<a->getRow(); r++){
+		for(size_t c=0; c<a->getCol(); c++){
+			to_be_assign->setValue(c, r, a->getValue(r, c)); 
+		}
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT MatTranspose<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	MatTranspose<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+

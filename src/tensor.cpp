@@ -97,7 +97,6 @@ template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 size_t Tensor<T, TOTAL_SIZE, DIMENSION>::getDimension() const {
 	return DIMENSION;
 }
-
 /*------------------------------Operator Overload------------------------------*/
 template <typename T, size_t TOTAL_SIZE, size_t DIMENSION>
 T& Tensor<T, TOTAL_SIZE, DIMENSION>::operator()(size_t index){
@@ -286,12 +285,11 @@ T Matrix<T, ROWS, COLS>::getValue(size_t row, size_t col) const {
 }
 
 template <typename T, size_t ROWS, size_t COLS>
-size_t Matrix<T, ROWS, COLS>::getRow() const {
+constexpr size_t Matrix<T, ROWS, COLS>::getRow(){
 	return ROWS;
 }
-
 template <typename T, size_t ROWS, size_t COLS>
-size_t Matrix<T, ROWS, COLS>::getCol() const {
+constexpr size_t Matrix<T, ROWS, COLS>::getCol(){
 	return COLS;
 }
 

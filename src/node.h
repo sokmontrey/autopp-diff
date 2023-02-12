@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include <iostream>
 #include "./function.cpp"
-#include "./tensor.cpp"
 
 enum NODE_TYPE{
 	VARIABLE = 1,
@@ -19,8 +18,7 @@ class Node{
 		NODE_TYPE _node_type = VARIABLE;
 
 		TT _tensor;
-		TT _derivative_tensor_a;
-		TT _derivative_tensor_b;
+		TT _derivative_tensor;
 
 	public:
 		Node() = default;
@@ -83,10 +81,6 @@ class Op: public Node<TT>{
 		TT& evaluate() override;
 		void differentiate(TT &derivative_factor) override;
 		void differentiate() override;
-		
-		/*-------------------------------Getter-----------------------------*/
-		TT& getDerivativeTensorA();
-		TT& getDerivativeTensorB();
 };
 
 #endif //NODE_H

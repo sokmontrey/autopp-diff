@@ -197,8 +197,8 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		/*------------------------------Getter------------------------------*/
 		T getValue(size_t (&&indexes)[2]) const;
 		T getValue(size_t row, size_t col) const;
-		size_t getRow() const;
-		size_t getCol() const;
+		static constexpr size_t getRow();
+		static constexpr size_t getCol();
 
 		/*------------------------------Setter------------------------------*/
 		void setValue(size_t (&&indexes)[2], T value);
