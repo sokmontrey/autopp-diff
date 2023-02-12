@@ -1,5 +1,7 @@
 #include "tensor.h"
 
+using namespace nodeflow;
+
 /*------------------------------Tensor------------------------------*/
 
 //TODO: check this if it correct?

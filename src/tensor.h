@@ -5,6 +5,7 @@
 #include <random>
 #include <algorithm>
 
+namespace nodeflow{
 /*
  * Tensor: A base class for creating n-dimensional array of data.
  * 		Tensor can be 1D (Scalar), 2D (Vector), 3D (Matrix), ..., ND.
@@ -211,4 +212,5 @@ class Matrix: public Tensor<T, ROWS * COLS, 2>{
 		void print() const override;
 };
 
+}//END namespace nodeflow
 #endif //TENSOR_H

@@ -1,5 +1,7 @@
 #include "node.h"
 
+using namespace nodeflow;
+
 /*------------------------------Node------------------------------*/
 template <typename TT>
 template <typename... Args>
@@ -18,7 +20,7 @@ TT& Node<TT>::evaluate(){
 }
 template <typename TT>
 void Node<TT>::differentiate(TT &derivative_factor){
-	tns::Add<TT>::evaluateTo(
+	Add<TT>::evaluateTo(
 			&this->_derivative_tensor, 
 			&this->_derivative_tensor, 
 			&derivative_factor);
@@ -92,7 +94,7 @@ TT& Op<FUNCTION, TT, TA, TB>::evaluate(){
 template <template <typename, typename, typename> class FUNCTION,
 		 typename TT, typename TA, typename TB>
 void Op<FUNCTION, TT, TA, TB>::differentiate(TT &derivative_factor){
-	tns::Add<TT>::evaluateTo(
+	Add<TT>::evaluateTo(
 			&this->_derivative_tensor, 
 			&this->_derivative_tensor, 
 			&derivative_factor);

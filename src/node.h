@@ -7,7 +7,9 @@
 #include "./function.cpp"
 
 //TODO: higher degree of derivative
-//
+
+namespace nodeflow{
+
 enum NODE_TYPE{
 	VARIABLE = 1,
 	CONSTANT = 2,
@@ -83,5 +85,7 @@ class Op: public Node<TT>{
 		void differentiate(TT &derivative_factor) override;
 		void differentiate() override;
 };
+
+}// END namespace nodeflow
 
 #endif //NODE_H

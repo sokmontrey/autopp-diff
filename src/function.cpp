@@ -1,6 +1,6 @@
 #include "./function.h"
 
-using namespace tns;
+using namespace nodeflow;
 
 /*-------------------------------Add-----------------------------*/
 template <typename TT, typename TA, typename TB>
@@ -122,17 +122,17 @@ void MatMul<TT,TA,TB>::differentiateTo(TT *derivative_factor,
 	//	respect to B: MatMul(Transpose(A), C)
 	
 	Matrix<double, b->getCol(), b->getRow()> transpose_b(0);
-	tns::MatTranspose<Matrix<double, b->getCol(), b->getRow()>, TB>
+	MatTranspose<Matrix<double, b->getCol(), b->getRow()>, TB>
 		::evaluateTo(&transpose_b, b);
-	tns::MatMul<TA, TT, Matrix<double, b->getCol(), b->getRow()>>::evaluateTo(
+	MatMul<TA, TT, Matrix<double, b->getCol(), b->getRow()>>::evaluateTo(
 			to_be_assign_a, 
 			derivative_factor,
 			&transpose_b);
 
 	Matrix<double, a->getCol(), a->getRow()> transpose_a(0);
-	tns::MatTranspose<Matrix<double, a->getCol(), a->getRow()>, TA>
+	MatTranspose<Matrix<double, a->getCol(), a->getRow()>, TA>
 		::evaluateTo(&transpose_a, a);
-	tns::MatMul<TB,Matrix<double, a->getCol(), a->getRow()>, TT>::evaluateTo(
+	MatMul<TB,Matrix<double, a->getCol(), a->getRow()>, TT>::evaluateTo(
 			to_be_assign_b, 
 			&transpose_a,
 			derivative_factor);

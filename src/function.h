@@ -5,8 +5,8 @@
 #include <iostream>
 #include "./tensor.cpp"
 
-//tns = tensor
-namespace tns{
+//nodeflow
+namespace nodeflow{
 
 //TODO: match sizes
 template <typename TT, typename TA=TT, typename TB=TT>
