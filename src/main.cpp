@@ -22,7 +22,7 @@ int main(){
 	f.evaluate().print();
 
 	f.differentiate();
-	a.getDerivativeTensor().print();
+	b.getDerivativeTensor().print();
 
 	return 0;
 }

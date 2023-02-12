@@ -16,8 +16,8 @@ TT Add<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 template <typename TT, typename TA, typename TB>
-void Add<TT,TA,TB>::differentiateTo(bool is_a, TT *derivative_factor,
-		TT *to_be_assign, TA *a, TB *b){
+void Add<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign, 
+		TT *derivative_factor, TA *a, TB *b){
 	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
 		//1 * derivative_factor
 		to_be_assign->setValue(i, derivative_factor->getValue(i));
@@ -37,8 +37,8 @@ TT Mul<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 template <typename TT, typename TA, typename TB>
-void Mul<TT,TA,TB>::differentiateTo(bool is_a, TT *derivative_factor,
-		TT *to_be_assign, TA *a, TB *b){
+void Mul<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign, 
+		TT *derivative_factor,TA *a, TB *b){
 	//use if statement outside of for loop should improve in performence
 	if(is_a){
 		for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
@@ -71,8 +71,8 @@ TT MatMul<TT,TA,TB>::evaluate(TA &a, TB &b){
 	return result;
 }
 template <typename TT, typename TA, typename TB>
-void MatMul<TT,TA,TB>::differentiateTo(bool is_a, TT *derivative_factor,
-		TT *to_be_assign, TA *a, TB *b){
+void MatMul<TT,TA,TB>::differentiateTo(bool is_a, TT *to_be_assign,  
+		TT *derivative_factor,TA *a, TB *b){
 	//TODO: formula: 
 	//	respect to A: MatMul(C, Transpose(A))
 	//	respect to B: MatMul(Transpose(B), C)
