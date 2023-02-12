@@ -26,6 +26,51 @@ void Add<TT,TA,TB>::differentiateTo(TT *derivative_factor,
 		to_be_assign_b->setValue(i, derivative_factor->getValue(i));
 	}
 }
+/*-------------------------------Invert-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void Invert<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, -a->getValue(i));
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT Invert<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	Invert<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+template <typename TT, typename TA, typename TB>
+void Invert<TT,TA,TB>::differentiateTo(TT *derivative_factor, 
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		to_be_assign_a->setValue(i, -derivative_factor->getValue(i));
+	}
+}
+/*-------------------------------Substract-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void Substract<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, a->getValue(i)-b->getValue(i));
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT Substract<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	Substract<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+template <typename TT, typename TA, typename TB>
+void Substract<TT,TA,TB>::differentiateTo(TT *derivative_factor, 
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		to_be_assign_a->setValue(i, derivative_factor->getValue(i));
+		to_be_assign_b->setValue(i, -derivative_factor->getValue(i));
+	}
+}
 /*-------------------------------Mul-----------------------------*/
 template <typename TT, typename TA, typename TB>
 void Mul<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
@@ -131,6 +176,30 @@ void Sum<TT,TA,TB>::differentiateTo(TT *derivative_factor,
 		to_be_assign_a->setValue(i, derivative_factor->getValue(0));
 	}
 }
+/*-------------------------------ScalarPow-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void ScalarPow<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t i=0; i<a->getTotalSize(); i++){
+		to_be_assign->setValue(i, std::pow(a->getValue(i), b->getValue(0)));
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT ScalarPow<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	ScalarPow<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+template <typename TT, typename TA, typename TB>
+void ScalarPow<TT,TA,TB>::differentiateTo(TT *derivative_factor,
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		//n x^n-1
+		to_be_assign_a->setValue(i, derivative_factor->getValue(i) 
+				* b->getValue(0) 
+				* std::pow(a->getValue(i), b->getValue(0)-1));
+	}
+}
 /*-------------------------------ReLU-----------------------------*/
 template <typename TT, typename TA, typename TB>
 void ReLU<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
@@ -150,5 +219,31 @@ void ReLU<TT,TA,TB>::differentiateTo(TT *derivative_factor,
 		TA *a, TB *b){
 	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
 		to_be_assign_a->setValue(i, a->getValue(i)>0? derivative_factor->getValue(i) : 0);
+	}
+}
+/*-------------------------------Sigmoid-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void Sigmoid<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, 
+			1 / (1 + std::exp(-a->getValue(i)))
+		);
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT Sigmoid<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	Sigmoid<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+template <typename TT, typename TA, typename TB>
+void Sigmoid<TT,TA,TB>::differentiateTo(TT *derivative_factor,
+		TA *to_be_assign_a, TB *to_be_assign_b,  
+		TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign_a->getTotalSize(); i++){
+		double sigmoid = 1 / (1 + std::exp(-a->getValue(i)));
+		to_be_assign_a->setValue(i, 
+			sigmoid * (1 - sigmoid)
+		);
 	}
 }

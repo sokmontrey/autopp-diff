@@ -62,7 +62,6 @@ class Const: public Node<TT>{
 	private:
 		NODE_TYPE _node_type = CONSTANT;
 	public:
-		TT& evaluate(){}
 		void differentiate(TT &derivative_factor) override {}
 		void differentiate() override {}
 };
