@@ -10,9 +10,9 @@ void Flatten<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
 	}
 }
 template <typename TT, typename TA, typename TB>
-TT Flatten<TT,TA,TB>::evaluate(TA &a, TB &b){
+TT Flatten<TT,TA,TB>::evaluate(TA &a){
 	TT result;
-	Flatten<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	Flatten<TT,TA,TB>::evaluateTo(&result, &a);
 	return result;
 }
 

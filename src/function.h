@@ -29,8 +29,12 @@ namespace nodeflow{
 //It will not automatically figure out the size for the output
 template <typename TT, typename TA=TT, typename TB=TT>
 struct Flatten{
-	static TT evaluate(TA &a, TB &b);
+	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
+	static void differentiateTo(
+			TT *derivative_factor,
+			TA *to_be_assign_a,  TB *to_be_assign_b,
+			TA *a, TB *b=nullptr){}
 };
 
 template <typename TT, typename TA=TT, typename TB=TT>
@@ -87,6 +91,11 @@ template <typename TT, typename TA=TT, typename TB=TA>
 struct MatTranspose{
 	static TT evaluate(TA &a);
 	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
+	//TODO figure out later
+	static void differentiateTo(
+			TT *derivative_factor,
+			TA *to_be_assign_a,  TB *to_be_assign_b,
+			TA *a, TB *b=nullptr){}
 };
 
 template <typename TT, typename TA=TT, typename TB=TA>
