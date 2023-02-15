@@ -8,7 +8,31 @@
 //nodeflow
 namespace nodeflow{
 
+/*
+ * NOTE: Create a custom Function struct
+ * 1. Required template:
+ * 		TT: Tensor Type (Type of tensor that the function will return)
+ * 		TA: Tensor Type A, first input's Tensor Type
+ * 		TB: Tensor Type B, first input's Tensor Type
+ * 2. Every function will need to have 2 input, Tensor a and Tensor b, eventhough the function only operate on only one of the input.
+ * 3. The function struct will need 
+ * 		evaluateTo method in order to directly modify the Tensor with a mathematical function
+ * 		differentiateTo method in order to take the derivative of the Tensor and modify a Tensor directly from its pointer
+ * 		evaluate (optional) method that take reference and use the evaluateTo to return a new Tensor
+ * 4. 
+ */
+
 //TODO: match sizes
+
+
+//Flatten Function required a predefined vector size in order to correctly flat a matrix
+//It will not automatically figure out the size for the output
+template <typename TT, typename TA=TT, typename TB=TT>
+struct Flatten{
+	static TT evaluate(TA &a, TB &b);
+	static void evaluateTo(TT *to_be_assign, TA *a, TB *b=nullptr);
+};
+
 template <typename TT, typename TA=TT, typename TB=TT>
 struct Add{
 	static TT evaluate(TA &a, TB &b);

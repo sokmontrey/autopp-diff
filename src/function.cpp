@@ -2,6 +2,20 @@
 
 using namespace nodeflow;
 
+/*-------------------------------Flatten-----------------------------*/
+template <typename TT, typename TA, typename TB>
+void Flatten<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
+	for(size_t i=0; i<to_be_assign->getTotalSize(); i++){
+		to_be_assign->setValue(i, a->getValue(i));
+	}
+}
+template <typename TT, typename TA, typename TB>
+TT Flatten<TT,TA,TB>::evaluate(TA &a, TB &b){
+	TT result;
+	Flatten<TT,TA,TB>::evaluateTo(&result, &a, &b);
+	return result;
+}
+
 /*-------------------------------Add-----------------------------*/
 template <typename TT, typename TA, typename TB>
 void Add<TT,TA,TB>::evaluateTo(TT *to_be_assign, TA *a, TB *b){
