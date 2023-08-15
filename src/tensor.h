@@ -42,7 +42,6 @@ namespace nodeflow{
  *
  */
 
-
 template <typename T=double, size_t TOTAL_SIZE=1, size_t DIMENSION=1>
 class Tensor{
 	protected:
