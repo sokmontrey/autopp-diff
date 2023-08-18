@@ -13,6 +13,7 @@ class Node{
         Node(DTYPE initial_data);
 
         void print();
+        DTYPE& operator()();
 };
 
 }

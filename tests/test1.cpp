@@ -1,8 +1,14 @@
 #include <nodeflow/node.h>
 #include <Eigen/Dense>
 
+using namespace Eigen;
+using namespace nodeflow;
+
 int main() {
-  nodeflow::Node<Eigen::MatrixXd> b = Eigen::MatrixXd::Random(2, 3);
+  Node<VectorXd> b = VectorXd(3);
+
+  b() << 1, 2, 3;
+  b.print();
 
   return 0;
 }
