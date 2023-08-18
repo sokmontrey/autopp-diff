@@ -1,30 +1,30 @@
 #include <nodeflow/node.h>
-#include <iostream>
-#include <Eigen/Dense>
 
 using namespace nodeflow;
 
-template <typename DTYPE>
-Node<DTYPE>::Node(DTYPE initial_data){
-    _data = initial_data;
+Node::Node(Eigen::MatrixXd initial_value){
+    this->value = initial_value;
 }
 
-template <typename DTYPE>
-void Node<DTYPE>::print(){
-    std::cout << "Node: " << typeid(DTYPE).name() << "\n"
+void Node::print(){
+    std::cout << "Node: " << " (Matrix) " << "\n"
         << "----\n"
-        << _data << "\n"
+        << this->value << "\n"
         << "----\n";
 }
 
-template <typename DTYPE>
-DTYPE& Node<DTYPE>::operator()(){
-    return _data;
+Eigen::MatrixXd& Node::operator()(){
+    return this->value;
 }
 
-template class Node<int>;
-template class Node<double>;
-template class Node<Eigen::VectorXd>;
-template class Node<Eigen::MatrixXd>;
-template class Node<Eigen::VectorXi>;
-template class Node<Eigen::MatrixXi>;
+template <unsigned int NINPUT>
+OperatorNode<NINPUT>::OperatorNode(
+    std::initializer_list<Node*> input_list
+){
+    for(size_t i=0; i<NINPUT; i++){
+        this->inputs[i] = *(input_list.begin() + i);
+    }
+}
+
+template class OperatorNode<1>;
+template class OperatorNode<2>;
