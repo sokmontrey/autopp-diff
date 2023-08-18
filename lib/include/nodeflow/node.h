@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 namespace nodeflow{
 
@@ -12,6 +11,8 @@ class Node{
     public:
         Node() = default;
         Node(DTYPE initial_data);
+
+        void print();
 };
 
 }
