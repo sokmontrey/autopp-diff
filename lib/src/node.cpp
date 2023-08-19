@@ -17,14 +17,10 @@ Eigen::MatrixXd& Node::operator()(){
     return this->value;
 }
 
-template <unsigned int NINPUT>
-OperatorNode<NINPUT>::OperatorNode(
-    std::initializer_list<Node*> input_list
-){
-    for(size_t i=0; i<NINPUT; i++){
-        this->inputs[i] = *(input_list.begin() + i);
-    }
+Eigen::MatrixXd& Node::getValue(){
+    return this->value;
 }
 
-template class OperatorNode<1>;
-template class OperatorNode<2>;
+Eigen::MatrixXd& Node::forward(){
+    return this->value;
+}

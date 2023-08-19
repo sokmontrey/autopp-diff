@@ -5,13 +5,12 @@ using namespace Eigen;
 using namespace nodeflow;
 
 int main() {
-  Node a = VectorXd::Random(2);
-  Node b = VectorXd::Random(2);
+    Node a = VectorXd::Random(10);
+    Node b = VectorXd::Random(2);
 
-  OperatorNode<2> f{&a, &b};
-  OperatorNode<1> f2{&f};
+    ReLU f {&a};
 
-  f2.forward();
+    f.forward();
 
-  return 0;
+    return 0;
 }
