@@ -33,16 +33,20 @@ class Node{
         virtual Eigen::MatrixXd& forward(){
             return this->value;
         }
+        virtual void backward(){
+            std::cout << "backward node" <<std::endl;
+        }
 };
 
 template <unsigned int NINPUT>
 class OperatorNode: public Node{
     protected:
         Node* inputs[NINPUT];
+        //TODO: no partial, just grad 
+        MatrixXd grad_dinputs[NINPUT];
 
-        virtual void compute(){
-            this->value;
-        }
+        virtual void compute() = 0;
+        virtual void derivative(size_t input_index, MatrixXd chain_value) = 0;
 
     public:
         OperatorNode() = default;
@@ -54,12 +58,24 @@ class OperatorNode: public Node{
         }
 
         Eigen::MatrixXd& forward() override{
-            for(int i=0; i<NINPUT; i++){
+            for(size_t i=0; i<NINPUT; i++){
                 this->inputs[i]->forward();
             }
             this->compute();
             return this->value;
         }
+
+        //TODO: pass chain value to compute derivative() and calculate grad directly
+        void backward(MatrixXd chain_value) override{
+            std::cout << "backward op" <<std::endl;
+            for(size_t i=0; i<NINPUT; i++){
+                this->derivative(i);
+            }
+            for(size_t i=0; i<NINPUT; i++){
+                this->inputs[i]->backward();
+            }
+        }
+        //TODO: getter for grad
 };
 
 
