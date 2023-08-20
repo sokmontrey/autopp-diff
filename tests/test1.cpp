@@ -1,16 +1,18 @@
 #include <nodeflow/node.h>
+#include <nodeflow/operator.h>
 #include <Eigen/Dense>
 
 using namespace Eigen;
 using namespace nodeflow;
 
 int main() {
-    Node a = VectorXd::Random(10);
-    Node b = VectorXd::Random(2);
+    Node a = VectorXd::Random(2);
+    Node b = MatrixXd::Random(3, 2);
 
-    ReLU f {&a};
+    Mul f {&b, &a};
 
     f.forward();
+    f.print();
 
     return 0;
 }

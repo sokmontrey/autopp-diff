@@ -13,13 +13,26 @@ class Node{
 
     public:
         Node() = default;
-        Node(Eigen::MatrixXd initial_value);
+        Node(Eigen::MatrixXd initial_value){
+            this->value = initial_value;
+        }
 
-        void print();
-        Eigen::MatrixXd& operator()();
-        Eigen::MatrixXd& getValue();
+        void print(){
+            std::cout << "Node: " << " (Matrix) " << "\n"
+                << "----\n"
+                << this->value << "\n"
+                << "----\n";
+        }
 
-        virtual Eigen::MatrixXd& forward();
+        Eigen::MatrixXd& operator()(){
+            return this->value;
+        }
+        Eigen::MatrixXd& getValue(){
+            return this->value;
+        }
+        virtual Eigen::MatrixXd& forward(){
+            return this->value;
+        }
 };
 
 template <unsigned int NINPUT>
@@ -49,13 +62,6 @@ class OperatorNode: public Node{
         }
 };
 
-class ReLU: public OperatorNode<1>{
-    using OperatorNode<1>::OperatorNode;
-    protected:
-        void compute() override {
-            this->value = this->inputs[0]->getValue().cwiseMax(0);
-        }
-};
 
 }//namespace nodeflow
 
