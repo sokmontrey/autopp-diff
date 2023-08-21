@@ -77,7 +77,7 @@ class OperatorNode: public Node{
 
         virtual void compute() = 0;
         virtual Eigen::MatrixXd derivative(size_t input_wrt_index) = 0;
-        // virtual void derivative(size_t input_index, MatrixXd chain_value) = 0;
+
     public:
         OperatorNode() = default;
         OperatorNode(std::initializer_list<Node*> input_list){
