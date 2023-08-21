@@ -11,9 +11,8 @@ int main() {
 
     Mul f {&b, &a};
 
-    f.forward();
+    f.finished();
     f.backward();
-    f.print();
 
     return 0;
 }
