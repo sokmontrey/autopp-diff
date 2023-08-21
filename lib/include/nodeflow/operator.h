@@ -36,6 +36,19 @@ class Mul: public OperatorNode<2>{
             this->inputs[1]->getValue()
         ;
     }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override{
+        if(input_wrt_index){ //second input
+            return 
+                this->inputs[0]->getValue().transpose() 
+                * 
+                this->outer_derivative;
+        }else{ // first input
+            return 
+                this->outer_derivative
+                *
+                this->inputs[1]->getValue().transpose();
+        }
+    }
 };
 
 }//namespace nodeflow
