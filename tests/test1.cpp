@@ -6,19 +6,13 @@ using namespace Eigen;
 using namespace nodeflow;
 
 int main() {
-    Node a = VectorXd(1);
-    Node b = VectorXd(1, 1);
+    Node a = VectorXd::Random(5);
 
-    a() << 5;
-    b() << 10;
-
-    Mul f {&b, &a};
+    ReLU f {&a};
 
     f.finished();
 
     f.backward();
-
-    std::cout << b.getGrad() << std::endl;
 
     return 0;
 }

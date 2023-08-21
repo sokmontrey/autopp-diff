@@ -12,6 +12,10 @@ class ReLU: public OperatorNode<1>{
             this->inputs[0]->getValue().cwiseMax(0)
         ;
     }
+
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return (this->value.array() > 0).cast<double>();
+    }
 };
 
 class Add: public OperatorNode<2>{
@@ -23,6 +27,9 @@ class Add: public OperatorNode<2>{
             +
             this->inputs[1]->getValue()
         ;
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->outer_derivative;
     }
 };
 
