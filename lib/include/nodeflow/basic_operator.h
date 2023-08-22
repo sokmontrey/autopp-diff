@@ -6,20 +6,6 @@ namespace nodeflow{
 namespace op{
 namespace basic{
 
-class ReLU: public OperatorNode<1>{
-    using OperatorNode<1>::OperatorNode;
-
-    void compute() override{
-        this->value = 
-            this->inputs[0]->getValue().cwiseMax(0)
-        ;
-    }
-
-    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return (this->value.array() > 0).cast<double>();
-    }
-};
-
 class Add: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
 
@@ -61,5 +47,23 @@ class Mul: public OperatorNode<2>{
 };
 
 }//namespace basic
+
+namespace nn{
+
+class ReLU: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override{
+        this->value = 
+            this->inputs[0]->getValue().cwiseMax(0)
+        ;
+    }
+
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return (this->value.array() > 0).cast<double>();
+    }
+};
+
+}//namespace nn
 }//namespace op
 }//namespace nodeflow

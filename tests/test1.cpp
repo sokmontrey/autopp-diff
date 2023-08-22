@@ -4,7 +4,7 @@
 #include <Eigen/Dense>
 
 using namespace nodeflow;
-using namespace op::basic;
+using namespace op::nn;
 
 int main() {
     Node a = Node::Vector(1);
