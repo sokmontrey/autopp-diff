@@ -3,7 +3,9 @@
 #include <nodeflow/node.h>
 
 namespace nodeflow{
-    
+namespace op{
+namespace basic{
+
 class ReLU: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
 
@@ -58,4 +60,6 @@ class Mul: public OperatorNode<2>{
     }
 };
 
+}//namespace basic
+}//namespace op
 }//namespace nodeflow
