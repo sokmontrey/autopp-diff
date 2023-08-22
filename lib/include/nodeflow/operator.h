@@ -6,6 +6,21 @@ namespace nodeflow{
 namespace op{
 namespace basic{
 
+//TODO:
+// Pow
+// Square Root
+// Invert
+// Subtract
+// Resieprocal
+//
+// Sin, Cos, Tan
+//
+// Exp, Ln, Log
+//
+// Max, Min
+//
+// PiecesWise
+
 class Add: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
 
