@@ -4,14 +4,21 @@
 #include <Eigen/Dense>
 
 using namespace nodeflow;
-using namespace op::nn;
+using namespace op::basic;
 
 int main() {
     Node a = Node::Vector(1);
+    a() << 4;
 
-    a.print();
+    Pow f({&a}, 0.5);
 
-    ReLU f {&a};
+    f.finished();
+    f.forward();
+    f.backward();
+
+    f.print();
+
+    std::cout<< a.getGrad() << std::endl;
 
     return 0;
 }

@@ -61,6 +61,25 @@ class Mul: public OperatorNode<2>{
     }
 };
 
+class Pow: public OperatorNode<1>{
+    private:
+        double exponent;
+    public:
+        Pow(std::initializer_list<Node*> input_list, double exponent)
+        :OperatorNode<1>(input_list), exponent(exponent) { }
+
+    void compute() override{
+        this->value = this->getInput().array().pow(this->exponent);
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput()
+            .array()
+            .pow(this->exponent - 1) 
+            * this->exponent
+        ;
+    }
+};
+
 }//namespace basic
 
 namespace nn{
