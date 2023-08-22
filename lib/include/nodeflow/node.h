@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <Eigen/Dense>
-#include <variant>
 
 namespace nodeflow{
 
@@ -79,6 +78,27 @@ class Node{
             }
 
             this->parent_called_count++;
+        }
+
+        static Node Constant(size_t rows, size_t cols, double fill_value){
+            Node temp = Eigen::MatrixXd::Constant(rows, cols, fill_value); 
+            return temp;
+        }
+        static Node Random(size_t rows){
+            Node temp = Eigen::MatrixXd::Random(rows, 1);
+            return temp;
+        }
+        static Node Random(size_t rows, size_t cols){
+            Node temp = Eigen::MatrixXd::Random(rows, cols);
+            return temp;
+        }
+        static Node Vector(size_t rows){
+            Node temp = Eigen::MatrixXd::Constant(rows, 1, 0);
+            return temp;
+        }
+        static Node Matrix(size_t rows, size_t cols){
+            Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
+            return temp;
         }
 };
 
