@@ -7,7 +7,7 @@ namespace op{
 namespace basic{
 
 //TODO:
-// Pow
+// Pow x
 // Square Root
 // Invert
 // Subtract
@@ -76,6 +76,22 @@ class Pow: public OperatorNode<1>{
             .array()
             .pow(this->exponent - 1) 
             * this->exponent
+            * this->outer_derivative.array()
+        ;
+    }
+};
+
+class Sqrt:public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override{
+        this->value = this->getInput().array().sqrt();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return 
+            (
+                1 / (2 * this->getInput().array().sqrt())
+            ) * this->outer_derivative.array() 
         ;
     }
 };

@@ -6,11 +6,14 @@
 using namespace nodeflow;
 using namespace op::basic;
 
+//TODO: Node::Scalar(initial_number);
+//TODO: Node::Vector({1, 2,3})
+//TODO: smae thing for Matrix
 int main() {
     Node a = Node::Vector(1);
-    a() << 4;
+    a() << 9;
 
-    Pow f({&a}, 0.5);
+    Sqrt f{&a};
 
     f.finished();
     f.forward();
