@@ -7,11 +7,11 @@ using namespace nodeflow;
 
 int main() {
     Node a = VectorXd::Random(5);
+    a.constant();
 
     ReLU f {&a};
 
     f.finished();
-
     f.backward();
 
     return 0;

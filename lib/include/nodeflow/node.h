@@ -43,6 +43,10 @@ class Node{
             return this->value;
         }
         Eigen::MatrixXd& getGrad(){
+            if(!this->is_differentiatable) 
+                std::cout 
+                    << "Warning: Calling 'getGrad()' on a constant node" 
+                    << std::endl;
             return this->outer_derivative;
         }
 
@@ -55,11 +59,19 @@ class Node{
             this->is_value_ready = false;
             this->parent_called_count = 0;
         }
+        bool isDifferentiatable(){
+            return this->is_differentiatable;
+        }
+        void constant(){
+            this->is_differentiatable = false;
+        }
 
         virtual Eigen::MatrixXd& forward(){
             return this->value;
         }
         virtual void backward(Eigen::MatrixXd partial_outer_derivative){
+            if(!this->is_differentiatable) return;
+
             if(!this->parent_called_count) {
                 this->outer_derivative = partial_outer_derivative;
             }else{
@@ -101,9 +113,15 @@ class OperatorNode: public Node{
         void finished(){
             this->num_parent++;
 
+            bool is_diff_temp = false;
             for(size_t i=0; i<NINPUT; i++){
                 this->inputs[i]->finished();
+                is_diff_temp = 
+                    this->inputs[i]->isDifferentiatable() 
+                    || 
+                    is_diff_temp;
             }
+            this->is_differentiatable = is_diff_temp;
 
             this->compute();
             this->rows = this->value.rows();
@@ -132,6 +150,8 @@ class OperatorNode: public Node{
             );
         }
         void backward(Eigen::MatrixXd partial_outer_derivative) override {
+            if(!this->is_differentiatable) return;
+
             if(!this->parent_called_count) {
                 this->outer_derivative = partial_outer_derivative;
             }else{
