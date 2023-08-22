@@ -11,9 +11,9 @@ class Add: public OperatorNode<2>{
 
     void compute() override {
         this->value =
-            this->inputs[0]->getValue()
+            this->getInput(0)
             +
-            this->inputs[1]->getValue()
+            this->getInput(1)
         ;
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -26,22 +26,22 @@ class Mul: public OperatorNode<2>{
 
     void compute() override {
         this->value =
-            this->inputs[0]->getValue()
+            this->getInput(0)
             *
-            this->inputs[1]->getValue()
+            this->getInput(1)
         ;
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override{
         if(input_wrt_index){ //second input
             return 
-                this->inputs[0]->getValue().transpose() 
+                this->getInput(0).transpose() 
                 * 
                 this->outer_derivative;
         }else{ // first input
             return 
                 this->outer_derivative
                 *
-                this->inputs[1]->getValue().transpose();
+                this->getInput(1).transpose();
         }
     }
 };
@@ -55,7 +55,7 @@ class ReLU: public OperatorNode<1>{
 
     void compute() override{
         this->value = 
-            this->inputs[0]->getValue().cwiseMax(0)
+            this->getInput().cwiseMax(0)
         ;
     }
 

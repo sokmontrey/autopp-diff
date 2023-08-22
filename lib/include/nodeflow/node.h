@@ -119,6 +119,13 @@ class OperatorNode: public Node{
             }
         }
 
+        Eigen::MatrixXd getInput(size_t input_index){
+            return this->inputs[input_index]->getValue();
+        }
+        Eigen::MatrixXd getInput(){
+            return this->inputs[0]->getValue();
+        }
+
         void reset(){
             if(!this->is_value_ready) return;
 

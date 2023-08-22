@@ -1,5 +1,5 @@
 #include <nodeflow/node.h>
-#include <nodeflow/basic_operator.h>
+#include <nodeflow/operator.h>
 
 #include <Eigen/Dense>
 
