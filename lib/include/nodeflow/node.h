@@ -113,6 +113,10 @@ class OperatorNode: public Node{
     public:
         OperatorNode() = default;
         OperatorNode(std::initializer_list<Node*> input_list){
+            this->initializeInput(input_list);
+        }
+
+        void initializeInput(std::initializer_list<Node*> input_list){
             for(size_t i=0; i<NINPUT; i++){
                 auto input = *(input_list.begin() + i);
                 this->inputs[i] = input;
