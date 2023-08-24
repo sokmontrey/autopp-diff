@@ -6,12 +6,8 @@
 using namespace nodeflow;
 using namespace op::basic;
 
-//TODO: Node::Scalar(initial_number);
-//TODO: Node::Vector({1, 2,3})
-//TODO: smae thing for Matrix
-
 int main() {
-    Node a = Node::Vector({1, 4});
+    Node a = Node::Matrix({{1}});
 
     Sqrt f{&a};
 
@@ -26,4 +22,17 @@ int main() {
     return 0;
 }
 
-//TODO: finished apply constant
+//TODO:
+// Pow ---------
+// Square Root ----------
+// Invert
+// Subtract
+// Resieprocal
+//
+// Sin, Cos, Tan
+//
+// Exp, Ln, Log
+//
+// Max, Min
+//
+// PiecesWise

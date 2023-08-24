@@ -95,19 +95,29 @@ class Node{
             Node temp = Eigen::MatrixXd::Random(rows, cols);
             return temp;
         }
+        static Node Scalar(double initial_value){
+            Node temp = Eigen::MatrixXd::Constant(1, 1, initial_value);
+            return temp;
+        }
         static Node Vector(size_t rows){
             Node temp = Eigen::MatrixXd::Constant(rows, 1, 0);
             return temp;
         }
-        static Node Vector(std::initializer_list<double> initial_value){
-            Node temp = Eigen::MatrixXd(initial_value.size(), 1);
-            for(int i=0; i<initial_value.size(); i++){
-                temp.getValue()(i, 0) = *(initial_value.begin() + i);
+        static Node Vector(std::initializer_list<double> initial_vector){
+            Node temp = Eigen::MatrixXd(initial_vector.size(), 1);
+            for(int i=0; i<initial_vector.size(); i++){
+                temp.getValue()(i, 0) = *(initial_vector.begin() + i);
             }
             return temp;
         }
         static Node Matrix(size_t rows, size_t cols){
             Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
+            return temp;
+        }
+        static Node Matrix(
+            std::initializer_list<std::initializer_list<double>> initial_matrix
+        ){
+            Node temp = Eigen::MatrixXd(initial_matrix);
             return temp;
         }
 };

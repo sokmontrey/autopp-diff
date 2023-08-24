@@ -7,8 +7,8 @@ namespace op{
 namespace basic{
 
 //TODO:
-// Pow x
-// Square Root
+// Pow ---------
+// Square Root ----------
 // Invert
 // Subtract
 // Resieprocal
@@ -96,7 +96,7 @@ class Sqrt:public OperatorNode<1>{
     }
 };
 
-}//namespace basic
+}//namespace basic -------------------------------------------
 
 namespace nn{
 
@@ -114,6 +114,6 @@ class ReLU: public OperatorNode<1>{
     }
 };
 
-}//namespace nn
-}//namespace op
-}//namespace nodeflow
+}//namespace nn ----------------------------------------------
+}//namespace op ----------------------------------------------
+}//namespace nodeflow ----------------------------------------
