@@ -140,7 +140,9 @@ class Inverse: public OperatorNode<1>{
         this->value = this->getInput().array().inverse();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return -this->getInput().array().pow(2).inverse();
+        return -this->getInput().array().pow(2).inverse()
+            *
+            this->outer_derivative.array();
     }
 };
 
@@ -155,7 +157,9 @@ class Sin: public OperatorNode<1>{
         this->value = this->getInput().array().sin();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().cos();
+        return this->getInput().array().cos()
+            *
+            this->outer_derivative.array();
     }
 };
 
@@ -166,7 +170,9 @@ class Cos: public OperatorNode<1>{
         this->value = this->getInput().array().cos();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return -this->getInput().array().sin();
+        return -this->getInput().array().sin()
+            *
+            this->outer_derivative.array();
     }
 };
 
@@ -177,7 +183,9 @@ class Tan: public OperatorNode<1>{
         this->value = this->getInput().array().tan();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().cos().pow(2).inverse();
+        return this->getInput().array().cos().pow(2).inverse()
+            *
+            this->outer_derivative.array();
     }
 };
 
@@ -192,7 +200,9 @@ class Sinh: public OperatorNode<1>{
         this->value = this->getInput().array().sinh();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().cosh();
+        return this->getInput().array().cosh()
+            *
+            this->outer_derivative.array();
     }
 };
 
@@ -203,7 +213,9 @@ class Cosh: public OperatorNode<1>{
         this->value = this->getInput().array().cosh();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().sinh();
+        return this->getInput().array().sinh() 
+            *
+            this->outer_derivative.array();
     }
 };
 
@@ -214,7 +226,9 @@ class Tanh: public OperatorNode<1>{
         this->value = this->getInput().array().tanh();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().cosh().pow(2).inverse();
+        return this->getInput().array().cosh().pow(2).inverse() 
+            * 
+            this->outer_derivative.array();
     }
 };
 
@@ -229,7 +243,9 @@ class Exp: public OperatorNode<1>{
         this->value = this->getInput().array().exp();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().exp();
+        return this->getInput().array().exp() 
+            * 
+            this->outer_derivative.array();
     }
 };
 
@@ -240,7 +256,9 @@ class Loge: public OperatorNode<1>{
         this->value = this->getInput().array().log();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array().inverse();
+        return this->getInput().array().inverse() 
+            * 
+            this->outer_derivative.array();
     }
 };
 
@@ -258,7 +276,9 @@ class ReLU: public OperatorNode<1>{
     }
 
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return (this->getInput().array() > 0).cast<double>();
+        return (this->getInput().array() > 0).cast<double>().array() 
+            * 
+            this->outer_derivative.array();
     }
 };
 
@@ -275,6 +295,25 @@ class Sigmoid: public OperatorNode<1>{
         ;
     }
 
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        Eigen::MatrixXd temp = (-this->getInput().array()).exp();
+        return temp.array() * this->outer_derivative.array() 
+            / 
+            ( 1 + temp.array() ).pow(2);
+    }
+};
+
+class Softmax: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override{
+        Eigen::MatrixXd exp = this->getInput().array().exp(); 
+        double sum = exp.sum();
+
+        this->value = exp / sum;
+    }
+
+    //TODO: derivative formula
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
         Eigen::MatrixXd temp = (-this->getInput().array()).exp();
         return temp.array() / ( 1 + temp.array() ).pow(2);

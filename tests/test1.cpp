@@ -12,9 +12,9 @@ using namespace op::basic;
  */
 
 int main() {
-    Node a = Node::Matrix({{0.5, -3}, {-1 , 0}});
+    Node a = Node::Vector({1.3, 5.1, 2.2, 0.7, 1.1});
 
-    nodeflow::op::nn::Sigmoid f{&a};
+    nodeflow::op::nn::Softmax f{&a};
 
     f.forward();
     f.finished();
@@ -26,6 +26,7 @@ int main() {
     return 0;
 }
 
+//TODO: col Vector with initializer_list
 //TODO:
 // Pow ---------
 // Square Root ----------
