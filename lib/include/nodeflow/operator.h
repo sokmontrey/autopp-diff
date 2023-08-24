@@ -12,7 +12,9 @@ class FunctionName: public OperatorNode<[number of input]>{
     using OperatorNode<[number of input]>::OperatorNode;
 
     void compute() override {
-        //Input Node(s) can be access by this->inputs[INDEX]
+        //Input Node(s) can be access by this->getInput(INPUT_INDEX)
+        //      or this->getInput() for a signal input op 
+        //      (too lazy to use 0 index)
         //Result from the calculation MUST be assigned to this->value
     }
 
