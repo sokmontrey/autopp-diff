@@ -38,6 +38,9 @@ class Node{
         Eigen::MatrixXd& operator()(){
             return this->value;
         }
+        double& operator()(size_t row, size_t col){
+            return this->value(row, col);
+        }
         Eigen::MatrixXd& getValue(){
             return this->value;
         }
