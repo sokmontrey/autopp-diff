@@ -131,6 +131,17 @@ class Subtract: public OperatorNode<2>{
     }
 };
 
+class Inverse: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().inverse();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return -this->getInput().array().pow(2).inverse();
+    }
+};
+
 }//namespace basic -------------------------------------------
 
 namespace nn{

@@ -149,6 +149,9 @@ class OperatorNode: public Node{
         Eigen::MatrixXd getInput(){
             return this->inputs[0]->getValue();
         }
+        // REASON: answer was not correct
+        //      Try rerun it again
+        //      Maybe because I use .constant on one of the Node
         // std::vector<Eigen::MatrixXd> getGrad(){
         //     if(!this->is_differentiatable) 
         //         std::cout 
