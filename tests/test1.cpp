@@ -14,7 +14,7 @@ using namespace op::basic;
 int main() {
     Node a = Node::Matrix({{0.5, -3}, {-1 , 0}});
 
-    nodeflow::op::hyp::Sinh f{&a};
+    nodeflow::op::exp::Loge f{&a};
 
     f.forward();
     f.finished();

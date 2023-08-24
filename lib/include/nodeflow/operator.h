@@ -219,7 +219,33 @@ class Tanh: public OperatorNode<1>{
 };
 
 }//namespace hyp ---------------------------------------------
- //
+
+namespace exp{
+
+class Exp: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().exp();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().exp();
+    }
+};
+
+class Loge: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().log();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().inverse();
+    }
+};
+
+}//namesapce exp-----------------------------------------------
+
 namespace nn{
 
 class ReLU: public OperatorNode<1>{
