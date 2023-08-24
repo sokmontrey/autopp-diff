@@ -183,6 +183,43 @@ class Tan: public OperatorNode<1>{
 
 }//namespace trig --------------------------------------------
 
+namespace hyp{
+
+class Sinh: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().sinh();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().cosh();
+    }
+};
+
+class Cosh: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().cosh();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().sinh();
+    }
+};
+
+class Tanh: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().tanh();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().cosh().pow(2).inverse();
+    }
+};
+
+}//namespace hyp ---------------------------------------------
+ //
 namespace nn{
 
 class ReLU: public OperatorNode<1>{
