@@ -13,6 +13,7 @@ using namespace op::basic;
 
 int main() {
     Node a = Node::Matrix({{2, -3}, {-1 , 0}});
+    a.constant();
 
     Pow f_1({&a}, 2);
     Subtract f{&f_1, &a};
@@ -22,7 +23,6 @@ int main() {
     f.print();
 
     f.backward();
-    std::cout<< f_1.getGrad() << std::endl;
 
     return 0;
 }
@@ -31,7 +31,7 @@ int main() {
 // Pow ---------
 // Square Root ----------
 // Invert ----------
-// Subtract
+// Subtract -------
 // Resieprocal
 //
 // Sin, Cos, Tan

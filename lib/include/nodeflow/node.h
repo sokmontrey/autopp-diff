@@ -149,6 +149,18 @@ class OperatorNode: public Node{
         Eigen::MatrixXd getInput(){
             return this->inputs[0]->getValue();
         }
+        // std::vector<Eigen::MatrixXd> getGrad(){
+        //     if(!this->is_differentiatable) 
+        //         std::cout 
+        //             << "Warning: Calling 'getGrad()' on a constant node" 
+        //             << std::endl;
+        //
+        //     std::vector<Eigen::MatrixXd> result;
+        //     for(size_t i=0; i<NINPUT; i++){
+        //         result.push_back(this->outer_derivative * this->derivative(i));
+        //     }
+        //     return result;
+        // }
 
         void reset(){
             if(!this->is_value_ready) return;
