@@ -2,24 +2,31 @@
 
 #include <nodeflow/node.h>
 
+/*
+ * Below is a template for create a custom operator node
+ */
+
+/*
+class FunctionName: public OperatorNode<[number of input]>{
+    //default constructor (check Pow for custom constructor)
+    using OperatorNode<[number of input]>::OperatorNode;
+
+    void compute() override {
+        //Input Node(s) can be access by this->inputs[INDEX]
+        //Result from the calculation MUST be assigned to this->value
+    }
+
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        //MUST: return a matrix as the result to the taking the partial derivative on the function with respect to this->inputs[input_wrt_index]
+        //MUST: use this->outer_derivative according to chain rule
+        return ;
+    }
+};
+*/
+
 namespace nodeflow{
 namespace op{
 namespace basic{
-
-//TODO:
-// Pow ---------
-// Square Root ----------
-// Invert
-// Subtract
-// Resieprocal
-//
-// Sin, Cos, Tan
-//
-// Exp, Ln, Log
-//
-// Max, Min
-//
-// PiecesWise
 
 class Add: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
