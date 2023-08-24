@@ -14,7 +14,7 @@ using namespace op::basic;
 int main() {
     Node a = Node::Matrix({{0.5, -3}, {-1 , 0}});
 
-    nodeflow::op::exp::Loge f{&a};
+    nodeflow::op::nn::Sigmoid f{&a};
 
     f.forward();
     f.finished();
@@ -35,12 +35,12 @@ int main() {
 //
 // Sin, Cos, Tan -------
 //
-// Exp, Ln, Log
+// Exp, Ln, Log -------
 //
 // Max, Min
 //
 // PiecesWise
 //
-// Sigmoid
-// Tanh
+// Sigmoid------
+// Tanh-------
 // Softmax

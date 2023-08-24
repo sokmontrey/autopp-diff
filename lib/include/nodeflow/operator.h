@@ -258,7 +258,26 @@ class ReLU: public OperatorNode<1>{
     }
 
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return (this->value.array() > 0).cast<double>();
+        return (this->getInput().array() > 0).cast<double>();
+    }
+};
+
+class Sigmoid: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override{
+        //1 / (1 + exp(-x))
+        this->value = 
+            (
+                1+(-this->getInput().array())
+                .exp()
+            ).inverse()
+        ;
+    }
+
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        Eigen::MatrixXd temp = (-this->getInput().array()).exp();
+        return temp.array() / ( 1 + temp.array() ).pow(2);
     }
 };
 
