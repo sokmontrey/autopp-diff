@@ -9,9 +9,9 @@ using namespace op::basic;
 //TODO: Node::Scalar(initial_number);
 //TODO: Node::Vector({1, 2,3})
 //TODO: smae thing for Matrix
+
 int main() {
-    Node a = Node::Vector(1);
-    a() << 9;
+    Node a = Node::Vector({1, 4});
 
     Sqrt f{&a};
 

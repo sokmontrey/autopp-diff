@@ -96,6 +96,13 @@ class Node{
             Node temp = Eigen::MatrixXd::Constant(rows, 1, 0);
             return temp;
         }
+        static Node Vector(std::initializer_list<double> initial_value){
+            Node temp = Eigen::MatrixXd(initial_value.size(), 1);
+            for(int i=0; i<initial_value.size(); i++){
+                temp.getValue()(i, 0) = *(initial_value.begin() + i);
+            }
+            return temp;
+        }
         static Node Matrix(size_t rows, size_t cols){
             Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
             return temp;
