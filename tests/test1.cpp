@@ -12,9 +12,9 @@ using namespace op::basic;
  */
 
 int main() {
-    Node a = Node::Matrix({{2, -3}, {-1 , 0}});
+    Node a = Node::Matrix({{0.5, -3}, {-1 , 0}});
 
-    Inverse f{&a};
+    nodeflow::op::trig::Tan f{&a};
 
     f.forward();
     f.finished();
@@ -31,7 +31,7 @@ int main() {
 // Square Root ----------
 // Invert ----------
 // Subtract -------
-// Resieprocal
+// Resieprocal -----
 //
 // Sin, Cos, Tan
 //

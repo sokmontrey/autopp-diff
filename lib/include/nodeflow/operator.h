@@ -146,6 +146,43 @@ class Inverse: public OperatorNode<1>{
 
 }//namespace basic -------------------------------------------
 
+namespace trig{
+
+class Sin: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().sin();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().cos();
+    }
+};
+
+class Cos: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().cos();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return -this->getInput().array().sin();
+    }
+};
+
+class Tan: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput().array().tan();
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->getInput().array().cos().pow(2).inverse();
+    }
+};
+
+}//namespace trig --------------------------------------------
+
 namespace nn{
 
 class ReLU: public OperatorNode<1>{
