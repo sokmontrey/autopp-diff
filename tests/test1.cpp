@@ -6,17 +6,22 @@
 using namespace nodeflow;
 using namespace op::basic;
 
+/*
+ * To finalize the graph created
+ *      call .foward() then .finished() on the last node
+ */
+
 int main() {
-    Node a = Node::Matrix({{1}});
+    Node a = Node::Matrix({{2, -3}, {-1 , 0}});
 
-    Sqrt f{&a};
+    Pow f_1({&a}, 2);
+    Invert f{&f_1};
 
-    f.finished();
     f.forward();
-    f.backward();
-
+    f.finished();
     f.print();
 
+    f.backward();
     std::cout<< a.getGrad() << std::endl;
 
     return 0;
@@ -25,7 +30,7 @@ int main() {
 //TODO:
 // Pow ---------
 // Square Root ----------
-// Invert
+// Invert ----------
 // Subtract
 // Resieprocal
 //
@@ -36,3 +41,7 @@ int main() {
 // Max, Min
 //
 // PiecesWise
+//
+// Sigmoid
+// Tanh
+// Softmax

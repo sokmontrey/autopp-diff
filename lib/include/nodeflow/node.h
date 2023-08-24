@@ -174,7 +174,6 @@ class OperatorNode: public Node{
             }
             this->is_differentiatable = is_diff_temp;
 
-            this->compute();
             this->rows = this->value.rows();
             this->cols = this->value.cols();
         }
@@ -200,6 +199,7 @@ class OperatorNode: public Node{
                 )
             );
         }
+
         void backward(Eigen::MatrixXd partial_outer_derivative) override {
             if(!this->is_differentiatable) return;
 

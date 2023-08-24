@@ -103,6 +103,18 @@ class Sqrt:public OperatorNode<1>{
     }
 };
 
+class Invert: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+
+    void compute() override {
+        this->value = - this->getInput();
+    }
+
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return -this->outer_derivative;
+    }
+};
+
 }//namespace basic -------------------------------------------
 
 namespace nn{
