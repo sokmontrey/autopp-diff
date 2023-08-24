@@ -115,6 +115,22 @@ class Invert: public OperatorNode<1>{
     }
 };
 
+class Subtract: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
+
+    void compute() override {
+        this->value = this->getInput(0) - this->getInput(1);
+    }
+
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        if(input_wrt_index){ // Second input
+            return -this->outer_derivative;
+        }else{ // First input
+            return this->outer_derivative;
+        }
+    }
+};
+
 }//namespace basic -------------------------------------------
 
 namespace nn{

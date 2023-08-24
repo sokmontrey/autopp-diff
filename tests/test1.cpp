@@ -15,14 +15,14 @@ int main() {
     Node a = Node::Matrix({{2, -3}, {-1 , 0}});
 
     Pow f_1({&a}, 2);
-    Invert f{&f_1};
+    Subtract f{&f_1, &a};
 
     f.forward();
     f.finished();
     f.print();
 
     f.backward();
-    std::cout<< a.getGrad() << std::endl;
+    std::cout<< f_1.getGrad() << std::endl;
 
     return 0;
 }
