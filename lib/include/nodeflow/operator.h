@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nodeflow/node.h>
+#include <cmath>
 
 /*
  * Below is a template for create a custom operator node
@@ -313,10 +314,25 @@ class Softmax: public OperatorNode<1>{
         this->value = exp / sum;
     }
 
-    //TODO: derivative formula
+    //TODO: check if sum of row of jacobian always approach zero
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        Eigen::MatrixXd temp = (-this->getInput().array()).exp();
-        return temp.array() / ( 1 + temp.array() ).pow(2);
+        //(Diagonal(x * sum) - OuterProd(X, X)) / sum^2
+        
+        Eigen::MatrixXd exp = this->getInput().array().exp();
+        double sum = exp.sum();
+
+        // Eigen::DiagonalMatrix<double, Eigen::Dynamic> diagonal_exp_sum;
+        Eigen::MatrixXd diagonal_exp_sum = Eigen
+            ::MatrixXd
+            ::Constant(exp.rows(), exp.rows(), 0);
+        diagonal_exp_sum.diagonal() = exp * sum;
+
+        Eigen::MatrixXd jacobian = 
+            ( diagonal_exp_sum - (exp * exp.transpose()) ) 
+            / 
+            std::pow(sum, 2)
+        ;
+        return jacobian * this->outer_derivative;
     }
 };
 

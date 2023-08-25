@@ -12,7 +12,7 @@ using namespace op::basic;
  */
 
 int main() {
-    Node a = Node::Vector({1.3, 5.1, 2.2, 0.7, 1.1});
+    Node a = Node::Vector({0.1, 0.1, 0.1});
 
     nodeflow::op::nn::Softmax f{&a};
 
