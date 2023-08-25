@@ -279,9 +279,40 @@ class ReLU: public OperatorNode<1>{
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
         return (this->getInput().array() > 0).cast<double>().array() 
             * 
-            this->outer_derivative.array();
+            this->outer_derivative.array()
+        ;
     }
 };
+
+class LeakyReLU: public OperatorNode<1>{
+    private:
+        double leak_value;
+    public:
+        LeakyReLU(std::initializer_list<Node*> input_list)
+        :OperatorNode<1>(input_list), leak_value(0.1) { }
+
+        LeakyReLU(std::initializer_list<Node*> input_list, double leak_value)
+        :OperatorNode<1>(input_list), leak_value(leak_value) { }
+
+    void compute() override{
+        this->value =
+            this->getInput().cwiseMax(this->leak_value * this->getInput())
+        ;
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        size_t rows = this->getInput().rows();
+        size_t cols = this->getInput().cols();
+
+        Eigen::MatrixXd one_m = Eigen::MatrixXd::Constant(rows, cols, 1);
+        Eigen::MatrixXd leak_m = Eigen::MatrixXd::Constant(rows, cols, this->leak_value);
+
+        return (this->getInput().array() > 0).select(one_m, leak_m).array()
+            *
+            this->outer_derivative.array()
+        ;
+    }
+};
+
 
 class Sigmoid: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -303,7 +334,6 @@ class Sigmoid: public OperatorNode<1>{
             ( 1 + temp.array() ).pow(2);
     }
 };
-
 class Softmax: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
 

@@ -12,9 +12,9 @@ using namespace op::basic;
  */
 
 int main() {
-    Node a = Node::Vector({0.1, 0.2, 0.1});
+    Node a = Node::Vector({0.1, -0.2, 0.1});
 
-    nodeflow::op::nn::Softmax f{&a};
+    nodeflow::op::nn::LeakyReLU f({&a}, 0.1);
 
     f.forward();
     f.finished();
