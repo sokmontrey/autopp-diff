@@ -110,16 +110,16 @@ class Node{
             }
             return temp;
         }
-        static Node Matrix(size_t rows, size_t cols){
-            Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
-            return temp;
-        }
-        static Node Matrix(
-            std::initializer_list<std::initializer_list<double>> initial_matrix
-        ){
-            Node temp = Eigen::MatrixXd(initial_matrix);
-            return temp;
-        }
+        // static Node Matrix(size_t rows, size_t cols){
+        //     Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
+        //     return temp;
+        // }
+        // static Node Matrix(
+        //     std::initializer_list<std::initializer_list<double>> initial_matrix
+        // ){
+        //     Node temp = Eigen::MatrixXd(initial_matrix);
+        //     return temp;
+        // }
 };
 
 template <unsigned int NINPUT>
