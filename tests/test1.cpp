@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 
 using namespace nodeflow;
+using namespace op::basic;
 
 /*
  * To finalize the graph created
@@ -13,7 +14,7 @@ using namespace nodeflow;
 int main() {
     Node a = Node::Vector({0.1, -0.2, 0.1});
 
-    LeakyReLU f({&a}, 0.1);
+    nodeflow::op::nn::LeakyReLU f({&a}, 0.1);
 
     f.forward();
     f.finished();

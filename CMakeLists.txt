@@ -23,13 +23,16 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # Build of the library
-add_subdirectory(source)
+add_subdirectory(lib)
+
+add_subdirectory(tools/eigen)
+target_link_libraries(${PROJECT_NAME} eigen)
 
 # Enable tests.
 include(CTest)
 # BUILD_TESTING option is defined via include(CTest)
 if(BUILD_TESTING)
-  add_subdirectory(test)
+  add_subdirectory(tests)
 endif()
 
 # Generate an installer (requires nsis)
