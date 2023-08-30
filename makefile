@@ -1,2 +1,2 @@
 all:
-	cls && cd build && cmake --build . && .\tests\Debug\test1.exe
+	cls && cd build && cmake --build . && .\test\Debug\Test.exe
