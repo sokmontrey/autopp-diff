@@ -1,3 +1,0 @@
-[submodule "tools/eigen"]
-	path = tools/eigen
-	url = https://github.com/libigl/eigen.git

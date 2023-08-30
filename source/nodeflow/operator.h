@@ -28,8 +28,6 @@ class FunctionName: public OperatorNode<[number of input]>{
 */
 
 namespace nodeflow{
-namespace op{
-namespace basic{
 
 class Add: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -147,10 +145,6 @@ class Inverse: public OperatorNode<1>{
     }
 };
 
-}//namespace basic -------------------------------------------
-
-namespace trig{
-
 class Sin: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
 
@@ -189,10 +183,6 @@ class Tan: public OperatorNode<1>{
             this->outer_derivative.array();
     }
 };
-
-}//namespace trig --------------------------------------------
-
-namespace hyp{
 
 class Sinh: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -233,10 +223,6 @@ class Tanh: public OperatorNode<1>{
     }
 };
 
-}//namespace hyp ---------------------------------------------
-
-namespace exp{
-
 class Exp: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
 
@@ -262,10 +248,6 @@ class Loge: public OperatorNode<1>{
             this->outer_derivative.array();
     }
 };
-
-}//namesapce exp-----------------------------------------------
-
-namespace nn{
 
 class ReLU: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -366,6 +348,4 @@ class Softmax: public OperatorNode<1>{
     }
 };
 
-}//namespace nn ----------------------------------------------
-}//namespace op ----------------------------------------------
 }//namespace nodeflow ----------------------------------------
