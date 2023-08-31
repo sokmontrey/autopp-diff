@@ -19,7 +19,22 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # Build of the library
-add_subdirectory(source)
+# add_subdirectory(source)
+add_library(${PROJECT_NAME}
+    source/${PROJECT_NAME}/node.h
+    source/${PROJECT_NAME}/node.cpp
+    source/${PROJECT_NAME}/operator.h
+)
+add_library(${PROJECT_NAME}::nodeflow ALIAS nodeflow)
+target_include_directories(${PROJECT_NAME}
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/source>
+           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+# External Library --------------------------------------------------
+find_package(Eigen3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+
+# END External Library ----------------------------------------------
 
 option(BUILD_TESTING "Build tests" ON)
 
