@@ -4,4 +4,4 @@ project(Test)
 add_executable(${PROJECT_NAME} test_main.cpp)
 
 find_package(nodeflow)
-target_link_libraries(${PROJECT_NAME} PRIVATE nodeflow::nodeflow)
+target_link_libraries(${PROJECT_NAME} PRIVATE nodeflow)
