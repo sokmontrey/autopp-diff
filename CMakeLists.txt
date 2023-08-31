@@ -30,6 +30,11 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
+# build
+export(TARGETS ${PROJECT_NAME} 
+       NAMESPACE ${PROJECT_NAME}::
+       FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+
 # package
 include(CMakePackageConfigHelpers)
 
