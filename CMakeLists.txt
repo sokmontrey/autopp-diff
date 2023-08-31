@@ -32,23 +32,38 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-# Generate an installer (requires nsis)
-include(InstallRequiredSystemLibraries)
-include(CPack)
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE")
-set(CPACK_PACKAGE_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${${PROJECT_NAME}_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${${PROJECT_NAME}_VERSION_PATCH}")
-set(CPACK_PACKAGE_VERSION_TWEAK "${${PROJECT_NAME}_VERSION_TWEAK}")
-set(CPACK_SOURCE_GENERATOR "TGZ")
-# It's better that the folder path have the version of the library.
-file(
-  TO_NATIVE_PATH
-  "${PROJECT_NAME}/${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
-  path_suggested)
-# Need to escape backslash for NSIS.
-string(REPLACE "\\" "\\\\" path_suggested "${path_suggested}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${path_suggested}")
-set(CPACK_NSIS_PACKAGE_NAME
-    "${PROJECT_NAME} ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
+# package
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/mylibConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/mylibConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/mylibConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+# install
+install(
+    TARGETS ${PROJECT_NAME} 
+    EXPORT ${PROJECT_NAME}Targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(
+    EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+# install header
+install(
+    DIRECTORY source/${PROJECT_NAME}  # Adjust the path to your header files
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING PATTERN "*.h"
 )

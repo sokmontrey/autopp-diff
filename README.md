@@ -1,5 +1,9 @@
-# Node-Flow-Cpp
+# Nodeflow
 
-A Computational graph library written from scratch in C++ with the support of automatic differentiation and Tensor representation of data.
+A C++ computational graph library with reverse-mode automatic differentiation support.
 
-(Please note that this was created for learning purposes. The library is still in an early stage with inexperienced design.
+Installation:
+
+```cpp
+
+```
