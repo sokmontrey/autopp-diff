@@ -376,6 +376,27 @@ class Loge: public OperatorNode<1>{
     }
 };
 
+class Sum: public OperatorNode<1>{
+    using OperatorNode<1>::OperatorNode;
+    public:
+        Sum(std::initializer_list<Node*> input_list)
+        :OperatorNode<1>(input_list){
+            this->rows = this->getInput().rows();
+            this->cols = this->getInput().cols();
+        }
+
+    void compute() override {
+        this->value = 
+            Eigen::MatrixXd::Constant(
+                1, 1, this->getInput().sum()
+            )
+        ;
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return this->outer_derivative;
+    }
+};
+
 class ReLU: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
 

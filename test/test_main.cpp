@@ -12,7 +12,7 @@ int main() {
     Node a = Node::Vector({1, 2, 3});
     Node b = Node::Vector({4, 5, 6});
 
-    ScalarDiv f(&a, 10);
+    Sum f{&a};
 
     f.forward();
     f.finished();

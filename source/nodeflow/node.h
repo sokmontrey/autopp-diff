@@ -189,8 +189,10 @@ class OperatorNode: public Node{
             }
             this->is_differentiatable = is_diff_temp;
 
-            this->rows = this->value.rows();
-            this->cols = this->value.cols();
+            if(!this->rows){
+                this->rows = this->value.rows();
+                this->cols = this->value.cols();
+            }
         }
 
         Eigen::MatrixXd& forward() override{
