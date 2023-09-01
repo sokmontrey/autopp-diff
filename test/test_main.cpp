@@ -9,9 +9,10 @@ using namespace nodeflow;
  */
 
 int main() {
-    Node a = Node::Vector({0.1, -0.2, 2});
+    Node a = Node::Vector({1, 2, 3});
+    Node b = Node::Vector({4, 5, 6});
 
-    Pow f(&a, 2);
+    EleWiseMul f{&a, &b};
 
     f.forward();
     f.finished();
@@ -19,6 +20,7 @@ int main() {
 
     f.backward();
     std::cout << a.getGrad() << std::endl;
+    std::cout << b.getGrad() << std::endl;
 
     return 0;
 }
