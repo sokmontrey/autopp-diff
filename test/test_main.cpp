@@ -12,7 +12,7 @@ int main() {
     Node a = Node::Vector({1, 2, 3});
     Node b = Node::Vector({4, 5, 6});
 
-    EleWiseMul f{&a, &b};
+    ScalarMul f(&a, 3);
 
     f.forward();
     f.finished();
@@ -20,7 +20,6 @@ int main() {
 
     f.backward();
     std::cout << a.getGrad() << std::endl;
-    std::cout << b.getGrad() << std::endl;
 
     return 0;
 }

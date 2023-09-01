@@ -98,6 +98,27 @@ class EleWiseMul: public OperatorNode<2>{
     }
 };
 
+class ScalarMul: public OperatorNode<1>{
+    private:
+        double scalar;
+    public:
+        ScalarMul(std::initializer_list<Node*> input_list, double scalar)
+        :OperatorNode<1>(input_list), scalar(scalar) { }
+
+        ScalarMul(Node* input, double scalar)
+        :OperatorNode<1>({input}), scalar(scalar) { }
+
+        void compute() override {
+            this->value = 
+                this->getInput() * scalar
+            ;
+        }
+
+        Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+            return this->scalar * this->outer_derivative.array();
+        }
+};
+
 class Pow: public OperatorNode<1>{
     private:
         double exponent;
