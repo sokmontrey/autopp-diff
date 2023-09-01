@@ -119,6 +119,33 @@ class ScalarMul: public OperatorNode<1>{
         }
 };
 
+class EleWiseDiv: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
+
+    void compute() override {
+        this->value = 
+            this->getInput(0).array()
+            /
+            this->getInput(1).array()
+        ;
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        if(input_wrt_index){ //second input
+            return 
+                - ( this->getInput(0).array() / 
+                    this->getInput(1).array().pow(2) )
+                * this->outer_derivative.array()
+            ;
+        }else{//first input
+            return 
+                this->getInput(1).array().inverse() 
+                *
+                this->outer_derivative.array()
+            ;
+        }
+    }
+};
+
 class Pow: public OperatorNode<1>{
     private:
         double exponent;
