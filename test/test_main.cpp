@@ -12,7 +12,7 @@ int main() {
     Node a = Node::Vector({1, 2, 3});
     Node b = Node::Vector({4, 5, 6});
 
-    Sum f{&a};
+    Pow f(&a, 2);
 
     f.forward();
     f.finished();

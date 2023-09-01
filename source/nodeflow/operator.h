@@ -106,7 +106,7 @@ class ScalarMul: public OperatorNode<1>{
         :OperatorNode<1>(input_list), scalar(scalar) { }
 
         ScalarMul(Node* input, double scalar)
-        :OperatorNode<1>({input}), scalar(scalar) { }
+        :OperatorNode<1>(input), scalar(scalar) { }
 
         void compute() override {
             this->value = 
@@ -183,7 +183,7 @@ class ScalarDiv: public OperatorNode<1>{
         :OperatorNode<1>(input_list), scalar(scalar){ }
 
         ScalarDiv(Node* input, double scalar)
-        :OperatorNode<1>({input}), scalar(scalar){ }
+        :OperatorNode<1>(input), scalar(scalar){ }
 
     void compute() override {
         this->value = this->getInput(0) / this->scalar;
@@ -201,14 +201,13 @@ class Pow: public OperatorNode<1>{
         :OperatorNode<1>(input_list), exponent(exponent) { }
 
         Pow(Node* input, double exponent)
-        :OperatorNode<1>({input}), exponent(exponent) {} 
+        :OperatorNode<1>(input), exponent(exponent) { } 
 
     void compute() override{
         this->value = this->getInput().array().pow(this->exponent);
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput()
-            .array()
+        return this->getInput().array()
             .pow(this->exponent - 1) 
             * this->exponent
             * this->outer_derivative.array()
@@ -377,10 +376,15 @@ class Loge: public OperatorNode<1>{
 };
 
 class Sum: public OperatorNode<1>{
-    using OperatorNode<1>::OperatorNode;
     public:
         Sum(std::initializer_list<Node*> input_list)
         :OperatorNode<1>(input_list){
+            this->rows = this->getInput().rows();
+            this->cols = this->getInput().cols();
+        }
+
+        Sum(Node* input)
+        :OperatorNode<1>(input){
             this->rows = this->getInput().rows();
             this->cols = this->getInput().cols();
         }
@@ -416,13 +420,18 @@ class ReLU: public OperatorNode<1>{
 
 class LeakyReLU: public OperatorNode<1>{
     private:
-        double leak_value;
+        double leak_value = 0.1;
     public:
         LeakyReLU(std::initializer_list<Node*> input_list)
-        :OperatorNode<1>(input_list), leak_value(0.1) { }
+        :OperatorNode<1>(input_list) {}
+
+        LeakyReLU(Node* input):OperatorNode<1>(input) {}
 
         LeakyReLU(std::initializer_list<Node*> input_list, double leak_value)
-        :OperatorNode<1>(input_list), leak_value(leak_value) { }
+        :OperatorNode<1>(input_list), leak_value(leak_value) {}
+
+        LeakyReLU(Node* input, double leak_value)
+        :OperatorNode<1>(input), leak_value(leak_value) {}
 
     void compute() override{
         this->value =

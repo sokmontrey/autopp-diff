@@ -13,8 +13,8 @@ class Node{
         Eigen::MatrixXd value;
         Eigen::MatrixXd outer_derivative;
 
-        unsigned int rows = 1;
-        unsigned int cols = 1;
+        unsigned int rows = 0;
+        unsigned int cols = 0;
 
         int num_parent = 0;
         int parent_called_count = 0;
@@ -134,6 +134,13 @@ class OperatorNode: public Node{
         OperatorNode() = default;
         OperatorNode(std::initializer_list<Node*> input_list){
             this->initializeInput(input_list);
+        }
+        OperatorNode(Node* a){
+            this->inputs[0] = a;
+        }
+        OperatorNode(Node* a, Node* b){
+            this->inputs[0] = a;
+            this->inputs[1] = a;
         }
 
         void initializeInput(std::initializer_list<Node*> input_list){
