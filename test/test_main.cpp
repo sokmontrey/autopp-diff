@@ -9,9 +9,9 @@ using namespace nodeflow;
  */
 
 int main() {
-    Node a = Node::Vector({0.1, -0.2, 0.1});
+    Node a = Node::Vector({0.1, -0.2, 2});
 
-    LeakyReLU f({&a}, 0.1);
+    Pow f(&a, 2);
 
     f.forward();
     f.finished();

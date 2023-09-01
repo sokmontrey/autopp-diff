@@ -76,6 +76,9 @@ class Pow: public OperatorNode<1>{
         Pow(std::initializer_list<Node*> input_list, double exponent)
         :OperatorNode<1>(input_list), exponent(exponent) { }
 
+        Pow(Node* input, double exponent)
+        :OperatorNode<1>({input}), exponent(exponent) {} 
+
     void compute() override{
         this->value = this->getInput().array().pow(this->exponent);
     }
