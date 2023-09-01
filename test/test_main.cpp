@@ -1,6 +1,4 @@
-#include <nodeflow/node.h>
-#include <nodeflow/operator.h>
-
+#include <nodeflow/nodeflow.h>
 #include <Eigen/Dense>
 
 using namespace nodeflow;
