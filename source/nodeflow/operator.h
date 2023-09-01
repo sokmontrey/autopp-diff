@@ -167,11 +167,29 @@ class Div: public OperatorNode<2>{
             ;
         }else{ //first input
             return 
-                1 / this->getInput(1)(0,0)
+                (1 / this->getInput(1)(0,0))
                 *
                 this->outer_derivative.array()
             ;
         }
+    }
+};
+
+class ScalarDiv: public OperatorNode<1>{
+    private:
+        double scalar;
+    public:
+        ScalarDiv(std::initializer_list<Node*> input_list, double scalar)
+        :OperatorNode<1>(input_list), scalar(scalar){ }
+
+        ScalarDiv(Node* input, double scalar)
+        :OperatorNode<1>({input}), scalar(scalar){ }
+
+    void compute() override {
+        this->value = this->getInput(0) / this->scalar;
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        return (1 / this->scalar) * this->outer_derivative;
     }
 };
 
