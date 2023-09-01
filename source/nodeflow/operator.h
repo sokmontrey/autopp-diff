@@ -146,6 +146,35 @@ class EleWiseDiv: public OperatorNode<2>{
     }
 };
 
+//The second input must be a scalar in 1x1 matrix form
+//This allowed to take the gradient of both the nominator and denominator
+class Div: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
+
+    void compute() override {
+        this->value = 
+            this->getInput(0).array()
+            /
+            this->getInput(1)(0, 0)
+        ;
+    }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        if(input_wrt_index){ //second input
+            return 
+                - ( this->getInput(0).array() / 
+                    std::pow(this->getInput(1)(0,0), 2) )
+                * this->outer_derivative.array()
+            ;
+        }else{ //first input
+            return 
+                1 / this->getInput(1)(0,0)
+                *
+                this->outer_derivative.array()
+            ;
+        }
+    }
+};
+
 class Pow: public OperatorNode<1>{
     private:
         double exponent;

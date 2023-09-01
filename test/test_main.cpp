@@ -12,7 +12,7 @@ int main() {
     Node a = Node::Vector({1, 2, 3});
     Node b = Node::Vector({4, 5, 6});
 
-    EleWiseDiv f{&a, &b};
+    Div f{&a, &b};
 
     f.forward();
     f.finished();
