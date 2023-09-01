@@ -57,7 +57,7 @@ class Node{
             this->rows = this->value.rows();
             this->cols = this->value.cols();
         }
-        void reset(){
+        virtual void reset(){
             this->is_value_ready = false;
             this->parent_called_count = 0;
         }
@@ -165,7 +165,7 @@ class OperatorNode: public Node{
         //     return result;
         // }
 
-        void reset(){
+        void reset() override {
             if(!this->is_value_ready) return;
 
             this->is_value_ready = false;
