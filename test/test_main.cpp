@@ -8,11 +8,12 @@ using namespace nodeflow;
  *      call .foward() then .finished() on the last node
  */
 
+//TODO: manually set rows and cols
 int main() {
-    Node a = Node::Vector({1, 2, 3});
-    Node b = Node::Vector({4, 5, 6});
+    Node a = Node::Random(4, 1);
+    Node b = Node::Random(1, 1);
 
-    Pow f(&a, 2);
+    Mul f(&a, &b);
 
     f.forward();
     f.finished();
