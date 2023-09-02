@@ -140,7 +140,7 @@ class OperatorNode: public Node{
         }
         OperatorNode(Node* a, Node* b){
             this->inputs[0] = a;
-            this->inputs[1] = a;
+            this->inputs[1] = b;
         }
 
         void initializeInput(std::initializer_list<Node*> input_list){
