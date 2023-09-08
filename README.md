@@ -12,7 +12,7 @@ git clone https://github.com/sokmontrey/nodeflow.git
 
 2. Link the library:
 
-```bash
+```cmake
 add_subdirectory(nodeflow)
 
 target_link_libraries(${PROJECT_NAME} nodeflow)
