@@ -5,6 +5,10 @@
 
 namespace nodeflow{
 
+/*
+ *
+*/
+
 class Node{
     protected:
         bool is_differentiatable = true;
@@ -83,10 +87,6 @@ class Node{
             this->parent_called_count++;
         }
 
-        static Node Constant(size_t rows, size_t cols, double fill_value){
-            Node temp = Eigen::MatrixXd::Constant(rows, cols, fill_value); 
-            return temp;
-        }
         static Node Random(size_t rows){
             Node temp = Eigen::MatrixXd::Random(rows, 1);
             return temp;
@@ -95,12 +95,18 @@ class Node{
             Node temp = Eigen::MatrixXd::Random(rows, cols);
             return temp;
         }
+
         static Node Scalar(double initial_value){
             Node temp = Eigen::MatrixXd::Constant(1, 1, initial_value);
             return temp;
         }
+
         static Node Vector(size_t rows){
             Node temp = Eigen::MatrixXd::Constant(rows, 1, 0);
+            return temp;
+        }
+        static Node Vector(size_t rows, double fill_value){
+            Node temp = Eigen::MatrixXd::Constant(rows, 1, fill_value);
             return temp;
         }
         static Node Vector(std::initializer_list<double> initial_vector){
@@ -110,16 +116,21 @@ class Node{
             }
             return temp;
         }
-        // static Node Matrix(size_t rows, size_t cols){
-        //     Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
-        //     return temp;
-        // }
-        // static Node Matrix(
-        //     std::initializer_list<std::initializer_list<double>> initial_matrix
-        // ){
-        //     Node temp = Eigen::MatrixXd(initial_matrix);
-        //     return temp;
-        // }
+
+        static Node Matrix(size_t rows, size_t cols){
+            Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
+            return temp;
+        }
+        static Node Matrix(size_t rows, size_t cols, size_t fill_value){
+            Node temp = Eigen::MatrixXd::Constant(rows, cols, fill_value);
+            return temp;
+        }
+        static Node Matrix(
+            std::initializer_list<std::initializer_list<double>> initial_matrix
+        ){
+            Node temp = Eigen::MatrixXd(initial_matrix);
+            return temp;
+        }
 };
 
 template <unsigned int NINPUT>

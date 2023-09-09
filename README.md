@@ -30,6 +30,33 @@ f.forward();
 f.print();
 ```
 
+### Using Eigen3
+```cpp
+using namespace nodeflow;
+
+Node a = Eigen::MatrixXd(3, 2);
+a() << 1, 2, 
+    3, 4,
+    5, 6;
+```
+
+Using `node_name()` or `node_name.getValue()` return the reference to nodes' value which will alway be an `Eigen::MatrixXd`.
+
+More examples of Node initialization:
+```cpp
+using namespace nodeflow;
+
+// Eigen
+Node a = Eigen::VectorXd(3);
+Node b = Eigen::VectorXd::Random(3);
+Node c = Eigen::VectorXd::Constant(3, 0);
+//...
+
+/* Using Node static initializer */
+
+//
+```
+
 ## Installation with CMake:
 
 1. Clone the project:

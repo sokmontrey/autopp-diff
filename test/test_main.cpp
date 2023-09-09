@@ -10,8 +10,11 @@ using namespace nodeflow;
 
 //TODO: manually set rows and cols
 int main() {
-    Node a = Node::Random(4, 1);
-    Node b = Node::Random(1, 1);
+    Node a = Node::Matrix({
+        {1,2,3},
+        {4,5,6}
+    });
+    Node b = Node::Matrix(3, 1, 1);
 
     Mul f(&a, &b);
 
