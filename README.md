@@ -52,10 +52,11 @@ Node b = Eigen::VectorXd::Random(3);
 Node c = Eigen::VectorXd::Constant(3, 0);
 //...
 
-/* Using Node static initializer */
-
 //
 ```
+
+> [!NOTE]
+> Further usage information coming soon
 
 ## Installation with CMake:
 
