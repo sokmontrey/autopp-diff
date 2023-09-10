@@ -4,10 +4,18 @@
 #include <cmath>
 
 //TODO: check input size before any operation
+//finish all the derivative doc
 // Implement:
 //      Normal operator
 //      Statistic operatos
 //      Transpose operator
+
+/*
+ * NOTE: @params: is referring to the constructor parameter of the OperatorNode
+ *      Constructor argument can be individual individual argument form: OPERATOR_NODE_NAME a(&a, &b, ...);
+ *      OR list argument form: OPERATOR_NODE_NAME a{&a, &b, ...};
+ *      The number of argument is depend on the type of operator node
+ */
 
 /*
  * Below is a template for creating a custom operator node, extensions of OperatorNode with different compute and derivative function
@@ -60,6 +68,13 @@ namespace nodeflow{
 /*
  * Addition operator : a[i][j] + b[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *      ∂b = 1
+ *
+ * @params: a: Node*: pointer to first input Node
+ *          b: Node*: pointer to second input Node
 */
 class Add: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -79,6 +94,13 @@ class Add: public OperatorNode<2>{
 /*
  * Matrix multiplication operator a * b
  * TYPE: NON ELEMENT WISE
+ *
+ * DERIVATIVE: Jacobian matrix is multiplied directly with outer derivative directly to get sum of partial derivative
+ *      ∂a = b.T * outer_derivative 
+ *      ∂b = outer_derivative * a.T
+ *
+ * @params: a: Node*: pointer to first input Node
+ *          b: Node*: pointer to second input Node
 */
 class Mul: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -113,6 +135,13 @@ class Mul: public OperatorNode<2>{
 /*
  * Element wise Multiplication operator: a[i][j] * b[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = b
+ *      ∂b = a
+ *
+ * @params: a: Node*: pointer to first input Node
+ *          b: Node*: pointer to second input Node
 */
 class EleWiseMul: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -147,6 +176,9 @@ class EleWiseMul: public OperatorNode<2>{
  * Matrix-Scalar multiplication operator: a[i][j] * b
  * TYPE: MATRIX SCALAR
  *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
  * Used to multiply a matrix with a scalar value
  *
  * NOTE: The graph will not find the partial derivative with respect to scalar input(second input)
@@ -178,6 +210,13 @@ class ScalarMul: public OperatorNode<1>{
 /*
  * Element wise Division a[i][j] / b[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *      ∂b = 1
+ *
+ * @params: a: Node*: pointer to first input Node
+ *          b: Node*: pointer to second input Node
 */
 class EleWiseDiv: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -211,8 +250,15 @@ class EleWiseDiv: public OperatorNode<2>{
  * Matrix-Scalar division operator: a[i][j] / b[0][0]
  * TYPE: MATRIX matrix-SCALAR
  *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *      ∂b = 1
+ *
  * NOTE: the scalar input Node is a 1x1 matrix
  * Use this to get partial derivative with respect to the second input
+ *
+ * @params: a: Node*: pointer to first input Node
+ *          b: Node*: pointer to second input Node (1x1 matrix node)
 */
 class Div: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -245,6 +291,9 @@ class Div: public OperatorNode<2>{
  * Matrix-Scalar division operator: a[i][j] / b
  * TYPE: ELEMENT WISE
  *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
  * Used to multiply a matrix with a scalar value
  *
  * NOTE: The graph will not find the partial derivative with respect to scalar input(second input)
@@ -273,6 +322,11 @@ class ScalarDiv: public OperatorNode<1>{
 /*
  * Power operator: raise every elements of a matrix to the power of a scalar value. a[i][j]^b
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Pow: public OperatorNode<1>{
     private:
@@ -299,6 +353,11 @@ class Pow: public OperatorNode<1>{
 /*
  * Square Root operator : √a[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Sqrt:public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -318,6 +377,11 @@ class Sqrt:public OperatorNode<1>{
 /*
  * Invert or Negation operator : -a[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = -1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Invert: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -334,6 +398,13 @@ class Invert: public OperatorNode<1>{
 /*
  * Subtraction operator : a[i][j] - b[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *      ∂b = -1
+ *
+ * @params: a: Node*: pointer to first input Node
+ *          b: Node*: pointer to second input Node
 */
 class Subtract: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
@@ -354,6 +425,11 @@ class Subtract: public OperatorNode<2>{
 /*
  * Inversion operator: 1 / a[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = -1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Inverse: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -375,6 +451,11 @@ class Inverse: public OperatorNode<1>{
 /*
  * Sin operator: sin(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Sin: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -392,6 +473,11 @@ class Sin: public OperatorNode<1>{
 /*
  * Cos operator: cos(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Cos: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -409,6 +495,11 @@ class Cos: public OperatorNode<1>{
 /*
  * Tan operator: tan(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Tan: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -430,6 +521,11 @@ class Tan: public OperatorNode<1>{
 /*
  * Hyperbolic Sin operator: sinh(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Sinh: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -447,6 +543,11 @@ class Sinh: public OperatorNode<1>{
 /*
  * Hyperbolic Cos operator: cosh(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Cosh: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -464,6 +565,11 @@ class Cosh: public OperatorNode<1>{
 /*
  * Hyperbolic Cos operator: tanh(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Tanh: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -485,6 +591,11 @@ class Tanh: public OperatorNode<1>{
 /*
  * Exponential operator: exp(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Exp: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -502,6 +613,11 @@ class Exp: public OperatorNode<1>{
 /*
  * Log base e or Ln operator: ln(a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Loge: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -523,6 +639,11 @@ class Loge: public OperatorNode<1>{
 /*
  * Sum operator: sum all of the element in a matrix into a 1x1 matrix: Σa[i][j]
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Sum: public OperatorNode<1>{
     public:
@@ -557,6 +678,11 @@ class Sum: public OperatorNode<1>{
 /*
  * Rectifier Linear Unit operator: max(0, a[i][j])
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class ReLU: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -579,7 +705,12 @@ class ReLU: public OperatorNode<1>{
  * Leaky Rectifier Linear Unit operator: max(leak_value, a[i][j])
  * TYPE: ELEMENT WISE
  *
+ * DERIVATIVE: 
+ *      ∂a = 1
+ *
  * NOTE: default leak_value = 0.1
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class LeakyReLU: public OperatorNode<1>{
     private:
@@ -619,6 +750,11 @@ class LeakyReLU: public OperatorNode<1>{
 /*
  * Sigmoid operator: 1 / (1 + e^(-a[i][j]))
  * TYPE: ELEMENT WISE
+ *
+ * DERIVATIVE: 
+ *      ∂a = 
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Sigmoid: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -642,8 +778,27 @@ class Sigmoid: public OperatorNode<1>{
 };
 
 /*
- * Softmax operator: e^a[i][j] / Σa
+ * Softmax operator: e^a[i][j] / Σe^a (e^a is element wise)
  * TYPE: ELEMENT WISE + NORMALIZATION
+ *
+ * DERIVATIVE: 
+ *      exp = e^a (element wise)
+ *      sum = Σexp
+ *      diagonal_exp_sum = diagonal(exp * sum) 
+ *
+ *          [ exp11 . sum         0              0      ] <- diagonal_exp_sum
+ *          [       0        exp22 . sum         0      ]
+ *          [       0             0         exp33 . sum ]
+ *
+ *      jacobian = ( diagonal_exp_sum - square_transpose_elewise_mul ) / sum^2
+ *
+ *          [ exp11sum - e1e1           e1e2                 e1e3     ] <-jacobian
+ *          [       e2e1          exp22sum - e2e2            e2e3     ]
+ *          [       e3e1                e3e2          exp33sum - e3e3 ]
+ *
+ *      ∂a = jacobian * outer derivative
+ *
+ * @params: a: Node*: pointer to input Node
 */
 class Softmax: public OperatorNode<1>{
     using OperatorNode<1>::OperatorNode;
@@ -660,7 +815,6 @@ class Softmax: public OperatorNode<1>{
         Eigen::MatrixXd exp = this->getInput().array().exp();
         double sum = exp.sum();
 
-        // Eigen::DiagonalMatrix<double, Eigen::Dynamic> diagonal_exp_sum;
         Eigen::MatrixXd diagonal_exp_sum = Eigen
             ::MatrixXd
             ::Constant(exp.rows(), exp.rows(), 0);
