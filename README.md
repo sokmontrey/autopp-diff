@@ -56,7 +56,7 @@ Node c = Eigen::VectorXd::Constant(3, 0);
 ```
 
 > [!NOTE]
-> Further usage information coming soon
+> Further documentation will be here coming soon
 
 ## Installation with CMake:
 
