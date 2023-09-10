@@ -5,10 +5,13 @@
 
 namespace nodeflow{
 
-/*
+/**
+ * Fundamental element in a  computational graph.
+ *      Using Eigen::MatrixXd to represent its value.
  *
-*/
-
+ * @constructors:
+ *      @params: Eigen::Matrix or Eigen::Vector : Assign an Eigen::Matrix or Vector object to the value member.
+ */
 class Node{
     protected:
         bool is_differentiatable = true;
@@ -148,8 +151,26 @@ class Node{
         }
 };
 
+/**
+ * Based class for Operator Nodes.
+ *
+ * .finished() must be used at the final OperatorNode to finish setting up the graph
+ * .forward() is for forward evaluation of the function
+ *      Any parameters for the function has to be set directly to the input Node 
+ *          This can be done using node_name = Eigen::Matrix OR Eigen::Vector
+ *          OR node_name.getValue(row, col) = new_element_value
+ *          OR node_name(row, col) = new_element_value
+ * .backward() propagate backward to calculate partial derivative of the function with respect to each input Nodes
+ *      Can be called independanly from .forward(). Does not need to call .foward() to operate .backward()
+ * .reset() must be used after each .forward() or .backward() call
+ *
+ * @constructors:
+ *      1. @params: input_list: initializer_list of Node* to input Node(s)
+ *      2. @params: a: pointer to a single input Node
+ *      3. @params: a, b: pointer to first and second input Node
+ */
 template <unsigned int NINPUT>
-class OperatorNode: public Node{
+class OperatorNode: public Node {
     protected:
         Node* inputs[NINPUT];
 
@@ -187,22 +208,6 @@ class OperatorNode: public Node{
         Eigen::MatrixXd getInput(){
             return this->inputs[0]->getValue();
         }
-        // REASON: answer was not correct
-        //      Try rerun it again
-        //      Maybe because I use .constant on one of the Node
-        // std::vector<Eigen::MatrixXd> getGrad(){
-        //     if(!this->is_differentiatable) 
-        //         std::cout 
-        //             << "Warning: Calling 'getGrad()' on a constant node" 
-        //             << std::endl;
-        //
-        //     std::vector<Eigen::MatrixXd> result;
-        //     for(size_t i=0; i<NINPUT; i++){
-        //         result.push_back(this->outer_derivative * this->derivative(i));
-        //     }
-        //     return result;
-        // }
-
         void reset() override {
             if(!this->is_value_ready) return;
 
