@@ -10,16 +10,13 @@ using namespace nodeflow;
 
 //TODO: manually set rows and cols
 int main() {
-    Node a = Node::Matrix({
-        {1,2,3},
-        {4,5,6}
-    });
-    Node b = Node::Matrix(3, 1, 1);
+    Node a = Node::Matrix(2, 3, 1);
+    Node b = Node::Matrix(3, 2, 1);
 
     Mul f(&a, &b);
 
-    f.forward();
     f.finished();
+    f.forward();
     f.print();
 
     f.backward();

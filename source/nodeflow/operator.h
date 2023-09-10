@@ -47,6 +47,11 @@ class Add: public OperatorNode<2>{
 class Mul: public OperatorNode<2>{
     using OperatorNode<2>::OperatorNode;
 
+    void setSize() override {
+        this->setRows( this->inputs[0]->getRows() );
+        this->setCols( this->inputs[1]->getCols() );
+    }
+
     void compute() override {
         this->value =
             this->getInput(0)

@@ -23,13 +23,25 @@ class Node{
         int num_parent = 0;
         int parent_called_count = 0;
 
+        void setRows(size_t rows){
+            this->rows = rows;
+        }
+        void setCols(size_t cols){
+            this->cols = cols;
+        }
     public:
         Node() = default;
         Node(Eigen::MatrixXd initial_value){
             this->value = initial_value;
+
+            this->setRows(initial_value.rows());
+            this->setCols(initial_value.cols());
         }
         void operator=(Eigen::MatrixXd new_value){
             this->value = new_value;
+
+            this->setRows(new_value.rows());
+            this->setCols(new_value.cols());
         }
 
         void print(){
@@ -38,6 +50,9 @@ class Node{
                 << this->value << "\n"
                 << "----\n";
         }
+
+        size_t getRows(){ return this->rows; }
+        size_t getCols(){ return this->cols; }
 
         Eigen::MatrixXd& operator()(){
             return this->value;
@@ -58,8 +73,8 @@ class Node{
 
         void finished(){
             this->num_parent++;
-            this->rows = this->value.rows();
-            this->cols = this->value.cols();
+            this->setRows(this->value.rows());
+            this->setCols(this->value.cols());
         }
         virtual void reset(){
             this->is_value_ready = false;
@@ -140,7 +155,10 @@ class OperatorNode: public Node{
 
         virtual void compute() = 0;
         virtual Eigen::MatrixXd derivative(size_t input_wrt_index) = 0;
-
+        virtual void setSize(){
+            this->setRows( this->inputs[0]->getRows() );
+            this->setCols( this->inputs[0]->getCols() );
+        }
     public:
         OperatorNode() = default;
         OperatorNode(std::initializer_list<Node*> input_list){
@@ -159,6 +177,8 @@ class OperatorNode: public Node{
                 auto input = *(input_list.begin() + i);
                 this->inputs[i] = input;
             }
+
+            this->setSize();
         }
 
         Eigen::MatrixXd getInput(size_t input_index){
@@ -207,10 +227,7 @@ class OperatorNode: public Node{
             }
             this->is_differentiatable = is_diff_temp;
 
-            if(!this->rows){
-                this->rows = this->value.rows();
-                this->cols = this->value.cols();
-            }
+            this->setSize();
         }
 
         Eigen::MatrixXd& forward() override{
