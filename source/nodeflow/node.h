@@ -74,7 +74,7 @@ class Node{
             return this->outer_derivative;
         }
 
-        void finished(){
+        virtual void finished(){
             this->num_parent++;
             this->setRows(this->value.rows());
             this->setCols(this->value.cols());
@@ -219,7 +219,7 @@ class OperatorNode: public Node {
             }
         }
 
-        void finished(){
+        void finished() override {
             this->num_parent++;
 
             bool is_diff_temp = false;
