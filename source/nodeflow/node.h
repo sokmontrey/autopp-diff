@@ -66,6 +66,12 @@ class Node{
         Eigen::MatrixXd& getValue(){
             return this->value;
         }
+        void setValue(Eigen::MatrixXd new_value){
+            this->value = new_value;
+
+            this->setRows(new_value.rows());
+            this->setCols(new_value.cols());
+        }
         Eigen::MatrixXd& getGrad(){
             if(!this->is_differentiatable) 
                 std::cout 
@@ -103,6 +109,9 @@ class Node{
             }
 
             this->parent_called_count++;
+        }
+        virtual void backward(){
+            //a method with no pupose just for the graph
         }
 
         static Node Random(size_t rows){
