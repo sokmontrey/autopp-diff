@@ -21,7 +21,6 @@ using namespace nodeflow;
 // 
 
 int main() {
-
   Graph f("add(sin(mul(a, b)), a)", {
     {"a", Node::Scalar(3.14)},
     {"b", Node::Scalar(0.25)}

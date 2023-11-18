@@ -4,7 +4,6 @@
 #include <Eigen/Dense>
 
 namespace nodeflow{
-
 /**
  * Fundamental element in a  computational graph.
  *      Using Eigen::MatrixXd to represent its value.
