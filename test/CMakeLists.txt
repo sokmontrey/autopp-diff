@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.24.0)
 project(Test)
 
-add_executable(nodeflow_test test_main.cpp)
+# add_executable(nodeflow_test test_main.cpp)
+add_executable(nodeflow_test eval.cpp)
 target_link_libraries(nodeflow_test nodeflow)

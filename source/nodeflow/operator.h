@@ -3,8 +3,7 @@
 #include <nodeflow/node.h>
 #include <cmath>
 
-//TODO: check input size before any operation
-//finish all the derivative doc
+//TODO: finish all the derivative doc
 // Implement:
 //      Normal operator
 //      Statistic operatos
