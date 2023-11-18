@@ -16,7 +16,7 @@ private:
 
 public:
     Graph(std::string s){
-        this->f = parser(s);
+        this->f = parser(trim(s));
         this->f->finished();
     }
     ~Graph(){
@@ -116,6 +116,15 @@ public:
         std::string temp;
         for(int i = s.length() - 1; i >= 0; i--){
             temp += s[i];
+        }
+        return temp;
+    }
+    std::string trim(std::string s){
+        std::string temp="";
+        for(int i = 0; i < s.length(); i++){
+            if (s[i] != ' '){
+                temp += s[i];
+            }
         }
         return temp;
     }
