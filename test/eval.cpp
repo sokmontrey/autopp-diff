@@ -22,9 +22,9 @@ using namespace nodeflow;
 
 int main() {
 
-  Graph f("add(a,b)");
+  Graph f("add(sin(mul(a, b)), a)");
 
-  f.setNode("a", Node::Scalar(1)).setNode("b", Node::Scalar(5));
+  f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
 
   f.finished().forward().print();
 
