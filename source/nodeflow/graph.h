@@ -6,6 +6,9 @@
 #include <vector>
 #include <map>
 
+//TODO: constructor with initial node values
+//TODO: allow sub graph
+
 namespace nodeflow {
 
 class Graph{
@@ -16,6 +19,11 @@ private:
 
 public:
     Graph(std::string s){
+        this->f = parser(removeSpaces(s));
+        this->f->finished();
+    }
+    Graph(std::string s, std::map<std::string, Node> node_map){
+        this->node_map = node_map;
         this->f = parser(removeSpaces(s));
         this->f->finished();
     }
@@ -131,17 +139,6 @@ public:
             }
         }
         return temp;
-    }
-    //a method that convert symbol expression to function expression
-    //for example: a + b -> add(a, b)
-    // implement this method for +, -, *, /, ^ and ()
-    // for example: a + b * c -> add(a, mul(b, c))
-    // for example: (a + b) * c -> mul(add(a, b), c)
-    // if there are already functions in the expression, only convert the symbols to functions
-    // for example: add(a, b) + c -> add(add(a, b), c)
-    std::string symbolToFunction(std::string s){
-
-        return s;
     }
 
     Graph& setNode(std::string name, Node node){
