@@ -12,10 +12,17 @@ class Graph{
 private:
     std::map<std::string, Node> node_map;
     std::vector<Node*> operator_nodes;
+    Node* f = nullptr;
 
 public:
     Graph(std::string s){
-        parser(s);
+        this->f = parser(s);
+        this->f->finished();
+    }
+    ~Graph(){
+        for (int i = 0; i < operator_nodes.size(); i++){
+            delete this->operator_nodes[i];
+        }
     }
     
     Node* parser(std::string s){
@@ -23,29 +30,25 @@ public:
         std::vector<std::string> operator_args = splitArgs(getOperatorArgs(s));
 
         if (operator_name == ""){
-            node_map[s] = Node();
-            return &node_map[s];
+            this->node_map[s] = Node();
+            return &this->node_map[s];
         } 
 
-        return createOperator(
+        createOperator(
             parser(operator_args[0]), 
             operator_args.size() > 1 ? parser(operator_args[1]) : nullptr,
             operator_name
         );
-    }
 
-    Node* createOperator(Node* a, Node* b, std::string operator_name){
+        return this->operator_nodes[this->operator_nodes.size() - 1];
+    }
+    void createOperator(Node* a, Node* b, std::string operator_name){
         if (operator_name == "add"){
-            Node* op = new Add(a, b);
-            this->operator_nodes.push_back(op);
-            return op;
+            this->operator_nodes.push_back(new Add(a, b));
         } else if ( operator_name == "mul" || operator_name == "matmul" || operator_name == "dot" ) {
-            Node* op = new Mul(a, b);
-            this->operator_nodes.push_back(op);
-            return op;
+            this->operator_nodes.push_back(new Mul(a, b));
         }
     }
-
     std::string getOperatorName(std::string s){
         std::string temp="";
         for(int i = 0; i < s.length(); i++){
@@ -115,6 +118,68 @@ public:
             temp += s[i];
         }
         return temp;
+    }
+
+    Graph& setNode(std::string name, Node node){
+        this->node_map[name] = node;
+        return *this;
+    }
+    Node* getNode(std::string name){
+        return &this->node_map[name];
+    }
+    Eigen::MatrixXd getGrad(std::string name){
+        return this->node_map[name].getGrad();
+    }
+    Eigen::MatrixXd getValue(std::string name){
+        return this->node_map[name].getValue();
+    }
+    Eigen::MatrixXd get(std::string name){
+        return this->node_map[name].getValue();
+    }
+    Eigen::MatrixXd getOutput(){
+        return this->f->getValue();
+    }
+    Graph& setValue(std::string name, Eigen::MatrixXd value){
+        this->node_map[name].setValue(value);
+        return *this;
+    }
+    Graph& set(std::string name, Eigen::MatrixXd value){
+        this->node_map[name].setValue(value);
+        return *this;
+    }
+
+    Node* getF(){
+        return this->f;
+    }
+
+    Graph& constant(std::string name){
+        this->node_map[name].constant();
+        return *this;
+    }
+
+    Graph& finished(){
+        this->f->finished();
+        return *this;
+    }
+
+    Graph& forward(){
+        this->f->forward();
+        return *this;
+    }
+
+    Graph& backward(){
+        this->f->backward();
+        return *this;
+    }
+
+    Graph& print(){
+        this->f->print();
+        return *this;
+    }
+
+    Graph& reset(){
+        this->f->reset();
+        return *this;
     }
 };
 

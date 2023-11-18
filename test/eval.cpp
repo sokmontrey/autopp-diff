@@ -17,8 +17,16 @@ using namespace nodeflow;
     std::cout << a.getGrad() << std::endl;
 */
 
+//TODO: Graph constructor with initial node values
+// 
+
 int main() {
+
   Graph f("add(a,b)");
+
+  f.setNode("a", Node::Scalar(1)).setNode("b", Node::Scalar(5));
+
+  f.finished().forward().print();
 
   return 0;
 }
