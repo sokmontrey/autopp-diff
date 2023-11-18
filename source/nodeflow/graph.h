@@ -16,7 +16,7 @@ private:
 
 public:
     Graph(std::string s){
-        this->f = parser(trim(s));
+        this->f = parser(removeSpaces(s));
         this->f->finished();
     }
     ~Graph(){
@@ -119,7 +119,7 @@ public:
         }
         return temp;
     }
-    std::string trim(std::string s){
+    std::string removeSpaces(std::string s){
         std::string temp="";
         for(int i = 0; i < s.length(); i++){
             if (s[i] != ' '){
