@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cmath>
-
 //TODO: finish all the derivative doc
 // Implement:
 //      Normal operator

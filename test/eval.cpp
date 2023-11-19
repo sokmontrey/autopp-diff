@@ -17,7 +17,7 @@ using namespace nodeflow;
 */
 
 int main() {
-    Graph f("add(a, 1)", {
+    Graph f("add(a, PI)", {
         {"a", Number(3.14)},
     });
 
