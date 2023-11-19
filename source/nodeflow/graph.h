@@ -49,15 +49,17 @@ private:
         }
         return this->operator_nodes[this->operator_nodes.size() - 1];
     }
-public:
-    Graph(std::string s){
+    void init(std::string s){
         this->f = parse(removeSpaces(s));
         this->f->finished();
     }
+public:
+    Graph(std::string s){
+        init(s);
+    }
     Graph(std::string s, std::map<std::string, Node> node_map){
         this->node_map = node_map;
-        this->f = parse(removeSpaces(s));
-        this->f->finished();
+        init(s);
     }
     ~Graph(){
         for (int i = 0; i < operator_nodes.size(); i++){
