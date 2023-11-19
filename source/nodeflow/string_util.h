@@ -4,7 +4,7 @@ namespace nodeflow {
 
 std::string getOperatorName(std::string s);
 std::string getOperatorArgs(std::string s);
-std::vector<std::string> splitArgs(std::string s);
+std::pair<std::string, std::string> splitArgs(std::string s);
 std::string reverseString(std::string s);
 std::string removeSpaces(std::string s);
 
@@ -47,7 +47,7 @@ std::string nodeflow::getOperatorArgs(std::string s){
     }
     return temp;
 }
-std::vector<std::string> nodeflow::splitArgs(std::string s){
+std::pair<std::string, std::string> nodeflow::splitArgs(std::string s){
     //reverse for loop the string
     std::string first_args_temp = "";
     std::string second_args_temp = "";
@@ -75,7 +75,7 @@ std::vector<std::string> nodeflow::splitArgs(std::string s){
     std::string first_args = nodeflow::reverseString(first_args_temp);
     std::string second_args = nodeflow::reverseString(second_args_temp);
 
-    return {first_args, second_args};
+    return std::make_pair(first_args, second_args);
 }
 
 std::string nodeflow::reverseString(std::string s){

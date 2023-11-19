@@ -1,10 +1,5 @@
 #pragma once 
 
-//TODO: constructor with initial node values
-//TODO: allow number for operator that require constant for example the Pow operator takes a node and a double
-
-//DOING: sub graph
-
 namespace nodeflow {
 
 class Graph{
@@ -22,13 +17,14 @@ private:
         if (s == "") return nullptr;
 
         std::string operator_name = getOperatorName(s);
-        std::vector<std::string> operator_args = splitArgs(getOperatorArgs(s));
+
+        std::pair<std::string,std::string> operator_args = splitArgs(getOperatorArgs(s));
 
         if (operator_name == "") return createNode(s);
 
         this->operator_nodes.push_back(createOperator(
-            parse(operator_args[0]),
-            parse(operator_args[1]),
+            parse(operator_args.first),
+            parse(operator_args.second),
             operator_name
         ));
         return this->operator_nodes.back();

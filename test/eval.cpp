@@ -28,13 +28,13 @@ int main() {
     //     {"$m", &m},
     // });
 
-    // Graph f("add(a, PI)", {
-    //     {"a", Number(3.14)},
-    // });
+    Graph f("add(a, PI)", {
+        {"a", Node::Scalar(3.14)},
+    });
 
     // f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
 
-    // f.forward().print();
+    f.forward().print();
     //
     // std::cout << f.backward().getGrad("w") << std::endl;
 
