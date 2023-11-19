@@ -53,6 +53,7 @@ private:
         this->f = parse(removeSpaces(s));
         this->f->finished();
     }
+
 public:
     Graph(std::string s){
         init(s);
