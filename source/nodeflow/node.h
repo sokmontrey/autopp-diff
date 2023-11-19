@@ -99,9 +99,16 @@ public:
 //================================================================
 
     virtual void finished(){
-        this->num_parent++;
+        this->finished(true);
+    }
+    virtual void finished(bool is_child){
         this->setRows(this->value.rows());
         this->setCols(this->value.cols());
+        this->num_parent++;
+    }
+    void clearGraph(){
+        this->num_parent = 0;
+        return;
     }
     virtual void reset(){
         this->is_value_ready = false;
@@ -252,6 +259,13 @@ public:
 //                      Graph Methods
 //================================================================
 
+    void clearGraph() {
+        this->num_parent = 0;
+        for(size_t i=0; i<NINPUT; i++){
+            this->inputs[i]->clearGraph();
+        }
+        return;
+    }
     void reset() override {
         if(!this->is_value_ready) return;
 
@@ -262,7 +276,11 @@ public:
             this->inputs[i]->reset();
         }
     }
-    void finished() override {
+    void finished(){
+        clearGraph();
+        finished(true);
+    }
+    void finished(bool is_child) override {
         this->num_parent++;
 
         bool is_diff_temp = false;
