@@ -18,11 +18,15 @@ using namespace nodeflow;
 
 int main() {
     //a simple regression model
-    Graph f("tanh(add(mul(w, x), b))", {
-        {"x", Node::Vector(2, 1)},
-        {"w", Node::Random(3, 2)},
-        {"b", Node::Random(3, 1)},
-    });
+    // Node w = Node::Random(3, 2);
+    // Node x = Node::Vector(2, 1);
+    // Mul m(&w, &x);
+
+    // Graph f("tanh(add($m, b))", {
+    //     {"b", Node::Random(3, 1)},
+    // },{
+    //     {"$m", &m},
+    // });
 
     // Graph f("add(a, PI)", {
     //     {"a", Number(3.14)},
@@ -30,9 +34,9 @@ int main() {
 
     // f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
 
-    f.forward().print();
-
-    std::cout << f.backward().getGrad("w") << std::endl;
+    // f.forward().print();
+    //
+    // std::cout << f.backward().getGrad("w") << std::endl;
 
     return 0;
 }

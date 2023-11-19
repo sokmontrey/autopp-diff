@@ -1,8 +1,9 @@
 #pragma once 
 
 //TODO: constructor with initial node values
-//TODO: allow sub graph
 //TODO: allow number for operator that require constant for example the Pow operator takes a node and a double
+
+//DOING: sub graph
 
 namespace nodeflow {
 
@@ -10,6 +11,7 @@ class Graph{
 private:
     std::map<std::string, Node> node_map;
     std::vector<Node*> operator_nodes;
+    std::map<std::string, Node*> sub_graphs;
     Node* f = nullptr;
 
 //================================================================
@@ -32,6 +34,8 @@ private:
         return this->operator_nodes.back();
     }
     Node* createNode(std::string node_name){
+        if (node_name[0] == '$') return this->sub_graphs[node_name];
+
         bool is_number = isNumber(node_name);
         std::string s = (is_number ? "c-" : "") + node_name;
 
@@ -57,8 +61,27 @@ public:
     Graph(std::string s){
         init(s);
     }
-    Graph(std::string s, std::map<std::string, Node> node_map){
+    Graph(
+        std::string s, 
+        std::map<std::string, Node> node_map
+    ){
         this->node_map = node_map;
+        init(s);
+    }
+    Graph(
+        std::string s, 
+        std::map<std::string, Node*> subgraphs
+    ){
+        this->sub_graphs = subgraphs;
+        init(s);
+    }
+    Graph(
+        std::string s, 
+        std::map<std::string, Node> node_map, 
+        std::map<std::string, Node*> subgraphs
+    ){
+        this->node_map = node_map;
+        this->sub_graphs = subgraphs;
         init(s);
     }
     ~Graph(){
