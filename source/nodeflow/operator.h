@@ -6,14 +6,14 @@
 //      Statistic operatos
 //      Transpose operator
 
-/*
+/**
  * NOTE: @params: is referring to the constructor parameter of the OperatorNode
  *      Constructor argument can be individual individual argument form: OPERATOR_NODE_NAME a(&a, &b, ...);
  *      OR list argument form: OPERATOR_NODE_NAME a{&a, &b, ...};
  *      The number of argument is depend on the type of operator node
  */
 
-/*
+/**
  * Below is a template for creating a custom operator node, extensions of OperatorNode with different compute and derivative function
  *
 class FunctionName: public OperatorNode<[number of input]>{
@@ -51,17 +51,17 @@ class FunctionName: public OperatorNode<[number of input]>{
 
 namespace nodeflow{
 
-/*
+/**
  * Since scalar, vector, and matrix can be represented using an Eigen::Matrix, 
  *      This doc will only refer to matrix. But the operator shoul work for 
  *      any other type of tensor with dimension smaller than the matrix.
  */
 
-//--------------------------------------------------------------------------
-//                           BASIC FUNCTION 
-//--------------------------------------------------------------------------
+//==========================================================================
+//                            Basic Function 
+//==========================================================================
 
-/*
+/**
  * Addition operator : a[i][j] + b[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -87,7 +87,7 @@ class Add: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Matrix multiplication operator a * b
  * TYPE: NON ELEMENT WISE
  *
@@ -128,7 +128,7 @@ class Mul: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Element wise Multiplication operator: a[i][j] * b[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -168,7 +168,7 @@ class EleWiseMul: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Matrix-Scalar multiplication operator: a[i][j] * b
  * TYPE: MATRIX SCALAR
  *
@@ -196,7 +196,7 @@ class ScalarMul: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Element wise Division a[i][j] / b[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -234,8 +234,7 @@ class EleWiseDiv: public OperatorNode<2>{
     }
 };
 
-//TODO create the same thing (Div with both input gradient) for Mul
-/*
+/**
  * Matrix-Scalar division operator: a[i][j] / b[0][0]
  * TYPE: MATRIX matrix-SCALAR
  *
@@ -276,7 +275,7 @@ class Div: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Matrix-Scalar division operator: a[i][j] / b
  * TYPE: ELEMENT WISE
  *
@@ -302,7 +301,7 @@ class ScalarDiv: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Power operator: raise every elements of a matrix to the power of a scalar value. a[i][j]^b
  * TYPE: ELEMENT WISE
  *
@@ -328,7 +327,7 @@ class Pow: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Square Root operator : √a[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -351,7 +350,7 @@ class Sqrt:public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Invert or Negation operator : -a[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -372,7 +371,7 @@ class Invert: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Subtraction operator : a[i][j] - b[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -399,7 +398,7 @@ class Subtract: public OperatorNode<2>{
     }
 };
 
-/*
+/**
  * Inversion operator: 1 / a[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -421,11 +420,11 @@ class Inverse: public OperatorNode<1>{
     }
 };
 
-//--------------------------------------------------------------------------
-//                              TRIGONOMETRY
-//--------------------------------------------------------------------------
+//==========================================================================
+//                              Trigonometric
+//==========================================================================
 
-/*
+/**
  * Sin operator: sin(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -447,7 +446,7 @@ class Sin: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Cos operator: cos(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -469,7 +468,7 @@ class Cos: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Tan operator: tan(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -491,11 +490,11 @@ class Tan: public OperatorNode<1>{
     }
 };
 
-//--------------------------------------------------------------------------
-//                         HYPERBOLIC FUNCTION
-//--------------------------------------------------------------------------
+//==========================================================================
+//                              Hyperbolic 
+//==========================================================================
 
-/*
+/**
  * Hyperbolic Sin operator: sinh(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -517,7 +516,7 @@ class Sinh: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Hyperbolic Cos operator: cosh(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -539,7 +538,7 @@ class Cosh: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Hyperbolic Cos operator: tanh(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -561,11 +560,11 @@ class Tanh: public OperatorNode<1>{
     }
 };
 
-//--------------------------------------------------------------------------
-//                EXPONENTIAL and LOGARITHMIC FUNCTION
-//--------------------------------------------------------------------------
+//==========================================================================
+//                              Exp & Log 
+//==========================================================================
 
-/*
+/**
  * Exponential operator: exp(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -587,7 +586,7 @@ class Exp: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Log base e or Ln operator: ln(a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -609,11 +608,11 @@ class Loge: public OperatorNode<1>{
     }
 };
 
-//--------------------------------------------------------------------------
-//                      OTHER MATRIX OPERATION
-//--------------------------------------------------------------------------
+//==========================================================================
+//                              Matrix Function
+//==========================================================================
 
-/*
+/**
  * Sum operator: sum all of the element in a matrix into a 1x1 matrix: Σa[i][j]
  * TYPE: ELEMENT WISE
  *
@@ -648,11 +647,11 @@ class Sum: public OperatorNode<1>{
     }
 };
 
-//--------------------------------------------------------------------------
-//                      NEURAL NETWORK FUNCTION 
-//--------------------------------------------------------------------------
+//==========================================================================
+//                              Statistic Function
+//==========================================================================
 
-/*
+/**
  * Rectifier Linear Unit operator: max(0, a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -678,7 +677,7 @@ class ReLU: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Leaky Rectifier Linear Unit operator: max(leak_value, a[i][j])
  * TYPE: ELEMENT WISE
  *
@@ -717,8 +716,7 @@ class LeakyReLU: public OperatorNode<2>{
     }
 };
 
-
-/*
+/**
  * Sigmoid operator: 1 / (1 + e^(-a[i][j]))
  * TYPE: ELEMENT WISE
  *
@@ -748,7 +746,7 @@ class Sigmoid: public OperatorNode<1>{
     }
 };
 
-/*
+/**
  * Softmax operator: e^a[i][j] / Σe^a (e^a is element wise)
  * TYPE: ELEMENT WISE + NORMALIZATION
  *

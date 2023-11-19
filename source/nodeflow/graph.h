@@ -12,6 +12,10 @@ private:
     std::vector<Node*> operator_nodes;
     Node* f = nullptr;
 
+//================================================================
+//                          Parser
+//================================================================
+
     Node* parse(std::string s){
         if (s == "") return nullptr;
 
@@ -38,17 +42,12 @@ private:
         }
         return &this->node_map[s];
     }
-    Node* createOperator(Node* a, Node* b, std::string operator_name){
-        //TODO: check for two-nodes operator if b is exist or not then throw error 
-        if (operator_name == "add"){
-            this->operator_nodes.push_back(new Add(a, b));
-        } else if ( operator_name == "mul" || operator_name == "matmul" || operator_name == "dot" ) {
-            this->operator_nodes.push_back(new Mul(a, b));
-        }else if (operator_name=="sin") {
-            this->operator_nodes.push_back(new Sin(a));
-        }
-        return this->operator_nodes[this->operator_nodes.size() - 1];
-    }
+    Node* createOperator(Node* a, Node* b, std::string operator_name);
+
+//================================================================
+//                         Initializer
+//================================================================
+
     void init(std::string s){
         this->f = parse(removeSpaces(s));
         this->f->finished();
@@ -67,6 +66,14 @@ public:
         }
     }
 
+//================================================================
+//                        Node Methods
+//================================================================
+
+    Graph& constant(std::string name){
+        this->node_map[name].constant();
+        return *this;
+    }
     Graph& setNode(std::string name, Node node){
         this->node_map[name] = node;
         return *this;
@@ -74,6 +81,14 @@ public:
     Node* getNode(std::string name){
         return &this->node_map[name];
     }
+
+//================================================================
+//                        Eigen Methods
+//================================================================
+/**
+ * Methods for directly getting and setting Eigen::MatrixXd
+*/
+
     Eigen::MatrixXd getGrad(std::string name){
         return this->node_map[name].getGrad();
     }
@@ -83,9 +98,6 @@ public:
     Eigen::MatrixXd get(std::string name){
         return this->node_map[name].getValue();
     }
-    Eigen::MatrixXd getOutput(){
-        return this->f->getValue();
-    }
     Graph& setValue(std::string name, Eigen::MatrixXd value){
         this->node_map[name].setValue(value);
         return *this;
@@ -94,36 +106,40 @@ public:
         this->node_map[name].setValue(value);
         return *this;
     }
-
     Node* getF(){
         return this->f;
     }
-
-    Graph& constant(std::string name){
-        this->node_map[name].constant();
-        return *this;
+    Eigen::MatrixXd getOutput(){
+        return this->f->getValue();
     }
 
+//================================================================
+//                      Function Methods
+//================================================================
+/**
+* Methods that are used on the last operator (f) 
+*   without having to get f from the graph
+*/
     Graph& finished(){
         this->f->finished();
         return *this;
     }
-
     Graph& forward(){
         this->f->forward();
         return *this;
     }
-
     Graph& backward(){
         this->f->backward();
         return *this;
     }
-
+    Graph& backward(Eigen::MatrixXd partial_outer_derivative){
+        this->f->backward(partial_outer_derivative);
+        return *this;
+    }
     Graph& print(){
         this->f->print();
         return *this;
     }
-
     Graph& reset(){
         this->f->reset();
         return *this;
@@ -132,3 +148,15 @@ public:
 
 } //namespace nodeflow
 
+
+nodeflow::Node* nodeflow::Graph::createOperator(Node* a, Node* b, std::string operator_name){
+    //TODO: check for two-nodes operator if b is exist or not then throw error 
+    if (operator_name == "add"){
+        this->operator_nodes.push_back(new Add(a, b));
+    } else if ( operator_name == "mul" || operator_name == "matmul" || operator_name == "dot" ) {
+        this->operator_nodes.push_back(new Mul(a, b));
+    }else if (operator_name=="sin") {
+        this->operator_nodes.push_back(new Sin(a));
+    }
+    return this->operator_nodes[this->operator_nodes.size() - 1];
+}

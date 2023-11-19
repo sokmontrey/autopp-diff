@@ -18,7 +18,7 @@ using namespace nodeflow;
 
 int main() {
     Graph f("add(a, PI)", {
-        {"a", Number(3.14)},
+        {"a", Node::Scalar(3.14)},
     });
 
     // f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
