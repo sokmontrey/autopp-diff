@@ -2,7 +2,6 @@
 #include <Eigen/Dense>
 
 using namespace nodeflow;
-
 /**
     Node a = Node::Matrix(2, 3, 1);
     Node b = Node::Matrix(3, 2, 1);
@@ -17,18 +16,14 @@ using namespace nodeflow;
     std::cout << a.getGrad() << std::endl;
 */
 
-//TODO: Graph constructor with initial node values
-// 
-
 int main() {
-  Graph f("add(sin(mul(a, b)), a)", {
-    {"a", Node::Scalar(3.14)},
-    {"b", Node::Scalar(0.25)}
-  });
+    Graph f("add(a, 1)", {
+        {"a", Number(3.14)},
+    });
 
-  // f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
+    // f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
 
-  f.finished().forward().print();
+    f.finished().forward().print();
 
-  return 0;
+    return 0;
 }

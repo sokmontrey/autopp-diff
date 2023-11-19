@@ -8,6 +8,7 @@
 
 //TODO: constructor with initial node values
 //TODO: allow sub graph
+//TODO: allow number for operator that require constant for example the Pow operator takes a node and a double
 
 namespace nodeflow {
 
@@ -34,25 +35,31 @@ public:
     }
     
     Node* parser(std::string s){
+        if (s == "") return nullptr;
+
         std::string operator_name = getOperatorName(s);
         std::vector<std::string> operator_args = splitArgs(getOperatorArgs(s));
 
-        if (operator_name == ""){
-            if(this->node_map.find(s) == this->node_map.end()){
-                this->node_map[s] = Node();
-            }
-            return &this->node_map[s];
-        } 
-
-        createOperator(
-            parser(operator_args[0]), 
-            operator_args.size() > 1 ? parser(operator_args[1]) : nullptr,
-            operator_name
-        );
-
-        return this->operator_nodes[this->operator_nodes.size() - 1];
+        return operator_name == "" 
+            ? createNode(s) 
+            : createOperator(
+                parser(operator_args[0]),
+                parser(operator_args[1]),
+                operator_name
+            );
     }
-    void createOperator(Node* a, Node* b, std::string operator_name){
+    Node* createNode(std::string node_name){
+        bool is_number = isNumber(node_name);
+        std::string s = (is_number ? "c-" : "") + node_name;
+
+        if(this->node_map.find(s) == this->node_map.end()){
+            //if node is not already exist
+            this->node_map[s] = is_number ? Node::ScalarConst(std::stod(node_name)) : Node();
+        }
+        return &this->node_map[s];
+    }
+    Node* createOperator(Node* a, Node* b, std::string operator_name){
+        //TODO: check for two-nodes operator if b is exist or not then throw error 
         if (operator_name == "add"){
             this->operator_nodes.push_back(new Add(a, b));
         } else if ( operator_name == "mul" || operator_name == "matmul" || operator_name == "dot" ) {
@@ -60,6 +67,7 @@ public:
         }else if (operator_name=="sin") {
             this->operator_nodes.push_back(new Sin(a));
         }
+        return this->operator_nodes[this->operator_nodes.size() - 1];
     }
     std::string getOperatorName(std::string s){
         std::string temp="";
@@ -123,22 +131,6 @@ public:
         std::string second_args = reverseString(second_args_temp);
 
         return {first_args, second_args};
-    }
-    std::string reverseString(std::string s){
-        std::string temp;
-        for(int i = s.length() - 1; i >= 0; i--){
-            temp += s[i];
-        }
-        return temp;
-    }
-    std::string removeSpaces(std::string s){
-        std::string temp="";
-        for(int i = 0; i < s.length(); i++){
-            if (s[i] != ' '){
-                temp += s[i];
-            }
-        }
-        return temp;
     }
 
     Graph& setNode(std::string name, Node node){

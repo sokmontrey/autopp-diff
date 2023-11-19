@@ -1,7 +1,5 @@
 #pragma once
 
-#include <nodeflow/nodeflow.h>
-
 namespace nodeflow {
 
     Node Number(double value){

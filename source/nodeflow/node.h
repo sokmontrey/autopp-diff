@@ -91,8 +91,9 @@ class Node{
         bool isDifferentiatable(){
             return this->is_differentiatable;
         }
-        void constant(){
+        Node& constant(){
             this->is_differentiatable = false;
+            return *this;
         }
 
         virtual Eigen::MatrixXd& forward(){
@@ -125,6 +126,10 @@ class Node{
         static Node Scalar(double initial_value){
             Node temp = Eigen::MatrixXd::Constant(1, 1, initial_value);
             return temp;
+        }
+
+        static Node ScalarConst(double initial_value){
+            return Node::Scalar(initial_value).constant();
         }
 
         static Node Vector(size_t rows){

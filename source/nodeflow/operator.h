@@ -1,6 +1,5 @@
 #pragma once
 
-#include <nodeflow/node.h>
 #include <cmath>
 
 //TODO: finish all the derivative doc
@@ -185,25 +184,18 @@ class EleWiseMul: public OperatorNode<2>{
  * @params: a: Node*: pointer to input Node
  *          b: double: scalar value
 */
-class ScalarMul: public OperatorNode<1>{
-    private:
-        double scalar;
-    public:
-        ScalarMul(std::initializer_list<Node*> input_list, double scalar)
-        :OperatorNode<1>(input_list), scalar(scalar) { }
+class ScalarMul: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
 
-        ScalarMul(Node* input, double scalar)
-        :OperatorNode<1>(input), scalar(scalar) { }
+    void compute() override {
+        double scalar = this->getInput(1)(0, 0);
+        this->value = this->getInput() * scalar ;
+    }
 
-        void compute() override {
-            this->value = 
-                this->getInput() * scalar
-            ;
-        }
-
-        Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-            return this->scalar * this->outer_derivative.array();
-        }
+    Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        double scalar = this->getInput(1)(0, 0);
+        return scalar * this->outer_derivative.array();
+    }
 };
 
 /*
@@ -300,21 +292,15 @@ class Div: public OperatorNode<2>{
  * @params: a: Node*: pointer to input Node
  *          b: double: scalar value
 */
-class ScalarDiv: public OperatorNode<1>{
-    private:
-        double scalar;
-    public:
-        ScalarDiv(std::initializer_list<Node*> input_list, double scalar)
-        :OperatorNode<1>(input_list), scalar(scalar){ }
-
-        ScalarDiv(Node* input, double scalar)
-        :OperatorNode<1>(input), scalar(scalar){ }
-
+class ScalarDiv: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
     void compute() override {
-        this->value = this->getInput(0) / this->scalar;
+        double scalar = this->getInput(1)(0, 0);
+        this->value = this->getInput(0) / scalar;
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return (1 / this->scalar) * this->outer_derivative;
+        double scalar = this->getInput(1)(0, 0);
+        return (1 / scalar) * this->outer_derivative;
     }
 };
 
@@ -327,24 +313,19 @@ class ScalarDiv: public OperatorNode<1>{
  *
  * @params: a: Node*: pointer to input Node
 */
-class Pow: public OperatorNode<1>{
-    private:
-        double exponent;
-    public:
-        Pow(std::initializer_list<Node*> input_list, double exponent)
-        :OperatorNode<1>(input_list), exponent(exponent) { }
-
-        Pow(Node* input, double exponent)
-        :OperatorNode<1>(input), exponent(exponent) { } 
+class Pow: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
 
     void compute() override{
-        this->value = this->getInput().array().pow(this->exponent);
+        double exponent = this->getInput(1)(0,0);
+        this->value = this->getInput(0).array().pow(exponent);
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return this->getInput().array()
-            .pow(this->exponent - 1) 
-            * this->exponent
-            * this->outer_derivative.array()
+        double exponent = this->getInput(1)(0,0);
+        return this->getInput(0).array()
+            .pow(exponent - 1) 
+            * exponent
+            * outer_derivative.array()
         ;
     }
 };
@@ -365,8 +346,7 @@ class Sqrt:public OperatorNode<1>{
         this->value = this->getInput().array().sqrt();
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
-        return 
-            (
+        return (
                 1 / (2 * this->getInput().array().sqrt())
             ) * this->outer_derivative.array() 
         ;
@@ -711,32 +691,26 @@ class ReLU: public OperatorNode<1>{
  *
  * @params: a: Node*: pointer to input Node
 */
-class LeakyReLU: public OperatorNode<1>{
-    private:
-        double leak_value = 0.1;
-    public:
-        LeakyReLU(std::initializer_list<Node*> input_list)
-        :OperatorNode<1>(input_list) {}
-
-        LeakyReLU(Node* input):OperatorNode<1>(input) {}
-
-        LeakyReLU(std::initializer_list<Node*> input_list, double leak_value)
-        :OperatorNode<1>(input_list), leak_value(leak_value) {}
-
-        LeakyReLU(Node* input, double leak_value)
-        :OperatorNode<1>(input), leak_value(leak_value) {}
+class LeakyReLU: public OperatorNode<2>{
+    using OperatorNode<2>::OperatorNode;
 
     void compute() override{
+        double leak_value = this->getInput(1)(0, 0);
+        if(leak_value == 0) leak_value = 0.1;
+
         this->value =
-            this->getInput().cwiseMax(this->leak_value * this->getInput())
+            this->getInput().cwiseMax(leak_value * this->getInput())
         ;
     }
     Eigen::MatrixXd derivative(size_t input_wrt_index) override {
+        double leak_value = this->getInput(1)(0, 0);
+        if(leak_value == 0) leak_value = 0.1;
+
         size_t rows = this->getInput().rows();
         size_t cols = this->getInput().cols();
 
         Eigen::MatrixXd one_m = Eigen::MatrixXd::Constant(rows, cols, 1);
-        Eigen::MatrixXd leak_m = Eigen::MatrixXd::Constant(rows, cols, this->leak_value);
+        Eigen::MatrixXd leak_m = Eigen::MatrixXd::Constant(rows, cols, leak_value);
 
         return (this->getInput().array() > 0).select(one_m, leak_m).array()
             *
