@@ -22,13 +22,14 @@ private:
         std::string operator_name = getOperatorName(s);
         std::vector<std::string> operator_args = splitArgs(getOperatorArgs(s));
 
-        return operator_name == "" 
-            ? createNode(s) 
-            : createOperator(
-                parse(operator_args[0]),
-                parse(operator_args[1]),
-                operator_name
-            );
+        if (operator_name == "") return createNode(s);
+
+        this->operator_nodes.push_back(createOperator(
+            parse(operator_args[0]),
+            parse(operator_args[1]),
+            operator_name
+        ));
+        return this->operator_nodes.back();
     }
     Node* createNode(std::string node_name){
         bool is_number = isNumber(node_name);
@@ -151,12 +152,53 @@ public:
 
 nodeflow::Node* nodeflow::Graph::createOperator(Node* a, Node* b, std::string operator_name){
     //TODO: check for two-nodes operator if b is exist or not then throw error 
-    if (operator_name == "add"){
-        this->operator_nodes.push_back(new Add(a, b));
-    } else if ( operator_name == "mul" || operator_name == "matmul" || operator_name == "dot" ) {
-        this->operator_nodes.push_back(new Mul(a, b));
-    }else if (operator_name=="sin") {
-        this->operator_nodes.push_back(new Sin(a));
-    }
-    return this->operator_nodes[this->operator_nodes.size() - 1];
+//================================================================
+//                           Basic
+//================================================================
+    if (operator_name     == "add")          return new Add(a, b);
+    else if (operator_name== "sub")          return new Subtract(a);
+    else if (operator_name== "mul" 
+        || operator_name  == "matmul" 
+        || operator_name  == "dot" )         return new Mul(a, b); 
+    else if (operator_name== "ew_mul")       return new EleWiseMul(a, b);
+    else if (operator_name== "s_mul")        return new ScalarMul(a, b);
+    else if (operator_name== "div")          return new Div(a, b);
+    else if (operator_name== "ew_div")       return new EleWiseDiv(a, b);
+    else if (operator_name== "s_div")        return new ScalarDiv(a, b);
+    else if (operator_name== "pow")          return new Pow(a, b);
+    else if (operator_name== "sqrt")         return new Sqrt(a);
+    else if (operator_name== "invert")       return new Invert(a);
+    else if (operator_name== "inverse")      return new Inverse(a);
+//================================================================
+//                        Trigonometry
+//================================================================
+    else if (operator_name== "sin")          return new Sin(a);
+    else if (operator_name== "cos")          return new Cos(a);
+    else if (operator_name== "tan")          return new Tan(a);
+//================================================================
+//                        Hyperbolic
+//================================================================
+    else if (operator_name== "sinh")         return new Sinh(a);
+    else if (operator_name== "cosh")         return new Cosh(a);
+    else if (operator_name== "tanh")         return new Tanh(a);
+//================================================================
+//                        Exponential
+//================================================================
+    else if (operator_name== "exp")          return new Exp(a);
+//================================================================
+//                        Logarithmic
+//================================================================
+    else if (operator_name== "ln")           return new Loge(a);
+//================================================================
+//                      Matrix Operators
+//================================================================
+    else if (operator_name== "sum")          return new Sum(a);
+//================================================================
+//                          Statistic
+//================================================================
+    else if (operator_name== "sigmoid")      return new Sigmoid(a);
+    else if (operator_name== "relu")         return new ReLU(a);
+    else if (operator_name== "leaky_relu")   return new LeakyReLU(a, b);
+    else if (operator_name== "softmax")      return new Softmax(a);
+    else throw std::invalid_argument("Operator " + operator_name + " is not found");
 }

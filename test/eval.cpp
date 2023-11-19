@@ -17,13 +17,22 @@ using namespace nodeflow;
 */
 
 int main() {
-    Graph f("add(a, PI)", {
-        {"a", Node::Scalar(3.14)},
+    //a simple regression model
+    Graph f("tanh(add(mul(w, x), b))", {
+        {"x", Node::Vector(2, 1)},
+        {"w", Node::Random(3, 2)},
+        {"b", Node::Random(3, 1)},
     });
+
+    // Graph f("add(a, PI)", {
+    //     {"a", Number(3.14)},
+    // });
 
     // f.setNode("a", Node::Scalar(3.14)).setNode("b", Node::Scalar(0.25));
 
-    f.finished().forward().print();
+    f.forward().print();
+
+    std::cout << f.backward().getGrad("w") << std::endl;
 
     return 0;
 }
