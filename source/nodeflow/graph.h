@@ -1,11 +1,5 @@
 #pragma once 
 
-#include <string>
-#include <iostream>
-#include <Eigen/Dense>
-#include <vector>
-#include <map>
-
 //TODO: constructor with initial node values
 //TODO: allow sub graph
 //TODO: allow number for operator that require constant for example the Pow operator takes a node and a double
@@ -18,23 +12,7 @@ private:
     std::vector<Node*> operator_nodes;
     Node* f = nullptr;
 
-public:
-    Graph(std::string s){
-        this->f = parser(removeSpaces(s));
-        this->f->finished();
-    }
-    Graph(std::string s, std::map<std::string, Node> node_map){
-        this->node_map = node_map;
-        this->f = parser(removeSpaces(s));
-        this->f->finished();
-    }
-    ~Graph(){
-        for (int i = 0; i < operator_nodes.size(); i++){
-            delete this->operator_nodes[i];
-        }
-    }
-    
-    Node* parser(std::string s){
+    Node* parse(std::string s){
         if (s == "") return nullptr;
 
         std::string operator_name = getOperatorName(s);
@@ -43,8 +21,8 @@ public:
         return operator_name == "" 
             ? createNode(s) 
             : createOperator(
-                parser(operator_args[0]),
-                parser(operator_args[1]),
+                parse(operator_args[0]),
+                parse(operator_args[1]),
                 operator_name
             );
     }
@@ -54,7 +32,9 @@ public:
 
         if(this->node_map.find(s) == this->node_map.end()){
             //if node is not already exist
-            this->node_map[s] = is_number ? Node::ScalarConst(std::stod(node_name)) : Node();
+            this->node_map[s] = is_number 
+                ? Node::ScalarConst(std::stod(replaceMathConstants(node_name))) 
+                : Node();
         }
         return &this->node_map[s];
     }
@@ -69,68 +49,20 @@ public:
         }
         return this->operator_nodes[this->operator_nodes.size() - 1];
     }
-    std::string getOperatorName(std::string s){
-        std::string temp="";
-        for(int i = 0; i < s.length(); i++){
-            if (s[i] == '('){
-                return temp;
-            }
-            temp += s[i];
-        }
-        return "";
+public:
+    Graph(std::string s){
+        this->f = parse(removeSpaces(s));
+        this->f->finished();
     }
-    std::string getOperatorArgs(std::string s){
-        std::string temp="";
-        bool bracket_found = false;
-        int bracket_count = 0;
-
-        for(int i = 0; i < s.length(); i++){
-            if ( !bracket_found && s[i] == '('){
-                bracket_found = true;
-                continue;
-            } else if (bracket_found) {
-                if (s[i] == '('){
-                    bracket_count++;
-                } else if (s[i] == ')'){
-                    if (bracket_count == 0){
-                        return temp;
-                    }
-                    bracket_count--;
-                }
-                temp += s[i];
-            }
-        }
-        return temp;
+    Graph(std::string s, std::map<std::string, Node> node_map){
+        this->node_map = node_map;
+        this->f = parse(removeSpaces(s));
+        this->f->finished();
     }
-    std::vector<std::string> splitArgs(std::string s){
-        //reverse for loop the string
-        std::string first_args_temp = "";
-        std::string second_args_temp = "";
-        std::string temp;
-
-        int bracket_count = 0;
-        bool comma_found = false;
-
-        for (int i = s.length() - 1; i >= 0; i--){
-            if (s[i]==')'){
-                bracket_count++;
-            } else if (s[i]=='('){
-                bracket_count--;
-            } else if (s[i] == ',' && bracket_count == 0 && !comma_found){
-                second_args_temp = temp;
-                comma_found = true;
-                temp = "";
-                continue;
-            }
-            temp += s[i];
+    ~Graph(){
+        for (int i = 0; i < operator_nodes.size(); i++){
+            delete this->operator_nodes[i];
         }
-        first_args_temp = temp;
-        if (!comma_found) second_args_temp = "";
-
-        std::string first_args = reverseString(first_args_temp);
-        std::string second_args = reverseString(second_args_temp);
-
-        return {first_args, second_args};
     }
 
     Graph& setNode(std::string name, Node node){
