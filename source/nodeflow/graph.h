@@ -149,6 +149,9 @@ public:
         this->f->forward();
         return *this;
     }
+    Eigen::MatrixXd operator()(){
+        return this->f->forward();
+    }
     Graph& backward(){
         this->f->backward();
         return *this;
