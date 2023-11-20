@@ -4,6 +4,7 @@
 using namespace nodeflow;
 
 int main() {
+    std::cout << "Hello, world!" << std::endl;
     /*
     Node w = Node::Random(3, 2);
     Node x = Node::Vector(2, 1);

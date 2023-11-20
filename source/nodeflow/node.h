@@ -135,12 +135,10 @@ public:
 //================================================================
 
     static Node Random(){
-        Node temp = Eigen::MatrixXd::Random(1, 1);
-        return temp;
+        return Node(Eigen::MatrixXd::Random(1, 1));
     }
     static Node Scalar(double initial_value){
-        Node temp = Eigen::MatrixXd::Constant(1, 1, initial_value);
-        return temp;
+        return Node(Eigen::MatrixXd::Constant(1, 1, initial_value));
     }
     static Node ScalarConst(double initial_value){
         return Node::Scalar(initial_value).constant();
@@ -151,16 +149,13 @@ public:
 //================================================================
 
     static Node Random(size_t rows){
-        Node temp = Eigen::MatrixXd::Random(rows, 1);
-        return temp;
+        return Node(Eigen::MatrixXd::Random(rows, 1));
     }
     static Node Vector(size_t rows){
-        Node temp = Eigen::MatrixXd::Constant(rows, 1, 0);
-        return temp;
+        return Node(Eigen::MatrixXd::Constant(rows, 1, 0));
     }
     static Node Vector(size_t rows, double fill_value){
-        Node temp = Eigen::MatrixXd::Constant(rows, 1, fill_value);
-        return temp;
+        return Node(Eigen::MatrixXd::Constant(rows, 1, fill_value));
     }
     static Node Vector(std::initializer_list<double> initial_vector){
         Node temp = Eigen::MatrixXd(initial_vector.size(), 1);
@@ -175,16 +170,13 @@ public:
 //================================================================
 
     static Node Random(size_t rows, size_t cols){
-        Node temp = Eigen::MatrixXd::Random(rows, cols);
-        return temp;
+        return Node(Eigen::MatrixXd::Random(rows, cols));
     }
     static Node Matrix(size_t rows, size_t cols){
-        Node temp = Eigen::MatrixXd::Constant(rows, cols, 0);
-        return temp;
+        return Node(Eigen::MatrixXd::Constant(rows, cols, 0));
     }
     static Node Matrix(size_t rows, size_t cols, size_t fill_value){
-        Node temp = Eigen::MatrixXd::Constant(rows, cols, fill_value);
-        return temp;
+        return Node(Eigen::MatrixXd::Constant(rows, cols, fill_value));
     }
     static Node Matrix(
         std::initializer_list<std::initializer_list<double>> initial_matrix
