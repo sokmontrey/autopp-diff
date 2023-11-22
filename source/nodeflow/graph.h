@@ -149,6 +149,7 @@ public:
         return *this;
     }
     Graph& forward(){
+        this->f->reset();
         this->f->forward();
         return *this;
     }
