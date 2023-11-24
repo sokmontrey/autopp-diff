@@ -5,13 +5,14 @@ A simple and highly-extensible computational graph library written in C++.
 
 ### Creating a Function (Graph)
 **Simple Function:**
-```cpp
-#include <nodeflow/nodeflow.h>
 
-//f = sin(PI/6);
+$$\sin(\frac{\pi}{6})$$
+
+```cpp
+// create the function (graph)
 Graph f ("sin(div(PI, 6))");
 
-//evaluate sin(PI/6)
+// evaluate sin(PI/6)
 f.forward().print();
 ```
 
@@ -47,7 +48,7 @@ All operators in Nodeflow support matrix right off the bat (mostly element-wise 
 >Element-wise operation: operation on corresponding element (same row and col index. i.e. `a[i][j] + b[i][j]` for `0<=i<rows`, `0<=j<columns` and `a.rows == b.rows` and `a.cols == b.cols`) 
 
 ```cpp
-Graph f("mul(a, b)");
+Graph f ("mul(a, b)");
 
 f
 	.setNode("a", Node::Matrix({
@@ -83,12 +84,19 @@ std::cout << f.getGrad("b") << std::endl;
 git clone https://github.com/sokmontrey/nodeflow.git
 ```
 
-2. Link the library:
+2. Link the library using CMake:
 
 ```cmake
 add_subdirectory(nodeflow)
 add_executable(main main.cpp)
 target_link_libraries(main nodeflow)
+```
+
+3. Start coding:
+```cpp
+#include <nodeflow/nodeflow.h>
+using namespace nodeflow;
+//your code
 ```
 
 ## Getting Start
