@@ -10,6 +10,7 @@ namespace nodeflow{
 class Node{
 protected:
     bool is_differentiatable = true;
+    bool is_constant = false;
     bool is_value_ready = false;
 
     Eigen::MatrixXd value;
@@ -89,7 +90,11 @@ public:
     bool isDifferentiatable(){
         return this->is_differentiatable;
     }
+    bool isConstant(){
+        return this->is_constant;
+    }
     Node& constant(){
+        this->is_constant = true;
         this->is_differentiatable = false;
         return *this;
     }
@@ -277,11 +282,11 @@ public:
 
         bool is_diff_temp = false;
         for(size_t i=0; i<NINPUT; i++){
+            //if parent is a constant, then childrens are also constant
+            if (this->is_constant) this->inputs[i]->constant();
             this->inputs[i]->finished();
-            is_diff_temp = 
-                this->inputs[i]->isDifferentiatable() 
-                || 
-                is_diff_temp;
+            //if parent is not a constant but all children are constant, then parent is also constant
+            is_diff_temp = this->inputs[i]->isDifferentiatable() || is_diff_temp;
         }
         this->is_differentiatable = is_diff_temp;
 
@@ -322,7 +327,6 @@ public:
         }
     }
 };
-
 
 }//namespace nodeflow
 

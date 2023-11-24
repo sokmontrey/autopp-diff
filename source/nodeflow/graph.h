@@ -2,6 +2,50 @@
 
 namespace nodeflow {
 
+/**
+ * High level class for creating a graph of nodes
+ * params:
+ *     s: string of math expression with composition of functions
+ *     node_map: map of nodes that are used in the graph
+ *     subgraphs: map of subgraphs that are used in the graph
+ *
+ * Expression rules:
+ *      - Function names are in lower case
+ *      - Argument can be variable, constant, or subgraph
+ *          - Variable: any string that is not a number or a subgraphs
+ *              - Example: "a", "b", "_a_1", "hello"
+ *          - Constant: when an argument is a number or a math constant, it is considered as a constant
+ *              - Partial Derivative will not be calculated for constants
+ *              - Example: "1", "3.14", "PI", "E"
+ *          - Subgraph: when an argument name starts with "$", it is considered as a subgraph
+ *              - Example: "$subgraph_1", "$subgraph_2"
+ *              - A subgraph MUST be a reference to Node or to an OperatorNode. 
+ *              - The reference MUST be provided in the constructor of the main graph
+ *                  - Example 1: 
+ *
+ *                      Node a; 
+ *                      Graph g("sin($a)", {
+ *                          {"$a", &a} // map for subgraphs
+ *                      });
+ *
+ *                 - Example 2:
+ *
+ *                      //... define nodes a and b
+ *                      Add f(&a, &b);
+ *                      Graph g("sin($f)", {
+ *                          {"$f", &f} // map for subgraphs
+ *                      });
+ *
+ *
+ *                  - Example 3:
+ *
+ *                      //... define Graph f
+ *                      Graph g("sin($f)", {
+ *                          // .getEnd() or .getF() can be used to get the last operator node of a graph
+ *                          {"$f", f.getEnd()} 
+ *                      }); 
+ */
+
 class Graph{
 private:
     std::map<std::string, Node> node_map;
@@ -29,19 +73,41 @@ private:
         ));
         return this->operator_nodes.back();
     }
-    Node* createNode(std::string node_name){
-        if (node_name[0] == '$') return this->sub_graphs[node_name];
-
-        bool is_number = isNumber(node_name);
-        std::string s = (is_number ? "c-" : "") + node_name;
-
-        if(this->node_map.find(s) == this->node_map.end()){
-            //if node is not already exist
-            this->node_map[s] = is_number 
-                ? Node::ScalarConst(std::stod(replaceMathConstants(node_name))) 
-                : Node();
+    Node* getSubgraph(std::string node_name){
+        if (this->sub_graphs.find(node_name) == this->sub_graphs.end()){
+            throw std::runtime_error("Subgraph " + node_name + " is not defined");
         }
-        return &this->node_map[s];
+        return this->sub_graphs[node_name];
+    }
+    Node* createNode(std::string node_name){
+        if (node_name[0] == '#') {
+            if (node_name[1] == '$') {
+                //a constant subgraph
+                Node* n = getSubgraph(node_name);
+                n->constant();
+                return getSubgraph(node_name);
+            } 
+
+            //a constant node 
+            this->node_map[node_name] = Node();
+            this->node_map[node_name].constant();
+        } else if (node_name[0] == '$') {
+            //a subgraph
+            return getSubgraph(node_name);
+        } else {
+            //a variable node or a constant node
+            bool is_number = isNumber(node_name);
+            std::string s = (is_number ? "#" : "") + node_name;
+
+            if(this->node_map.find(s) == this->node_map.end()){
+                //if node is not already exist
+                this->node_map[s] = is_number 
+                    ? Node::ScalarConst(std::stod(replaceMathConstants(node_name))) 
+                    : Node();
+            }
+            return &this->node_map[s];
+        }
+        return &this->node_map[node_name];
     }
     Node* createOperator(Node* a, Node* b, std::string operator_name);
 
@@ -101,6 +167,13 @@ public:
     }
     Node* getNode(std::string name){
         return &this->node_map[name];
+    }
+
+    Node* getOperatorNode(int i){
+        return this->operator_nodes[i];
+    }
+    size_t getOperatorLength(){
+        return this->operator_nodes.size();
     }
 
 //================================================================
@@ -179,6 +252,12 @@ public:
 
 nodeflow::Node* nodeflow::Graph::createOperator(Node* a, Node* b, std::string operator_name){
     //TODO: check for two-nodes operator if b is exist or not then throw error 
+    //check if operator is a constant (start with #)
+    if (operator_name[0] == '#') {
+        nodeflow::Node* n = nodeflow::Graph::createOperator(a, b, operator_name.substr(1));
+        n->constant();
+        return n;
+    }
 //================================================================
 //                           Basic
 //================================================================
