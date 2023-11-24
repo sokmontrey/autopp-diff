@@ -1,46 +1,65 @@
 # Nodeflow Cpp
 A simple and highly-extensible computational graph library written in C++.
 
-## Simplicity using `Graph` (High-level code)
+## Simplicity using `Graph` class (High-level class)
 
-**Basic Calculation:**
+### Creating a Function (Graph)
+**Simple Function:**
 ```cpp
 #include <nodeflow/nodeflow.h>
 
 //f = sin(PI/6);
 Graph f ("sin(div(PI, 6))");
+
+//evaluate sin(PI/6)
 f.forward().print();
 ```
 
 **Function with variables:**
 ```cpp
 // f = sin(a + b)
-Graph f ("sin(add(a, b))");
-
-//make node a and b a scalar (1x1 matrix)
-f.setNode("a", Node::Scalar(0.1));
-f.setNode("b", Node::Scalar(0.25));
+Graph f ("sin(add(a, b))", {
+	//make node "a" and "b" a scalar (a number, 1x1 matrix)
+	//directly in the constructor
+	{"a", Node::Scalar(0.1)},
+	{"b", Node::Scalar(0.25)}
+});
 
 //calculate sin(0.1 + 0.25)
 f.forward().print();
 
-//change variable value
-f.setNode("a", Node::Scalar(0.2));
-f.setNode("b", Node::Scalar(0.1));
-
-//calculate sin(0.2 + 0.1)
-f.forward();
-//result is stored on the graph
-f.print();
+//change variable Node
+f
+	//update node value directly with eigen matrix
+	.set("a", Eigen::MatrixXd::Constant(1,1,0.2))
+	.setNode("b", Node::Random()) //random scalar value 0-1
+	.forward() //calculate sin(0.2 + 0.1)
+	.print()
+;
 ```
-or 
+
+**Vector and Matrix:**
+Nodeflow cpp use Eigen::MatrixXd as node's value. Any 0D, 1D, or 2D tensor will be represent in a node by Eigen::MatrixXd.
+
+All operators in Nodeflow support matrix right off the bat (mostly element-wise except matrix multiplication, "mul"). 
+
+>[!Note]
+>Element-wise operation: operation on corresponding element (same row and col index. i.e. `a[i][j] + b[i][j]` for `0<=i<rows`, `0<=j<columns` and `a.rows == b.rows` and `a.cols == b.cols`) 
+
 ```cpp
-// f = sin(a + b)
-Graph f ("sin(mul(a, b))", {
-	{"a", Node::Scalar(0.1)}, //initialize variables immediately
-	{"b", Node::Scalar(0.25)}
-});
-f.forward().print();
+Graph f("mul(a, b)");
+
+f
+	.setNode("a", Node::Matrix({
+		 {1, 2, 3},
+		 {3, 4, 5}
+	}))
+	.setNode("b", Node::Vector({
+		1, 2, 3
+	}))
+	.forward() // calculate matrix multiplcation a * b
+	.print()
+;
 ```
 
 **Automatic Differentiation:**
