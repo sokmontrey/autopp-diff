@@ -1,26 +1,54 @@
 # Nodeflow Cpp
 A simple and highly-extensible computational graph library written in C++.
 
-## A sneak peak
+## Simplicity using `Graph` (High-level code)
 
-**Create a Simple Function:**
-
-TODO: reset() before forward() on graph
-
+**Basic Calculation:**
 ```cpp
-// f = sin(a * b)
-Graph f ("sin(mul(a, b))");
+#include <nodeflow/nodeflow.h>
 
-f.setNode("a", Node::Scalar(3.14));
+//f = sin(PI/6);
+Graph f ("sin(div(PI, 6))");
+f.forward().print();
+```
+
+**Function with variables:**
+```cpp
+// f = sin(a + b)
+Graph f ("sin(add(a, b))");
+
+//make node a and b a scalar (1x1 matrix)
+f.setNode("a", Node::Scalar(0.1));
 f.setNode("b", Node::Scalar(0.25));
 
-//calculate sin(3.14 * 0.25)
+//calculate sin(0.1 + 0.25)
+f.forward().print();
+
+//change variable value
+f.setNode("a", Node::Scalar(0.2));
+f.setNode("b", Node::Scalar(0.1));
+
+//calculate sin(0.2 + 0.1)
+f.forward();
+//result is stored on the graph
+f.print();
+```
+or 
+```cpp
+// f = sin(a + b)
+Graph f ("sin(mul(a, b))", {
+	{"a", Node::Scalar(0.1)}, //initialize variables immediately
+	{"b", Node::Scalar(0.25)}
+});
 f.forward().print();
 ```
 
 **Automatic Differentiation:**
-
 ```cpp
+Graph f ("tanh(add(mul(w, x), b))", {
+	{"w", }
+});
+
 f.backward();
 //df/da
 std::cout << f.getGrad("a") << std::endl;
