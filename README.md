@@ -6,7 +6,7 @@ A simple and highly-extensible computational graph library written in C++.
 ### Creating a Function (Graph)
 **Simple Function:**
 
-$$\sin(\frac{\pi}{6})$$
+$$\sin(\frac{{\color{Orange} \pi}}{6})$$
 
 ```cpp
 // create the function (graph)
@@ -16,15 +16,13 @@ Graph f ("sin(div(PI, 6))");
 f.forward().print();
 ```
 
-**Function with variables:**
+**Multi-variables Function:**
+
+$$f({\color{Emerald}a},{\color{Orange}b}) = \sin({\color{Emerald}a} + {\color{Orange}b})$$
+
 ```cpp
 // f = sin(a + b)
-Graph f ("sin(add(a, b))", {
-	//make node "a" and "b" a scalar (a number, 1x1 matrix)
-	//directly in the constructor
-	{"a", Node::Scalar(0.1)},
-	{"b", Node::Scalar(0.25)}
-});
+Graph f ("sin(add(a, b))");
 
 //calculate sin(0.1 + 0.25)
 f.forward().print();
