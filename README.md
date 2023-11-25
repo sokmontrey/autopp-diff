@@ -91,16 +91,14 @@ Nodeflow use reverse-mode automatic differentiation method to propagate back and
 
 Chain rule:
 
-$${\frac{\partial f}{\partial \color{Orange}a} = \frac{\partial \color{Orange}+}{\partial \color{Orange}a} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} f}{\mathrm{d} {f}}}$$
+![partial derivative wrt a](./img/3.png)
 
 and
 
-$${\frac{\partial f}{\partial \color{Emerald}b} = \frac{\partial \color{orange}+}{\partial \color{Emerald}b} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} f}{\mathrm{d} {f}}}$$
+![partial derivative wrt b](./img/4.png)
 
-**Getting partial derivative with respect to a specific variable/parameter/node:**
+**Getting partial derivative with respect to a specific variable/parameter/node:** ${\frac{\partial {f}}{\partial {\color{Orange}a}}}$ and ${\frac{\partial {f}}{\partial {\color{Emerald}b}}}$
 
-$${\frac{\partial {f}}{\partial {\color{Orange}a}}} {\color{gray}and}
-{\frac{\partial {f}}{\partial {\color{Emerald}b}}}$$
 ```cpp
 f.getGrad("a");
 f.getGrad("b");
