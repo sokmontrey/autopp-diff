@@ -80,7 +80,7 @@ f.setNode("a", Node::Random())
 // update node's value directly with eigen matrix
 f.set("b", Eigen::MatrixXd::Constant(1,1,0.2))
 
-// calculate sin(0.2 + 0.1)
+// calculate sin(0.1 + 0.2)
 f.forward().print();
 ```
 
