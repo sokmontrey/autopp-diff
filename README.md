@@ -57,7 +57,7 @@ In case you are wondering, this create a graph that look something like this:
 
 ![image of sin(a+b) graph](./img/1.png)
 
-_I will be referring to $f$ as End node, $a$ and $b$ as Variable Node or Leaves Node._
+_I will be referring to $f$ as End node, $a$ and $b$ as Variable Node or Leaves Node (`f.getEnd()` or `f.getF()` to get the end node, $f$, from the graph `f` created above).
 
 Give set node's value: ${\color{Emerald}a = 0.1}$,  ${\color{Orange}b = 0.25}$
 
@@ -125,7 +125,7 @@ std::cout << f.getGrad("b") << std::endl;
 ```
 
 #### Jacobian Matrices:
-There is no way to get the Jacobian matrix from taking $\nabla f$. Nodeflow will try to backpropagate all the way from the **end node** `f.getEnd()` or `f.getF()` to the **variable node** (a and b) and calculate all the partial derivatives. 
+Currently, there is no high-level solution to get the Jacobian matrix from taking $\nabla f$. Nodeflow will try to backpropagate all the way from the **End node** to the **variable node** (a and b) and calculate all the partial derivatives. 
 
 The graph should end with an operation that produce a **scalar**. If not, Nodeflow will pass in an all-one matrix with the same shape as the end node value as the outer derivative. This will collapse any Jacobian matrix and calculate the "pseudo" $\nabla f$.
 
