@@ -110,12 +110,12 @@ and
 
 You can use `.getGrad` along with a node name to get the partial derivative of the function $f$ with respect to that specific node. 
 
+$${\frac{\partial {f}}{\partial {\color{Emerald}a}}} and {\frac{\partial {f}}{\partial {\color{Orange}b}}}$$
+
 ```cpp
 f.getGrad("a");
 f.getGrad("b");
 ```
-
-$${\frac{\partial {f}}{\partial {\color{Orange}a}}}$$ and $${\frac{\partial {f}}{\partial {\color{Emerald}b}}}$$
 
 `.getGrad` return an `Eigen::MatrixXd`:
 
