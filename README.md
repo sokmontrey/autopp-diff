@@ -17,7 +17,7 @@ git clone https://github.com/sokmontrey/nodeflow.git
 
 2. Link the library using CMake:
 
-```cpp
+```cmake
 add_subdirectory(nodeflow)
 add_executable(main main.cpp)
 target_link_libraries(main nodeflow)
@@ -33,7 +33,7 @@ using namespace nodeflow;
 
 ## Simplicity with `Graph` class (High-level class)
 ### Creating a Function (Graph)
-#### Simple Function:
+#### Simple Constant Function:
 
 $$\sin(\frac{{\color{Orange} \pi}}{6})$$
 
@@ -56,6 +56,8 @@ Graph f ("sin(add(a, b))");
 In case you are wondering, this create a graph that look something like this:
 
 ![image of sin(a+b) graph](./img/1.png)
+
+I will be referring to $f$ as End node, a and b as Variable Node or Leaves Node. 
 
 Give set node's value: ${\color{Emerald}a = 0.1}$,  ${\color{Orange}b = 0.25}$
 
@@ -145,29 +147,21 @@ See [Constant](#constant) for details.
 >[!IMPORTANT] 
 > Nodeflow can handle `.backward` for all sort of complex graph **as long as**
 > 1. The graph is using properly defined [operators](#operator).
-> 2. `f.finished()` is called correctly (see [The finished method](#the-finished-method) for more details).
+> 2. `f.finished()` is called correctly according to [The finished method](#the-finished-method).
 
 ### The finished method
 
 `f.finished()` will re-config the graph to avoid any unnecessarily computation. It is also important for the graph to calculate `.backward` correctly.
 
-`.finished` should be called when:
-- The shape of Nodes is defined by using `.setNode()`, not from the `Graph` constructor (see [example](#the-finished-method))
-- OR: The shape or dimension of any Node is changed, for example, from a scalar to a matrix or from a `2x2` matrix to `4x1`.
-- OR: If any node changes from being a variable to a constant or vice versa.
-
-**Examples:**
-
-Nodeflow automatically call `.finished()` when the graph is created. So if information about nodes is provided in the constructor,  you can immediately use `.backward()` without having to call `.forward()`:
+Nodeflow automatically call `.finished()` when the graph is created. You can initialize node directly in the constructor.
 
 ```cpp
 Graph f ("add(a, b)", {
 	{"a", Node::Scalar(1)},
-	{"b", Node::Scalar(1)}
+	{"b", Node::Scalar(1)} // Nodes shape already defined here
 }); 
 
-f.backward(); // no need for .finished() nor .forward()
-
+f.backward(); // no need to call .finished()
 f.getGrad("a");
 ```
 
