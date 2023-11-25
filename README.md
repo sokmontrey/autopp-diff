@@ -220,6 +220,50 @@ f.setNode("a", Node::Matrix({
 .print();
 ```
 
+### Sub-graph
+
+A Nodeflow graph can take in other graphs as sub graphs and build up a larger graph.
+
+Use `$` in front of a variable name in the expression to indicate that it is a sub graph. Then, you MUST pass in the sub graph into the constructor of the main graph using one of the three methods.
+1. Pass in a map of pointers to sub graphs.
+2. Pass in a map of references of sub graphs.
+3. Pass in a map of pointers to **End Node** of sub graphs. (can be used directly with [Node or OperatorNode object](#lower-level)) 
+
+Examples:
+
+$${\color{Emerald}f(a) = \sin(a)}$$
+$${\color{Orange}g(x)=\cos(x)}$$
+$${h(x)=\mathrm{ReLU}(x)}$$
+$$\Rightarrow h({\color{Orange}g({\color{Emerald}f(a)})}) = ReLU({\color{Orange}\cos({\color{Emerald}\sin(a)})})$$
+
+```cpp
+// sub sub graph
+Graph f ("sin(a)"); 
+
+// sub graph
+Graph g ("cos($f)", {
+	{"$f", f} // map of reference of Graph
+});
+
+// main graph
+Graph h ("relu($any_name_you_want)", {
+	{"$any_name_you_want", &g} // map of pointers to Graph
+});
+
+// setNode individually on sub graph
+f.setNode("a", Node::Scalar(0.5)); 
+
+// call .finished on the main graph to use .backward
+h.finished()
+ .backward();
+
+// get partial derivative wrt a from f
+f.getGrad("a");
+```
+
+>[!NOTE]
+>If you want to initialize Node directly in the graph constructor, you can still do it. But the map of nodes has to be an argument before the map of sub graph.
+
 ### Constant
 
 ### Sub-graph
