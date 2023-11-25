@@ -83,7 +83,9 @@ f.backward();
 ```
 
 Nodeflow use reverse-mode automatic differentiation method to propagate back and calculate all the partial derivative with respect to every variable node.
+
 ![auto diff reverse mode on graph](./img/2.png)
+
 (Sorry for abusing the syntax)
 Chain rule:
 $${\color{gray}\frac{\partial \color{white}f}{\partial \color{pink}a} = \frac{\partial \color{orange}+}{\partial \color{pink}a} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
