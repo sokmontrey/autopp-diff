@@ -52,6 +52,7 @@ private:
     std::vector<Node*> operator_nodes;
     std::map<std::string, Node*> sub_graphs;
     Node* f = nullptr;
+    std::string expression;
 
 //================================================================
 //                          Parser
@@ -115,37 +116,42 @@ private:
 //                         Initializer
 //================================================================
 
-    void init(std::string s){
-        this->f = parse(removeSpaces(s));
+    void init(){
+        this->operator_nodes.clear();
+        this->f = parse(removeSpaces(this->expression));
         this->f->finished();
     }
 
 public:
     Graph(std::string s){
-        init(s);
+        this->expression = s;
+        init();
     }
     Graph(
         std::string s, 
         std::map<std::string, Node> node_map
     ){
+        this->expression = s;
         this->node_map = node_map;
-        init(s);
+        init();
     }
     Graph(
         std::string s, 
         std::map<std::string, Node*> subgraphs
     ){
+        this->expression = s;
         this->sub_graphs = subgraphs;
-        init(s);
+        init();
     }
     Graph(
         std::string s, 
         std::map<std::string, Node> node_map, 
         std::map<std::string, Node*> subgraphs
     ){
+        this->expression = s;
         this->node_map = node_map;
         this->sub_graphs = subgraphs;
-        init(s);
+        init();
     }
     ~Graph(){
         for (int i = 0; i < operator_nodes.size(); i++){
@@ -230,6 +236,7 @@ public:
         return this->f->forward();
     }
     Graph& backward(){
+        this->f->reset();
         this->f->backward();
         return *this;
     }

@@ -3,24 +3,41 @@
 using namespace nodeflow;
 
 int main() {
-    // f = sin(a + b)
-    Graph f ("sin(add(a, b))", {
-        //make node "a" and "b" a scalar (a number, 1x1 matrix)
-        //directly in the constructor
-        {"a", Node::Scalar(0.1)},
-        {"b", Node::Scalar(0.25)}
-    });
+    Graph f ("sin(add(a, b))");
+
+    f.setNode("a", Node::Scalar(0.1));
+    f.setNode("b", Node::Scalar(0.25));
+    f.finished();
 
     //calculate sin(0.1 + 0.25)
     f.forward().print();
 
+    f.backward();
+    std::cout << "da: " << f.getGrad("a") << std::endl;
+    std::cout << "db: " << f.getGrad("b") << std::endl;
+
     //change variable Node
     f
-        .setNode("a", Node::Scalar(0.2))
-        .setNode("b", Node::Random()) //random scalar value 0-1
-        .forward() //calculate sin(0.2 + 0.1)
+        .setNode("a", Node::Vector({1,2,3}))
+        .setNode("b", Node::Vector({1,2,3})) 
+        .forward()
         .print()
     ;
+    f.finished();
+    f.backward();
+    std::cout << "da: " << f.getGrad("a") << std::endl;
+    std::cout << "db: " << f.getGrad("b") << std::endl;
+    //change variable Node
+    f
+        .setNode("a", Node::Random(2, 3))
+        .setNode("b", Node::Random(2, 3))
+        .forward()
+        .print()
+    ;
+    f.finished();
+    f.backward();
+    std::cout << "da: " << f.getGrad("a") << std::endl;
+    std::cout << "db: " << f.getGrad("b") << std::endl;
 
     return 0;
 }
