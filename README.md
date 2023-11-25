@@ -48,7 +48,7 @@ Graph f ("sin(add(a, b))");
 In case you are wondering, this create a graph that look something like this:
 ![image of sin(a+b) graph](./img/1.png)
 
-Give set node's value: ${\color{Emerald}a = 0.1\;\;}$,  ${\color{Orange}b = 0.25}$
+Give set node's value: ${\color{Emerald}a = 0.1}$,  ${\color{Orange}b = 0.25}$
 
 ```cpp
 f.setNode("a", Node::Scalar(0.1 ))
@@ -88,12 +88,12 @@ Nodeflow use reverse-mode automatic differentiation method to propagate back and
 
 (Sorry for abusing the syntax)
 Chain rule:
-$${\color{gray}\frac{\partial \color{white}f}{\partial \color{pink}a} = \frac{\partial \color{orange}+}{\partial \color{pink}a} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
+$${\color{white}\frac{\partial \color{white}f}{\partial \color{pink}a} = \frac{\partial \color{orange}+}{\partial \color{pink}a} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
 and
-$${\color{gray}\frac{\partial \color{white}f}{\partial \color{cyan}b} = \frac{\partial \color{orange}+}{\partial \color{cyan}b} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
+$${\color{white}\frac{\partial \color{white}f}{\partial \color{cyan}b} = \frac{\partial \color{orange}+}{\partial \color{cyan}b} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
 
 **Getting partial derivative with respect to a specific variable/parameter/node:**
-$${\color{gray}\frac{\partial {\color{white}f}}{\partial {\color{pink}a}}} \;\;\mathrm{and}\;\;
+$${\color{white}\frac{\partial {\color{white}f}}{\partial {\color{pink}a}}} and
 {\color{gray}\frac{\partial {\color{white}f}}{\partial {\color{cyan}b}}}$$
 ```cpp
 f.getGrad("a");
