@@ -232,8 +232,11 @@ Use `$` in front of a variable name in the expression to indicate that it is a s
 Examples:
 
 $${\color{Emerald}f(a) = \sin(a)}$$
+
 $${\color{Orange}g(x)=\cos(x)}$$
+
 $${h(x)=\mathrm{ReLU}(x)}$$
+
 $$\Rightarrow h({\color{Orange}g({\color{Emerald}f(a)})}) = ReLU({\color{Orange}\cos({\color{Emerald}\sin(a)})})$$
 
 ```cpp
@@ -272,7 +275,7 @@ You make a Node or a sub graph a constant to avoid finding partial derivative wr
 
 Here is how you can create constants:
 
-1. If a variable name is a number, Nodeflow will make a constant automatically. Example `add(3, a)` or `pow(a, 2)`. 3 and 2, respectively, are constants node on the graph.
+1. If a variable name is a number, Nodeflow will make it a constant automatically. Example `add(3, a)` or `pow(a, 2)`. 3 and 2, respectively, are constants node on the graph.
 2. If a variable or an operator name start with a `#`, it is a constant node. Example:
 	1. `mul(#a, b)`: `f.getGrad("a")` is an empty matrix.
 	2. `sin(#cos(θ))`: `f.getGrad("θ")` is also empty.
