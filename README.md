@@ -190,8 +190,18 @@ f.finished();
 f.backward();
 ```
 
-### Vector and Matrix:
-Nodeflow cpp use `Eigen::MatrixXd` to store node's values. Any 0D, 1D, or 2D tensor will be represent as a matrix in a node by `Eigen::MatrixXd`.
+3. If any of the Node changes from being a variable to a constant or vice versa.
+
+```cpp
+//...
+f.constant("a");
+f.finished(); // if .finished is not called, nodeflow will calculate all the partial derivative even for constant nodes.
+f.backward();
+```
+
+### Vector and Matrix
+
+Nodeflow cpp use `Eigen::MatrixXd` to store node's values. 0D, 1D, or 2D tensor will be represented as a matrix in a node by `Eigen::MatrixXd`.
 
 All operators in Nodeflow support matrix right off the bat (mostly element-wise except matrix multiplication, "mul, dot, matmul"). 
 
