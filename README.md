@@ -9,7 +9,7 @@ git clone https://github.com/sokmontrey/nodeflow.git
 ```
 
 2. Link the library using CMake:
-```cmake
+```cpp
 add_subdirectory(nodeflow)
 add_executable(main main.cpp)
 target_link_libraries(main nodeflow)
@@ -46,6 +46,7 @@ Graph f ("sin(add(a, b))");
 ```
 
 In case you are wondering, this create a graph that look something like this:
+
 ![image of sin(a+b) graph](./img/1.png)
 
 Give set node's value: ${\color{Emerald}a = 0.1}$,  ${\color{Orange}b = 0.25}$
@@ -87,14 +88,19 @@ Nodeflow use reverse-mode automatic differentiation method to propagate back and
 ![auto diff reverse mode on graph](./img/2.png)
 
 (Sorry for abusing the syntax)
+
 Chain rule:
-$${\color{white}\frac{\partial \color{white}f}{\partial \color{pink}a} = \frac{\partial \color{orange}+}{\partial \color{pink}a} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
+
+$${\frac{\partial f}{\partial \color{Orange}a} = \frac{\partial \color{Orange}+}{\partial \color{Orange}a} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} f}{\mathrm{d} {f}}}$$
+
 and
-$${\color{white}\frac{\partial \color{white}f}{\partial \color{cyan}b} = \frac{\partial \color{orange}+}{\partial \color{cyan}b} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} \color{white}f}{\mathrm{d} {\color{white}f}}}$$
+
+$${\frac{\partial f}{\partial \color{Emerald}b} = \frac{\partial \color{orange}+}{\partial \color{Emerald}b} \cdot \frac{\mathrm{d} \color{Emerald}\sin}{\mathrm{d} \color{orange}+}\cdot \frac{\mathrm{d} f}{\mathrm{d} \color{Emerald}\sin}\cdot \frac{\mathrm{d} f}{\mathrm{d} {f}}}$$
 
 **Getting partial derivative with respect to a specific variable/parameter/node:**
-$${\color{white}\frac{\partial {\color{white}f}}{\partial {\color{pink}a}}} and
-{\color{gray}\frac{\partial {\color{white}f}}{\partial {\color{cyan}b}}}$$
+
+$${\frac{\partial {f}}{\partial {\color{Orange}a}}} {\color{gray}and}
+{\frac{\partial {f}}{\partial {\color{Emerald}b}}}$$
 ```cpp
 f.getGrad("a");
 f.getGrad("b");
