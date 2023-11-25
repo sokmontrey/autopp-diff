@@ -1,6 +1,12 @@
 # Nodeflow Cpp
 A simple and highly-extensible computational graph library written in C++.
 
+## A sneak peak
+
+<div align='center'>
+<img src="https://github.com/sokmontrey/nodeflow/blob/master/img/4.png" alt="quick snippet code of Nodeflow cpp with graph">
+</div>
+
 ## Installation 
 
 1. Clone the project:
@@ -137,16 +143,18 @@ f.finished();
 See [Constant](#constant) for details.
 
 >[!IMPORTANT] 
-> Nodeflow can handle gradient for all sort of complex graph **as long as**
-> 1. Operators used are defined 
-> 2. `f.finished()` must be called to use `.backward()` when one of the following happened:
-> 	- The shape of Nodes is defined by using `.setNode()`, not from the `Graph` constructor (see [example](#the-finished-method))
-> 	- OR: The shape or dimension of any Node is changed, for example, from a scalar to a matrix or from a `2x2` matrix to `4x1`.
-> 	- OR: If any node changes from being a variable to a constant or vice versa.
+> Nodeflow can handle `.backward` for all sort of complex graph **as long as**
+> 1. The graph is using properly defined [operators](#operator).
+> 2. `f.finished()` is called correctly (see [The finished method](#the-finished-method) for more details).
 
 ### The finished method
 
-`f.finished()` will re-config the graph to avoid any unnecessarily performance. It is also important 
+`f.finished()` will re-config the graph to avoid any unnecessarily computation. It is also important for the graph to calculate `.backward` correctly.
+
+`.finished` should be called when:
+- The shape of Nodes is defined by using `.setNode()`, not from the `Graph` constructor (see [example](#the-finished-method))
+- OR: The shape or dimension of any Node is changed, for example, from a scalar to a matrix or from a `2x2` matrix to `4x1`.
+- OR: If any node changes from being a variable to a constant or vice versa.
 
 **Examples:**
 
@@ -199,4 +207,6 @@ f.setNode("a", Node::Matrix({
 ### Sub-graph
 
 ## Lower-level 
-### Node, Operator, and Graph
+### Node
+### Operator 
+### Graph
