@@ -3,6 +3,16 @@
 using namespace nodeflow;
 
 int main() {
+    Graph g ("mul(a, b)");
+
+    g.setNode("a", Node::Matrix({
+         {1, 2, 3},
+         {3, 4, 5}
+    }))
+    .setNode("b", Node::Vector({ 1, 2, 3 }))
+    .forward() // calculate matrix multiplcation a * b
+    .print();
+
     Graph f ("sin(add(a, b))");
 
     f.setNode("a", Node::Scalar(0.1));
