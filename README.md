@@ -57,7 +57,7 @@ In case you are wondering, this create a graph that look something like this:
 
 ![image of sin(a+b) graph](./img/1.png)
 
-I will be referring to $f$ as End node, a and b as Variable Node or Leaves Node. 
+_I will be referring to $f$ as End node, $a$ and $b$ as Variable Node or Leaves Node._
 
 Give set node's value: ${\color{Emerald}a = 0.1}$,  ${\color{Orange}b = 0.25}$
 
