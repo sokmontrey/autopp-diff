@@ -279,6 +279,9 @@ Here is how you can create constants:
 3. Use `.constant` on a Node, an OperatorNode, or a Graph to make it a constant.
 4. You can also turn a sub graph into a constant directly in the expression by adding `#` before `$`. Example: `Graph g ("sin(#$f)")`
 
+When calling `.finished`, Nodeflow will also re-config the graph to determine some other possible constant nodes to further reduce computation such that:
+- If an OperatorNode take in all constant nodes as its input, it will become a constant node.
+
 ## Lower-level 
 ### Node
 ### Operator 

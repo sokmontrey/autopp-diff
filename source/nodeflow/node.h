@@ -282,10 +282,8 @@ public:
 
         bool is_diff_temp = false;
         for(size_t i=0; i<NINPUT; i++){
-            //if parent is a constant, then childrens are also constant
-            if (this->is_constant) this->inputs[i]->constant();
             this->inputs[i]->finished();
-            //if parent is not a constant but all children are constant, then parent is also constant
+            //if all children are constant, then parent is also constant
             is_diff_temp = this->inputs[i]->isDifferentiatable() || is_diff_temp;
         }
         this->is_differentiatable = is_diff_temp;
