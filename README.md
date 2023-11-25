@@ -4,7 +4,7 @@ A simple and highly-extensible computational graph library written in C++.
 ## A sneak peak
 
 <div align='center'>
-<img src="https://github.com/sokmontrey/nodeflow/blob/master/img/4.png" alt="quick snippet code of Nodeflow cpp with graph">
+<img src="https://github.com/sokmontrey/nodeflow/blob/master/img/5.png" alt="quick snippet code of Nodeflow cpp with graph">
 </div>
 
 ## Installation 
