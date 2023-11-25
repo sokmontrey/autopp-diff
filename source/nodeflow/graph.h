@@ -123,6 +123,11 @@ private:
     }
 
 public:
+
+//================================================================
+//                  No sub_graphs constructor
+//================================================================
+    
     Graph(std::string s){
         this->expression = s;
         init();
@@ -135,6 +140,12 @@ public:
         this->node_map = node_map;
         init();
     }
+
+//================================================================
+//                          No node_map
+//================================================================
+
+    //pointer to subgraphs (end node)
     Graph(
         std::string s, 
         std::map<std::string, Node*> subgraphs
@@ -143,6 +154,34 @@ public:
         this->sub_graphs = subgraphs;
         init();
     }
+    //pointer to subgraphs
+    Graph(
+        std::string s, 
+        std::map<std::string, Graph*> subgraphs
+    ){
+        this->expression = s;
+        for (auto it = subgraphs.begin(); it != subgraphs.end(); it++){
+            this->sub_graphs[it->first] = it->second->getEnd();
+        }
+        init();
+    }
+    //reference to subgraphs
+    Graph(
+        std::string s, 
+        std::map<std::string, Graph&> subgraphs
+    ){
+        this->expression = s;
+        for (auto it = subgraphs.begin(); it != subgraphs.end(); it++){
+            this->sub_graphs[it->first] = it->second.getEnd();
+        }
+        init();
+    }
+
+//================================================================
+//                  node_map with subgraphs
+//================================================================
+    
+    //pointer to subgraphs (end node)
     Graph(
         std::string s, 
         std::map<std::string, Node> node_map, 
@@ -151,6 +190,32 @@ public:
         this->expression = s;
         this->node_map = node_map;
         this->sub_graphs = subgraphs;
+        init();
+    }
+    //pointer to subgraphs
+    Graph(
+        std::string s, 
+        std::map<std::string, Node> node_map, 
+        std::map<std::string, Graph*> subgraphs
+    ){
+        this->expression = s;
+        this->node_map = node_map;
+        for (auto it = subgraphs.begin(); it != subgraphs.end(); it++){
+            this->sub_graphs[it->first] = it->second->getEnd();
+        }
+        init();
+    }
+    //reference to subgraphs
+    Graph(
+        std::string s, 
+        std::map<std::string, Node> node_map, 
+        std::map<std::string, Graph&> subgraphs
+    ){
+        this->expression = s;
+        this->node_map = node_map;
+        for (auto it = subgraphs.begin(); it != subgraphs.end(); it++){
+            this->sub_graphs[it->first] = it->second.getEnd();
+        }
         init();
     }
     ~Graph(){
