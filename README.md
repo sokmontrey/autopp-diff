@@ -266,7 +266,18 @@ f.getGrad("a");
 
 ### Constant
 
-### Sub-graph
+If a node is a constant, it does not mean that its value cannot be changed. 
+
+You make a Node or a sub graph a constant to avoid finding partial derivative wrt to that node or graph.
+
+Here is how you can create constants:
+
+1. If a variable name is a number, Nodeflow will make a constant automatically. Example `add(3, a)` or `pow(a, 2)`. 3 and 2, respectively, are constants node on the graph.
+2. If a variable or an operator name start with a `#`, it is a constant node. Example:
+	1. `mul(#a, b)`: `f.getGrad("a")` is an empty matrix.
+	2. `sin(#cos(θ))`: `f.getGrad("θ")` is also empty.
+3. Use `.constant` on a Node, an OperatorNode, or a Graph to make it a constant.
+4. You can also turn a sub graph into a constant directly in the expression by adding `#` before `$`. Example: `Graph g ("sin(#$f)")`
 
 ## Lower-level 
 ### Node
