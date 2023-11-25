@@ -165,13 +165,27 @@ f.backward(); // no need to call .finished()
 f.getGrad("a");
 ```
 
-The `.forward()` must be called after any node changes its shape from one to another or has no shape initially but being defined later with `.setNode` or `.set`. Otherwise, Nodeflow will not be able to do `.backward` correctly, or potentially throw a run-time error.
+>[!NOTE]
+>`.forward()` does not require `.finished`
+
+If you use `.backward`, `.finished` should be called if:
+
+1. The shape of Nodes is defined by using `.setNode()`, not from the `Graph` constructor.
 
 ```cpp
+f.setNode("a", Node::Scalar(1));
+f.setNode("b", Node::Scalar(1));
+f.finished(); // <--
+f.backward(); // then you can use .backward
+```
+
+2. The shape or dimension of any of the Node is changed, for example, from a scalar to a matrix or from a `2x2` matrix to `4x1`.
+
+```cpp
+//...
 f.setNode("a", Node::Vector({1,2,3}))
- .setNode("b", Node::Vector({4,5,6}));
+f.setNode("b", Node::Vector({4,5,6}));
 // the shape of both node a and b change from 1x1 to 3x1
-f.forward(); //.forward() works fine
 f.finished();
 f.backward();
 ```
