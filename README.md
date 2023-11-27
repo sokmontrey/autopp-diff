@@ -124,6 +124,10 @@ std::cout << f.getGrad("a") << std::endl;
 std::cout << f.getGrad("b") << std::endl;
 ```
 
+
+>[!NOTE]
+>You must call `.forward` on a graph before calling `.backward` to get a correct result and avoiding runtime error.
+
 #### Jacobian Matrices:
 Currently, there is no high-level solution to get the Jacobian matrix from taking $\nabla f$. Nodeflow will try to backpropagate all the way from the **End node** to the **variable node** (a and b) and calculate all the partial derivatives. 
 
@@ -268,6 +272,9 @@ f.getGrad("a");
 >If you want to initialize Node directly in the graph constructor, you can still do it. But the map of nodes has to be an argument before the map of sub graph.
 
 ### Constant
+
+>[!NOTE]
+>Creating constant with `#` is currently not working properly with `.backward`. Please use `.constant` instead.
 
 If a node is a constant, it does not mean that its value cannot be changed. 
 

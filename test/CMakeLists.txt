@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.24.0)
 project(Test)
 
+add_subdirectory(matplotplusplus)
+
 # add_executable(nodeflow_test test_main.cpp)
 # add_executable(nodeflow_test eval.cpp)
 # add_executable(nodeflow_test test_main.cpp)
 # add_executable(nodeflow_test graph.cpp)
-add_executable(nodeflow_test sub_graph.cpp)
-target_link_libraries(nodeflow_test nodeflow)
+# add_executable(nodeflow_test sub_graph.cpp)
+add_executable(nodeflow_test stream.cpp)
+
+target_link_libraries(nodeflow_test nodeflow matplot)
