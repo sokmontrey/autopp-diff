@@ -273,9 +273,6 @@ f.getGrad("a");
 
 ### Constant
 
->[!NOTE]
->Creating constant with `#` is currently not working properly with `.backward`. Please use `.constant` instead.
-
 If a node is a constant, it does not mean that its value cannot be changed. 
 
 You make a Node or a sub graph a constant to avoid finding partial derivative wrt to that node or graph.

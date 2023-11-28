@@ -49,7 +49,13 @@ public:
     double& operator()(size_t row, size_t col){
         return this->value(row, col);
     }
-    Eigen::MatrixXd& getValue(){
+    double getValue(size_t row, size_t col){
+        return this->value(row, col);
+    }
+    double getValue(){
+        return this->value(0, 0);
+    }
+    Eigen::MatrixXd& getMatrix(){
         return this->value;
     }
     Eigen::MatrixXd& getGrad(){
@@ -75,6 +81,12 @@ public:
 
         this->setRows(new_value.rows());
         this->setCols(new_value.cols());
+    }
+    void setValue(size_t row, size_t col, double new_value){
+        this->value(row, col) = new_value;
+    }
+    void setValue(double new_value){
+        this->value(0, 0) = new_value;
     }
     void operator=(Eigen::MatrixXd new_value){
         this->value = new_value;
@@ -165,7 +177,7 @@ public:
     static Node Vector(std::initializer_list<double> initial_vector){
         Node temp = Eigen::MatrixXd(initial_vector.size(), 1);
         for(int i=0; i<initial_vector.size(); i++){
-            temp.getValue()(i, 0) = *(initial_vector.begin() + i);
+            temp.setValue(i, 0, *(initial_vector.begin() + i));
         }
         return temp;
     }
@@ -246,10 +258,10 @@ public:
 //================================================================
 
     Eigen::MatrixXd getInput(size_t input_index){
-        return this->inputs[input_index]->getValue();
+        return this->inputs[input_index]->getMatrix();
     }
     Eigen::MatrixXd getInput(){
-        return this->inputs[0]->getValue();
+        return this->inputs[0]->getMatrix();
     }
 
 //================================================================

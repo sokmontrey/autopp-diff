@@ -81,17 +81,17 @@ private:
         return this->sub_graphs[node_name];
     }
     Node* createNode(std::string node_name){
-        if (node_name[0] == '#') {
-            if (node_name[1] == '$') {
-                //a constant subgraph
-                Node* n = getSubgraph(node_name);
-                n->constant();
-                return getSubgraph(node_name);
-            } 
-
-            //a constant node 
-            this->node_map[node_name] = Node();
+        if (node_name[0] == '#' && node_name[1] == '$') {
+            //a constant subgraph
+            getSubgraph(node_name)->constant();
+            return getSubgraph(node_name);
+        } else if (node_name[0] == '#') {
+            //a constant
+            if (this->node_map.find(node_name) == this->node_map.end()){
+                this->node_map[node_name] = Node();
+            }
             this->node_map[node_name].constant();
+            return &this->node_map[node_name];
         } else if (node_name[0] == '$') {
             //a subgraph
             return getSubgraph(node_name);
@@ -108,7 +108,6 @@ private:
             }
             return &this->node_map[s];
         }
-        return &this->node_map[node_name];
     }
     Node* createOperator(Node* a, Node* b, std::string operator_name);
 
@@ -240,6 +239,26 @@ public:
         return &this->node_map[name];
     }
 
+    std::vector<std::string> getVariableName() {
+        std::vector<std::string> variable_names;
+        for (auto it = this->node_map.begin(); it != this->node_map.end(); it++){
+            if (!it->second.isConstant()){
+                variable_names.push_back(it->first);
+            }
+        }
+        return variable_names;
+    }
+
+    std::vector<Node*> getVariableNode() {
+        std::vector<Node*> variable_nodes;
+        for (auto it = this->node_map.begin(); it != this->node_map.end(); it++){
+            if (!it->second.isConstant()){
+                variable_nodes.push_back(&it->second);
+            }
+        }
+        return variable_nodes;
+    }
+
     Node* getOperatorNode(int i){
         return this->operator_nodes[i];
     }
@@ -254,23 +273,23 @@ public:
  * Methods for directly getting and setting Eigen::MatrixXd
 */
 
+    /* getter */
     Eigen::MatrixXd getGrad(std::string name){
         return this->node_map[name].getGrad();
     }
-    Eigen::MatrixXd getValue(std::string name){
-        return this->node_map[name].getValue();
+
+    double getValue(std::string name, size_t i, size_t j){
+        return this->node_map[name].getValue(i, j);
     }
+    double getValue(std::string name){
+        return this->node_map[name].getValue(0, 0);
+    }
+
     Eigen::MatrixXd get(std::string name){
-        return this->node_map[name].getValue();
+        return this->node_map[name].getMatrix();
     }
-    Graph& setValue(std::string name, Eigen::MatrixXd value){
-        this->node_map[name].setValue(value);
-        return *this;
-    }
-    Graph& set(std::string name, Eigen::MatrixXd value){
-        this->node_map[name].setValue(value);
-        return *this;
-    }
+
+    /* end node getter */
     Node* getF(){
         return this->f;
     }
@@ -278,7 +297,21 @@ public:
         return this->f;
     }
     Eigen::MatrixXd getOutput(){
-        return this->f->getValue();
+        return this->f->getMatrix();
+    }
+
+    /* setter */
+    Graph& set(std::string name, size_t i, size_t j, double value){
+        this->node_map[name].setValue(i, j, value);
+        return *this;
+    }
+    Graph& set(std::string name, double value){
+        this->node_map[name].setValue(0,0,value);
+        return *this;
+    }
+    Graph& set(std::string name, Eigen::MatrixXd value){
+        this->node_map[name].setValue(value);
+        return *this;
     }
 
 //================================================================
