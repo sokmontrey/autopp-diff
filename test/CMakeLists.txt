@@ -8,6 +8,7 @@ add_subdirectory(matplotplusplus)
 # add_executable(nodeflow_test test_main.cpp)
 # add_executable(nodeflow_test graph.cpp)
 # add_executable(nodeflow_test sub_graph.cpp)
-add_executable(nodeflow_test stream.cpp)
+# add_executable(nodeflow_test stream.cpp)
+add_executable(nodeflow_test getAllNode.cpp)
 
 target_link_libraries(nodeflow_test nodeflow matplot)

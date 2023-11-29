@@ -259,6 +259,21 @@ public:
         return variable_nodes;
     }
 
+    std::vector<Node*> getAllLeaveNode(){
+        return this->f->getAllLeaveNode();
+    }
+
+    std::vector<Node*> getAllVariableNode(){
+        std::vector<Node*> all_nodes = this->getAllLeaveNode();
+        for (int i = 0; i < all_nodes.size(); i++){
+            if (all_nodes[i]->isConstant()){
+                all_nodes.erase(all_nodes.begin() + i);
+                i--;
+            }
+        }
+        return all_nodes;
+    }
+
     Node* getOperatorNode(int i){
         return this->operator_nodes[i];
     }

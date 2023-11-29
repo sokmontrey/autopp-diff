@@ -115,6 +115,10 @@ public:
 //                       Graph Methods
 //================================================================
 
+    virtual std::vector<Node*> getAllLeaveNode() {
+        return std::vector<Node*>{this};
+    }
+
     virtual void finished(){
         this->finished(true);
     }
@@ -268,6 +272,14 @@ public:
 //                      Graph Methods
 //================================================================
 
+    std::vector<Node*> getAllLeaveNode() override {
+        std::vector<Node*> nodes;
+        for (size_t i=0; i<NINPUT; i++){
+            auto temp = this->inputs[i]->getAllLeaveNode();
+            nodes.insert(nodes.end(), temp.begin(), temp.end());
+        }
+        return nodes;
+    }
     void clearGraph() {
         this->num_parent = 0;
         for(size_t i=0; i<NINPUT; i++){
