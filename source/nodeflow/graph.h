@@ -306,6 +306,9 @@ public:
     Eigen::MatrixXd getMatrix(std::string name){
         return this->node_map[name].getMatrix();
     }
+    Eigen::MatrixXd getMatrix(){
+        return this->f->getMatrix();
+    }
 
     /* end node getter */
     Node* getF(){
@@ -313,9 +316,6 @@ public:
     }
     Node* getEnd(){
         return this->f;
-    }
-    Eigen::MatrixXd getOutput(){
-        return this->f->getMatrix();
     }
 
     /* setter */
