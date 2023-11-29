@@ -299,6 +299,9 @@ public:
     double getValue(std::string name){
         return this->node_map[name].getValue(0, 0);
     }
+    double getValue(){
+        return this->f->getValue(0, 0);
+    }
 
     Eigen::MatrixXd getMatrix(std::string name){
         return this->node_map[name].getMatrix();
@@ -325,7 +328,7 @@ public:
         return *this;
     }
     Graph& setMatrix(std::string name, Eigen::MatrixXd value){
-        this->node_map[name].setValue(value);
+        this->node_map[name].setMatrix(value);
         return *this;
     }
 

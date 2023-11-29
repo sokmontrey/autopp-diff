@@ -56,10 +56,10 @@ int main() {
         double loss = 0;
 
         for (int j=0; j<100; j++){
-            h1.set("#x", x[j]);
-            error.set("#t", y[j]);
+            h1.setValue("#x", x[j]);
+            error.setValue("#t", y[j]);
 
-            loss += error.forward().getF()->getValue();
+            loss += error.forward().getValue();
             error.backward();
 
             for (auto var : vars){
