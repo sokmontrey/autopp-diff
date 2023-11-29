@@ -76,7 +76,7 @@ public:
 //                          Setters
 //================================================================
 
-    void setValue(Eigen::MatrixXd new_value){
+    void setMatrix(Eigen::MatrixXd new_value){
         this->value = new_value;
 
         this->setRows(new_value.rows());

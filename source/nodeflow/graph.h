@@ -300,7 +300,7 @@ public:
         return this->node_map[name].getValue(0, 0);
     }
 
-    Eigen::MatrixXd get(std::string name){
+    Eigen::MatrixXd getMatrix(std::string name){
         return this->node_map[name].getMatrix();
     }
 
@@ -316,15 +316,15 @@ public:
     }
 
     /* setter */
-    Graph& set(std::string name, size_t i, size_t j, double value){
+    Graph& setValue(std::string name, size_t i, size_t j, double value){
         this->node_map[name].setValue(i, j, value);
         return *this;
     }
-    Graph& set(std::string name, double value){
+    Graph& setValue(std::string name, double value){
         this->node_map[name].setValue(0,0,value);
         return *this;
     }
-    Graph& set(std::string name, Eigen::MatrixXd value){
+    Graph& setMatrix(std::string name, Eigen::MatrixXd value){
         this->node_map[name].setValue(value);
         return *this;
     }

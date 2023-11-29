@@ -39,6 +39,8 @@ int main() {
         {"$y", &model}
     });
 
+    std::vector<Node*> vars = model.getAllVariableNode();
+
     double learning_rate = 0.001;
 
     std::vector<double> x(100);
@@ -60,17 +62,20 @@ int main() {
             loss += error.forward().getF()->getValue();
             error.backward();
 
-            model.set("w", model.get("w") - learning_rate * model.getGrad("w"));
-            model.set("b", model.get("b") - learning_rate * model.getGrad("b"));
-
-            h3.set("w", h3.get("w") - learning_rate * h3.getGrad("w"));
-            h3.set("b", h3.get("b") - learning_rate * h3.getGrad("b"));
-
-            h2.set("w", h2.get("w") - learning_rate * h2.getGrad("w"));
-            h2.set("b", h2.get("b") - learning_rate * h2.getGrad("b"));
-
-            h1.set("w", h1.get("w") - learning_rate * h1.getGrad("w"));
-            h1.set("b", h1.get("b") - learning_rate * h1.getGrad("b"));
+            for (auto var : vars){
+                var->setMatrix(var->getMatrix() - learning_rate * var->getGrad());
+            }
+            // model.set("w", model.get("w") - learning_rate * model.getGrad("w"));
+            // model.set("b", model.get("b") - learning_rate * model.getGrad("b"));
+            //
+            // h3.set("w", h3.get("w") - learning_rate * h3.getGrad("w"));
+            // h3.set("b", h3.get("b") - learning_rate * h3.getGrad("b"));
+            //
+            // h2.set("w", h2.get("w") - learning_rate * h2.getGrad("w"));
+            // h2.set("b", h2.get("b") - learning_rate * h2.getGrad("b"));
+            //
+            // h1.set("w", h1.get("w") - learning_rate * h1.getGrad("w"));
+            // h1.set("b", h1.get("b") - learning_rate * h1.getGrad("b"));
         }
 
         loss /= 100;
