@@ -6,20 +6,20 @@ using namespace nodeflow;
 using namespace matplot;
 
 int main() {
-    Graph h1 ("relu(add(mul(w,#x),b))", {
+    Graph h1 ("tanh(add(mul(w,#x),b))", {
         {"#x", Node::Random(1,1)},
         {"w", Node::Random(20,1)},
         {"b", Node::Random(20,1)}
     });
 
-    Graph h2 ("relu(add(mul(w,$x),b))", {
+    Graph h2 ("tanh(add(mul(w,$x),b))", {
         {"w", Node::Random(20,20)},
         {"b", Node::Random(20)},
     },{
         {"$x", &h1}
     });
 
-    Graph h3 ("relu(add(mul(w,$x),b))", {
+    Graph h3 ("tanh(add(mul(w,$x),b))", {
         {"w", Node::Random(20,20)},
         {"b", Node::Random(20)},
     },{
@@ -41,7 +41,7 @@ int main() {
 
     std::vector<Node*> vars = model.getAllVariableNode();
 
-    double learning_rate = 0.001;
+    double learning_rate = 0.005;
 
     std::vector<double> x(100);
     std::vector<double> y(100);
@@ -72,9 +72,8 @@ int main() {
     }
 
     for (int j=0; j<100; j++){
-        h1.setNode("#x", Node::Scalar(x[j]));
+        h1.setValue("#x", x[j]);
         p[j] = model.forward().getValue();
-        // std::cout << "x: " << x[j] << " y: " << y[j] << " p: " << p[j] << std::endl;
     }
 
     plot(x,y);

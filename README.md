@@ -15,7 +15,13 @@ A simple and highly-extensible computational graph library written in C++.
 git clone https://github.com/sokmontrey/nodeflow.git
 ```
 
-2. Link the library using CMake:
+2. Install Eigen library:
+
+```bash
+git clone https://github.com/libigl/eigen ./source/third_party/Eigen/
+```
+
+4. Link the library using CMake:
 
 ```cmake
 add_subdirectory(nodeflow)
@@ -23,12 +29,19 @@ add_executable(main main.cpp)
 target_link_libraries(main nodeflow)
 ```
 
-3. Start coding:
+4. Start coding:
 
 ```cpp
 #include <nodeflow/nodeflow.h>
 using namespace nodeflow;
 //your code
+```
+
+5. Compile and run (Window, the easy way):
+
+```bash
+mkdir build
+make && make run
 ```
 
 ## Simplicity with `Graph` class (High-level class)
