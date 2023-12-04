@@ -107,7 +107,7 @@ private:
                     : Node();
             }
             return &this->node_map[s];
-        }
+        }   
     }
     Node* createOperator(Node* a, Node* b, std::string operator_name);
 
@@ -117,8 +117,11 @@ private:
 
     void init(){
         this->operator_nodes.clear();
-        this->f = parse(removeSpaces(this->expression));
-        this->f->finished();
+        // this->f = parse(removeSpaces(this->expression));
+        // this->f->finished();
+        if (this->expression == "") error::report("Graph", "Expression is empty!", this->expression, 0);
+        Scanner scanner(this->expression);
+        scanner.scan();
     }
 
 public:

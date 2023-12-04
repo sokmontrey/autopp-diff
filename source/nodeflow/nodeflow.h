@@ -9,7 +9,10 @@
 #include <cmath>
 #include <initializer_list>
 
+#include "error.h"
 #include "string_util.h"
 #include "node.h"
 #include "operator.h"
+#include "ex_token.h"
+#include "ex_scanner.h"
 #include "graph.h"
