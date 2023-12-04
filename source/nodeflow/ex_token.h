@@ -3,23 +3,15 @@
 namespace nodeflow {
 
 enum TokenType {
-    NUMBER,
-    WORD,
+    NUMBER, WORD,
 
-    HASH,
-    DOLLAR,
+    HASH, DOLLAR,
 
-    OPEN,
-    CLOSE,
+    OPEN, CLOSE,
 
-    NEG,
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    POW,
+    NEG, ADD, SUB, MUL, DIV, POW,
 
-    END,
+    COMMA, END,
 };
 
 struct Token{

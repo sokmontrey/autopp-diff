@@ -21,6 +21,10 @@ private:
     std::vector<Token> tokens;
     int start = 0;
     int pos = 0;
+    std::map<std::string, std::string> constants_map{
+        {"pi","3.1415926535"},
+        {"e", "2.7182818284"},
+    };
 public:
     Scanner(std::string str);
     ~Scanner() = default;
@@ -38,6 +42,7 @@ public:
     char peek(int n);
 
     void addToken(TokenType type);
+    void addToken(TokenType type, std::string value);
 
     void number();
     void word();
@@ -51,6 +56,7 @@ std::vector<Token> Scanner::scan(){
         start = pos;
         scanToken();
     }
+    addToken(END);
     return this->tokens;
 }
 
@@ -77,13 +83,17 @@ void Scanner::scanToken(){
             else 
                 addToken(NEG);
         } break;
+        case ',': addToken(COMMA); break;
         default: 
             if (isDigit(c) || c == '.'){
                 number();
             }else if (isAlpha(c)){
                 word();
             }else{
-                error::report("Scanner::scanToken", "Unexpected character", str, pos);
+                error::report("Scanner::scanToken", 
+                    "Unexpected character: \""+std::string{c}+"\"", 
+                    str, 
+                    pos);
             }
     }
 }
@@ -107,9 +117,12 @@ char Scanner::peek(int n){
 }
 
 void Scanner::addToken(TokenType type){
-    std::string text = str.substr(start, pos - start);
-    std::cout << text << std::endl;
-    this->tokens.push_back(Token{type, text, start});
+    std::string value = str.substr(start, pos - start);
+    addToken(type, value);
+}
+void Scanner::addToken(TokenType type, std::string value){
+    std::cout << value << std::endl;
+    this->tokens.push_back(Token{type, value, start});
 }
 void Scanner::number(){
     while (isDigit(peek())) advance();
@@ -122,7 +135,12 @@ void Scanner::number(){
 
 void Scanner::word(){
     while (isAlpha(peek())) advance();
-    addToken(WORD);
+    std::string word = str.substr(start, pos - start);
+    if (constants_map.find(word) != constants_map.end()){
+        addToken(NUMBER, constants_map[word]);
+    } else {
+        addToken(WORD, word);
+    }
 }
 
 } // namespace nodeflow
