@@ -3,11 +3,7 @@ set(LIB_NAME "nodeflow")
 
 add_library(${LIB_NAME} STATIC
     nodeflow.cpp
-
-    nodeflow.h
-    node.h
-    operator.h
-    graph.h
+    nodeflow.hpp
 )
 
 set(TARGETS ${LIB_NAME})

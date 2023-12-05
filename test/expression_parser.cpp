@@ -1,4 +1,4 @@
-#include <nodeflow/nodeflow.h>
+#include <nodeflow/nodeflow.hpp>
 
 using namespace nodeflow;
 
