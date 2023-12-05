@@ -26,12 +26,6 @@ private:
         {"e", "2.7182818284"},
     };
 
-public:
-    Scanner(std::string str);
-    ~Scanner() = default;
-
-    std::vector<Token> scan();
-
     bool isAtEnd();
     bool isDigit(char c);
     bool isAlpha(char c);
@@ -48,8 +42,13 @@ public:
     void number();
     void word();
 
-    void printTokens();
+public:
+    Scanner(std::string str);
+    ~Scanner() = default;
 
+    std::vector<Token> scan();
+
+    void printTokens();
 };
 
 Scanner::Scanner(std::string str){ this->str = str; }
