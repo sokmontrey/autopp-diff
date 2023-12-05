@@ -78,8 +78,8 @@ namespace nodeflow {
  * @params: a: Node*: pointer to first input Node
  *          b: Node*: pointer to second input Node
  */
-class Add : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class Add : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     this->value = this->getInput(0) + this->getInput(1);
@@ -100,8 +100,8 @@ class Add : public OperatorNode<2> {
  * @params: a: Node*: pointer to first input Node
  *          b: Node*: pointer to second input Node
  */
-class Mul : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class Mul : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void setSize() override {
     this->setRows(this->inputs[0]->getRows());
@@ -131,8 +131,8 @@ class Mul : public OperatorNode<2> {
  * @params: a: Node*: pointer to first input Node
  *          b: Node*: pointer to second input Node
  */
-class EleWiseMul : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class EleWiseMul : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     this->value = this->getInput(0).array() * this->getInput(1).array();
@@ -162,8 +162,8 @@ class EleWiseMul : public OperatorNode<2> {
  * @params: a: Node*: pointer to input Node
  *          b: double: scalar value
  */
-class ScalarMul : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class ScalarMul : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     double scalar = this->getInput(1)(0, 0);
@@ -187,8 +187,8 @@ class ScalarMul : public OperatorNode<2> {
  * @params: a: Node*: pointer to first input Node
  *          b: Node*: pointer to second input Node
  */
-class EleWiseDiv : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class EleWiseDiv : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     this->value = this->getInput(0).array() / this->getInput(1).array();
@@ -218,8 +218,8 @@ class EleWiseDiv : public OperatorNode<2> {
  * @params: a: Node*: pointer to first input Node
  *          b: Node*: pointer to second input Node (1x1 matrix node)
  */
-class Div : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class Div : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     this->value = this->getInput(0).array() / this->getInput(1)(0, 0);
@@ -250,8 +250,8 @@ class Div : public OperatorNode<2> {
  * @params: a: Node*: pointer to input Node
  *          b: double: scalar value
  */
-class ScalarDiv : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class ScalarDiv : public OperatorNode {
+  using OperatorNode::OperatorNode;
   void compute() override {
     double scalar = this->getInput(1)(0, 0);
     this->value = this->getInput(0) / scalar;
@@ -271,8 +271,8 @@ class ScalarDiv : public OperatorNode<2> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Pow : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class Pow : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     double exponent = this->getInput(1)(0, 0);
@@ -294,8 +294,8 @@ class Pow : public OperatorNode<2> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Sqrt : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Sqrt : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().sqrt(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -313,8 +313,8 @@ class Sqrt : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Invert : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Invert : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = -this->getInput(); }
 
@@ -334,8 +334,8 @@ class Invert : public OperatorNode<1> {
  * @params: a: Node*: pointer to first input Node
  *          b: Node*: pointer to second input Node
  */
-class Subtract : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class Subtract : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     this->value = this->getInput(0) - this->getInput(1);
@@ -359,8 +359,8 @@ class Subtract : public OperatorNode<2> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Inverse : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Inverse : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().inverse(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -382,8 +382,8 @@ class Inverse : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Sin : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Sin : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().sin(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -400,8 +400,8 @@ class Sin : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Cos : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Cos : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().cos(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -418,8 +418,8 @@ class Cos : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Tan : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Tan : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().tan(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -441,8 +441,8 @@ class Tan : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Sinh : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Sinh : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().sinh(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -459,8 +459,8 @@ class Sinh : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Cosh : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Cosh : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().cosh(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -477,8 +477,8 @@ class Cosh : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Tanh : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Tanh : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().tanh(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -500,8 +500,8 @@ class Tanh : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Exp : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Exp : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().exp(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -518,8 +518,8 @@ class Exp : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Loge : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Loge : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().array().log(); }
   Eigen::MatrixXd derivative(size_t input_wrt_index) override {
@@ -540,14 +540,14 @@ class Loge : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Sum : public OperatorNode<1> {
+class Sum : public OperatorNode {
 public:
-  Sum(std::initializer_list<Node *> input_list) : OperatorNode<1>(input_list) {
+  Sum(std::initializer_list<Node *> input_list) : OperatorNode(input_list) {
     this->rows = this->getInput().rows();
     this->cols = this->getInput().cols();
   }
 
-  Sum(Node *input) : OperatorNode<1>(input) {
+  Sum(Node *input) : OperatorNode(input) {
     this->rows = this->getInput().rows();
     this->cols = this->getInput().cols();
   }
@@ -573,8 +573,8 @@ public:
  *
  * @params: a: Node*: pointer to input Node
  */
-class ReLU : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class ReLU : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override { this->value = this->getInput().cwiseMax(0); }
 
@@ -595,8 +595,8 @@ class ReLU : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class LeakyReLU : public OperatorNode<2> {
-  using OperatorNode<2>::OperatorNode;
+class LeakyReLU : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     double leak_value = this->getInput(1)(0, 0);
@@ -630,8 +630,8 @@ class LeakyReLU : public OperatorNode<2> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Sigmoid : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Sigmoid : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     // 1 / (1 + exp(-x))
@@ -668,8 +668,8 @@ class Sigmoid : public OperatorNode<1> {
  *
  * @params: a: Node*: pointer to input Node
  */
-class Softmax : public OperatorNode<1> {
-  using OperatorNode<1>::OperatorNode;
+class Softmax : public OperatorNode {
+  using OperatorNode::OperatorNode;
 
   void compute() override {
     Eigen::MatrixXd exp = this->getInput().array().exp();

@@ -203,10 +203,11 @@ public:
  *      2. @params: a: pointer to a single input Node
  *      3. @params: a, b: pointer to first and second input Node
  */
-template <unsigned int NINPUT> class OperatorNode : public Node {
+class OperatorNode : public Node {
 protected:
-  Node *inputs[NINPUT];
+  std::vector<Node *> inputs;
 
+  size_t num_inputs = 0;
   virtual void compute() = 0;
   virtual Eigen::MatrixXd derivative(size_t input_wrt_index) = 0;
   virtual void setSize() {
@@ -219,18 +220,23 @@ public:
   OperatorNode(std::initializer_list<Node *> input_list) {
     this->initializeInput(input_list);
   }
-  OperatorNode(Node *a) { this->inputs[0] = a; }
+  OperatorNode(Node *a) {
+    this->inputs.push_back(a);
+    this->num_inputs = 1;
+  }
   OperatorNode(Node *a, Node *b) {
-    this->inputs[0] = a;
-    this->inputs[1] = b;
+    this->inputs.push_back(a);
+    this->inputs.push_back(b);
+    this->num_inputs = 2;
   }
   void initializeInput(std::initializer_list<Node *> input_list) {
-    for (size_t i = 0; i < NINPUT; i++) {
+    for (size_t i = 0; i < this->num_inputs; i++) {
       auto input = *(input_list.begin() + i);
-      this->inputs[i] = input;
+      this->inputs.push_back(input);
     }
 
     this->setSize();
+    this->num_inputs = input_list.size();
   }
 
   //================================================================
@@ -248,7 +254,7 @@ public:
 
   std::vector<Node *> getAllLeaveNode() override {
     std::vector<Node *> nodes;
-    for (size_t i = 0; i < NINPUT; i++) {
+    for (size_t i = 0; i < this->num_inputs; i++) {
       auto temp = this->inputs[i]->getAllLeaveNode();
       nodes.insert(nodes.end(), temp.begin(), temp.end());
     }
@@ -256,7 +262,7 @@ public:
   }
   void clearGraph() {
     this->num_parent = 0;
-    for (size_t i = 0; i < NINPUT; i++) {
+    for (size_t i = 0; i < this->num_inputs; i++) {
       this->inputs[i]->clearGraph();
     }
     return;
@@ -268,7 +274,7 @@ public:
     this->is_value_ready = false;
     this->parent_called_count = 0;
 
-    for (size_t i = 0; i < NINPUT; i++) {
+    for (size_t i = 0; i < this->num_inputs; i++) {
       this->inputs[i]->reset();
     }
   }
@@ -280,7 +286,7 @@ public:
     this->num_parent++;
 
     bool is_diff_temp = false;
-    for (size_t i = 0; i < NINPUT; i++) {
+    for (size_t i = 0; i < this->num_inputs; i++) {
       this->inputs[i]->finished();
       // if all children are constant, then parent is also constant
       is_diff_temp = this->inputs[i]->isDifferentiatable() || is_diff_temp;
@@ -293,7 +299,7 @@ public:
     if (this->is_value_ready)
       return this->value;
 
-    for (size_t i = 0; i < NINPUT; i++) {
+    for (size_t i = 0; i < this->num_inputs; i++) {
       this->inputs[i]->forward();
     }
     this->compute();
@@ -317,7 +323,7 @@ public:
     this->parent_called_count++;
 
     if (this->parent_called_count >= this->num_parent) {
-      for (size_t i = 0; i < NINPUT; i++) {
+      for (size_t i = 0; i < this->num_inputs; i++) {
         Eigen::MatrixXd partial_derivative = this->derivative(i);
         this->inputs[i]->backward(partial_derivative);
       }
