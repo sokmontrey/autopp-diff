@@ -25,6 +25,7 @@ private:
         {"pi","3.1415926535"},
         {"e", "2.7182818284"},
     };
+
 public:
     Scanner(std::string str);
     ~Scanner() = default;
@@ -47,6 +48,8 @@ public:
     void number();
     void word();
 
+    void printTokens();
+
 };
 
 Scanner::Scanner(std::string str){ this->str = str; }
@@ -56,7 +59,7 @@ std::vector<Token> Scanner::scan(){
         start = pos;
         scanToken();
     }
-    addToken(END);
+    addToken(END, "");
     return this->tokens;
 }
 
@@ -72,6 +75,7 @@ void Scanner::scanToken(){
         case '^': addToken(POW); break;
         case '#': addToken(HASH); break;
         case '$': addToken(DOLLAR); break;
+        case ',': addToken(COMMA); break;
         case '-': {
             char prev;
             for (int i=-2; (prev = peek(i)) == ' '; i--) {}
@@ -83,7 +87,6 @@ void Scanner::scanToken(){
             else 
                 addToken(NEG);
         } break;
-        case ',': addToken(COMMA); break;
         default: 
             if (isDigit(c) || c == '.'){
                 number();
@@ -121,7 +124,6 @@ void Scanner::addToken(TokenType type){
     addToken(type, value);
 }
 void Scanner::addToken(TokenType type, std::string value){
-    std::cout << value << std::endl;
     this->tokens.push_back(Token{type, value, start});
 }
 void Scanner::number(){
@@ -141,6 +143,9 @@ void Scanner::word(){
     } else {
         addToken(WORD, word);
     }
+}
+void Scanner::printTokens(){
+    for (auto token : tokens) token.print();
 }
 
 } // namespace nodeflow

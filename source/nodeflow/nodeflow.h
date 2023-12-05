@@ -15,4 +15,5 @@
 #include "operator.h"
 #include "ex_token.h"
 #include "ex_scanner.h"
+#include "ex_tree.h"
 #include "graph.h"

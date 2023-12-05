@@ -122,6 +122,7 @@ private:
         if (this->expression == "") error::report("Graph", "Expression is empty!", this->expression, 0);
         Scanner scanner(this->expression);
         scanner.scan();
+        scanner.printTokens();
     }
 
 public:
