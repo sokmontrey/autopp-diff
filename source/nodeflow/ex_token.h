@@ -31,6 +31,9 @@ struct Token{
     std::string value;
     int pos;
 
+    Token(TokenType type, std::string value, int pos) 
+    : type(type), value(value), pos(pos) { }
+
     void print(){
         //value     type
         printf("%-10s %s\n", value.c_str(), TokenNames[type].c_str());

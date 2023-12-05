@@ -123,7 +123,7 @@ void Scanner::addToken(TokenType type){
     addToken(type, value);
 }
 void Scanner::addToken(TokenType type, std::string value){
-    this->tokens.push_back(Token{type, value, start});
+    this->tokens.push_back(Token(type, value, start));
 }
 void Scanner::number(){
     while (isDigit(peek())) advance();
