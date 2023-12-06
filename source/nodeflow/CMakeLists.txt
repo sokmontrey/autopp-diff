@@ -4,6 +4,10 @@ set(LIB_NAME "nodeflow")
 add_library(${LIB_NAME} STATIC
     nodeflow.cpp
     nodeflow.hpp
+
+    expression/ex_scanner.cpp
+    expression/ex_parser.cpp
+    expression/ex_tree.hpp
 )
 
 set(TARGETS ${LIB_NAME})

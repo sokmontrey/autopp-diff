@@ -1,5 +1,17 @@
 #pragma once
 
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
+#include "node.hpp"
+#include "operator.hpp"
+#include "string_util.hpp"
+#include "../util/error.hpp"
+#include "../expression/ex_scanner.hpp"
+#include "../expression/ex_parser.hpp"
+
 namespace nodeflow {
 
 /**
@@ -129,7 +141,6 @@ private:
       error::report("Graph", "Expression is empty!", this->expression, 0);
     ExScanner scanner(this->expression);
     scanner.scan();
-    scanner.printTokens();
     ExParser parser(scanner.getTokens());
   }
 

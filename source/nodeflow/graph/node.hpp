@@ -1,5 +1,12 @@
 #pragma once
 
+#include <Eigen/Dense>
+
+#include <initializer_list>
+#include <iostream>
+#include <string>
+#include <vector>
+
 namespace nodeflow {
 /**
  * A Node class that is used to build a graph.
@@ -237,6 +244,10 @@ public:
 
     this->setSize();
     this->num_inputs = input_list.size();
+  }
+  void addInput(Node *new_input) {
+    this->inputs.push_back(new_input);
+    this->num_inputs++;
   }
 
   //================================================================

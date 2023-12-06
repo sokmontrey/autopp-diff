@@ -1,52 +1,6 @@
-#pragma once
+#include "ex_scanner.hpp"
 
-// TODO: add support for
-// variables names;
-// constants name (#), constant value, constant shotcut (pi, e, etc).
-// subgraph name ($)
-// floating point numbers
-// nagation operator (-a)
-// negative numbers (-1)
-// priority operator (a+b*c)
-// bracket operator (a+(b*c))
-// function operator (sin(a))
-// basic operators (+, -, *, /, ^)
-// exponential function (e^a)
-
-namespace nodeflow {
-
-class ExScanner {
-private:
-  std::string str;
-  std::vector<Token> tokens;
-  int start = 0;
-  int pos = 0;
-
-  bool isAtEnd();
-  bool isDigit(char c);
-  bool isAlpha(char c);
-
-  void scanToken();
-
-  char advance();
-  char peek();
-  char peek(int n);
-
-  void addToken(TokenType type);
-  void addToken(TokenType type, std::string value);
-
-  void number();
-  void word();
-
-public:
-  ExScanner(std::string str);
-  ~ExScanner() = default;
-
-  std::vector<Token> scan();
-
-  void printTokens();
-  std::vector<Token> getTokens();
-};
+using namespace nodeflow;
 
 ExScanner::ExScanner(std::string str) { this->str = str; }
 
@@ -170,6 +124,4 @@ void ExScanner::printTokens() {
   for (auto token : tokens)
     token.print();
 }
-std::vector<Token> getTokens() { return this->tokens; }
-
-} // namespace nodeflow
+std::vector<Token> ExScanner::getTokens(){ return this->tokens; }
