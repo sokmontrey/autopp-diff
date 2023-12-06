@@ -1,5 +1,5 @@
-#ifndef NODEFLOW_EXPRESSION_EX_PARSER_HPP
-#define NODEFLOW_EXPRESSION_EX_PARSER_HPP
+#pragma once
+
 
 #include <string>
 #include <vector>
@@ -57,4 +57,3 @@ private:
  * literal       -> NUMBER | WORD | PI | E;
  */
 
-#endif // NODEFLOW_EXPRESSION_EX_PARSER_HPP

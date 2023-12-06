@@ -1,5 +1,5 @@
-#ifndef NODEFLOW_GRAPH_HPP
-#define NODEFLOW_GRAPH_HPP
+#pragma once
+
 
 #include <iostream>
 #include <map>
@@ -175,4 +175,3 @@ public:
 
 } // namespace nodeflow
 
-#endif // NODEFLOW_GRAPH_HPP

@@ -1,5 +1,5 @@
-#ifndef NF_EXPRESSION_SCANNER_HPP_INCLUDED
-#define NF_EXPRESSION_SCANNER_HPP_INCLUDED
+#pragma once
+
 
 #include <string>
 #include <vector>
@@ -45,4 +45,3 @@ private:
 
 } //namespace nodeflow
 
-#endif // NF_EXPRESSION_SCANNER_HPP_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef NODEFLOW_EXPRESSION_EX_TREE_HPP_
-#define NODEFLOW_EXPRESSION_EX_TREE_HPP_
+#pragma once
+
 
 #include <vector>
 #include <string>
@@ -21,4 +21,3 @@ struct ExNode {
 
 } // namespace nodeflow
 
-#endif // NODEFLOW_EXPRESSION_EX_TREE_HPP_

@@ -1,8 +1,7 @@
-#ifndef NODEFLOW_HPP_
-#define NODEFLOW_HPP_
+#pragma once
+
 
 #include "./graph/node.hpp"
 #include "./graph/operator.hpp"
 #include "./graph/graph.hpp"
 
-#endif // NODEFLOW_HPP_

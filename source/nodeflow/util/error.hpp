@@ -1,5 +1,5 @@
-#ifndef NODEFLOW_UTIL_ERROR_HPP
-#define NODEFLOW_UTIL_ERROR_HPP
+#pragma once
+
 
 #include <iostream>
 #include <string>
@@ -17,4 +17,3 @@ void report(std::string where, std::string msg, std::string str, int pos){
 } // namespace error
 } // namespace nodeflow
 
-#endif // NODEFLOW_UTIL_ERROR_HPP

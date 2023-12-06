@@ -1,5 +1,5 @@
-#ifndef NODEFLOW_OPERATOR_HPP
-#define NODEFLOW_OPERATOR_HPP
+#pragma once
+
 
 #include "node.hpp"
 
@@ -698,4 +698,4 @@ class Softmax : public OperatorNode {
 
 } // namespace nodeflow
 
-#endif // NODEFLOW_OPERATOR_HPP
+

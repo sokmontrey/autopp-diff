@@ -1,5 +1,5 @@
-#ifndef NODEFLOW_EXPRESSION_TOKEN_HPP_
-#define NODEFLOW_EXPRESSION_TOKEN_HPP_
+#pragma once
+
 
 #include <string>
 #include <iostream>
@@ -46,4 +46,3 @@ struct Token {
 
 } // namespace nodeflow
 
-#endif // NODEFLOW_EXPRESSION_TOKEN_HPP_
