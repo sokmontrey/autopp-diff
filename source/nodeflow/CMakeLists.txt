@@ -5,6 +5,7 @@ add_library(${LIB_NAME} STATIC
     nodeflow.cpp
     nodeflow.hpp
 
+    graph/node.cpp
     expression/ex_scanner.cpp
     expression/ex_parser.cpp
     graph/graph.cpp
