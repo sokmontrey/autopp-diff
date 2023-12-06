@@ -1,4 +1,7 @@
-#pragma once
+#ifndef NODEFLOW_OPERATOR_HPP
+#define NODEFLOW_OPERATOR_HPP
+
+#include "node.hpp"
 
 // TODO: finish all the derivative doc
 //  Implement:
@@ -694,3 +697,5 @@ class Softmax : public OperatorNode {
 };
 
 } // namespace nodeflow
+
+#endif // NODEFLOW_OPERATOR_HPP

@@ -7,7 +7,7 @@ add_library(${LIB_NAME} STATIC
 
     expression/ex_scanner.cpp
     expression/ex_parser.cpp
-    expression/ex_tree.hpp
+    graph/graph.cpp
 )
 
 set(TARGETS ${LIB_NAME})

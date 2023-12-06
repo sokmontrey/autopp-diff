@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NODEFLOW_GRAPH_NODE_HPP
+#define NODEFLOW_GRAPH_NODE_HPP
 
 #include <Eigen/Dense>
 
@@ -343,3 +344,5 @@ public:
 };
 
 } // namespace nodeflow
+
+#endif // NODEFLOW_GRAPH_NODE_HPP
