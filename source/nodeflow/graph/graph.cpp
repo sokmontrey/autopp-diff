@@ -15,6 +15,8 @@ void Graph::init() {
   scanner.scan();
   scanner.printTokens();
   ExParser parser(scanner.getTokens());
+  std::cout << "\nExpression: ";
+  parser.expression()->print();
 }
 
 //================================================================

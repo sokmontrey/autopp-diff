@@ -1,16 +1,15 @@
 #pragma once
 
-
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
 
+#include "../expression/ex_parser.hpp"
+#include "../expression/ex_scanner.hpp"
+#include "../util/error.hpp"
 #include "node.hpp"
 #include "operator.hpp"
-#include "../util/error.hpp"
-#include "../expression/ex_scanner.hpp"
-#include "../expression/ex_parser.hpp"
 
 namespace nodeflow {
 
@@ -150,7 +149,7 @@ public:
 
   /* end node getter */
   Node *getF();
-  Node *getEnd(); 
+  Node *getEnd();
 
   /* setter */
   Graph &setValue(std::string name, size_t i, size_t j, double value);
@@ -174,4 +173,3 @@ public:
 };
 
 } // namespace nodeflow
-

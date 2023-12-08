@@ -1,12 +1,11 @@
 #pragma once
 
-
+#include "ex_token.hpp"
 #include <vector>
-#include <string>
 
 namespace nodeflow {
 
-enum class ExType{
+enum class ExType {
   CONSTANT,
   VARIABLE,
   NUMBER,
@@ -15,9 +14,16 @@ enum class ExType{
 
 struct ExNode {
   ExType type;
-  std::string value;
-  std::vector<ExNode*> args;
+  Token token;
+  std::vector<ExNode *> args;
+  void print() {
+    std::cout << token.value << (args.size() ? "(" : "");
+    for (int i = 0; i < args.size(); i++) {
+      args[i]->print();
+      std::cout << (i == args.size() - 1 ? "" : ", ");
+    }
+    std::cout << (args.size() ? ")" : "");
+  }
 };
 
 } // namespace nodeflow
-

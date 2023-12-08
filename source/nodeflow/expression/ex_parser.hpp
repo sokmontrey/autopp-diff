@@ -1,22 +1,23 @@
 #pragma once
 
-
-#include <string>
-#include <vector>
+#include "../util/error.hpp"
 #include "ex_token.hpp"
 #include "ex_tree.hpp"
+#include <string>
+#include <vector>
 
 namespace nodeflow {
 
 class ExParser {
 public:
   ExParser(std::vector<Token> tokens);
+  ExNode *expression();
 
 private:
   std::vector<Token> tokens;
-  int current = 0;
+  int pos = 0;
+  ExNode *root;
 
-  ExNode *expression();
   ExNode *term();
   ExNode *factor();
   ExNode *power();
@@ -24,8 +25,16 @@ private:
   ExNode *reciprocal();
   ExNode *primary();
   ExNode *function();
-  ExNode *args();
   ExNode *literal();
+
+  Token advance();
+  Token peek();
+  Token previous();
+  Token current();
+
+  bool isAtEnd();
+  bool match(std::initializer_list<TokenType> types);
+  bool matchValue(std::initializer_list<std::string> values);
 };
 
 } // namespace nodeflow
@@ -37,23 +46,19 @@ private:
  *
  * factor        -> power ( (SLASH | STAR) power )*;
  *
- * power         -> unary POW unary;
+ * power         -> unary ( (POW) unary )* ;
  *
  * unary         -> (MINUS) unary
  *               | reciprocal;
  *
- * reciprocal    -> "1" SLASH primary;
+ * reciprocal    -> "1" SLASH reciprocal | primary;
  *
- * primary       -> function
- *               | OPEN expression CLOSE
- *               | reciprocal
- *               | literal
+ * primary       -> OPEN expression CLOSE
  *               | (HASH | DOLLAR) primary;
+ *               | function
  *
- * function      -> WORD OPEN args CLOSE;
- *
- * args          -> expression ( COMMA expression )*;
+ * function      -> WORD OPEN expression (COMMA, expression)* CLOSE
+ *               | literal;
  *
  * literal       -> NUMBER | WORD | PI | E;
  */
-

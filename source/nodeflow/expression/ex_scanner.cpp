@@ -48,17 +48,6 @@ void ExScanner::scanToken() {
   case '-':
     addToken(MINUS);
     break;
-  // case '-': {
-  //     char prev;
-  //     for (int i=-2; (prev = peek(i)) == ' '; i--) {}
-  //
-  //     if (prev == '\0')
-  //         addToken(NEG);
-  //     else if (isDigit(prev) || isAlpha(prev) || prev == ')' || prev == '.')
-  //         addToken(SUB);
-  //     else
-  //         addToken(NEG);
-  // } break;
   default:
     if (isDigit(c) || c == '.') {
       number();
@@ -124,4 +113,4 @@ void ExScanner::printTokens() {
   for (auto token : tokens)
     token.print();
 }
-std::vector<Token> ExScanner::getTokens(){ return this->tokens; }
+std::vector<Token> ExScanner::getTokens() { return this->tokens; }
