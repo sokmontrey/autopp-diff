@@ -20,6 +20,7 @@ protected:
   bool is_differentiatable = true;
   bool is_constant = false;
   bool is_value_ready = false;
+  std::string name = "";
 
   Eigen::MatrixXd value;
   Eigen::MatrixXd outer_derivative;
@@ -35,38 +36,40 @@ protected:
 
 public:
   Node() = default;
-  Node(Eigen::MatrixXd initial_value) ;
+  Node(Eigen::MatrixXd initial_value);
 
   //================================================================
   //                          Getters
   //================================================================
 
-  size_t getRows() ;
-  size_t getCols() ;
-  Eigen::MatrixXd &operator()() ;
-  double &operator()(size_t row, size_t col) ;
-  double getValue(size_t row, size_t col) ;
-  double getValue() ;
-  Eigen::MatrixXd &getMatrix() ;
-  Eigen::MatrixXd &getGrad() ;
-  void print() ;
+  size_t getRows();
+  size_t getCols();
+  Eigen::MatrixXd &operator()();
+  double &operator()(size_t row, size_t col);
+  double getValue(size_t row, size_t col);
+  double getValue();
+  Eigen::MatrixXd &getMatrix();
+  Eigen::MatrixXd &getGrad();
+  std::string getName();
+  void print();
 
   //================================================================
   //                          Setters
   //================================================================
 
-  void setMatrix(Eigen::MatrixXd new_value) ;
-  void setValue(size_t row, size_t col, double new_value) ;
-  void setValue(double new_value) ;
-  void operator=(Eigen::MatrixXd new_value) ;
+  void setMatrix(Eigen::MatrixXd new_value);
+  void setValue(size_t row, size_t col, double new_value);
+  void setValue(double new_value);
+  void setName(std::string new_name);
+  void operator=(Eigen::MatrixXd new_value);
 
   //================================================================
   //                       Node Methods
   //================================================================
 
-  bool isDifferentiatable() ;
-  bool isConstant() ;
-  Node &constant() ;
+  bool isDifferentiatable();
+  bool isConstant();
+  Node &constant();
 
   //================================================================
   //                       Graph Methods
@@ -74,40 +77,40 @@ public:
 
   virtual std::vector<Node *> getAllLeaveNode();
 
-  virtual void finished() ;
-  virtual void finished(bool is_child) ;
-  void clearGraph() ;
-  virtual void reset() ;
-  virtual Eigen::MatrixXd &forward() ;
-  virtual void backward(Eigen::MatrixXd partial_outer_derivative) ;
-  virtual void backward() ;
+  virtual void finished();
+  virtual void finished(bool is_child);
+  void clearGraph();
+  virtual void reset();
+  virtual Eigen::MatrixXd &forward();
+  virtual void backward(Eigen::MatrixXd partial_outer_derivative);
+  virtual void backward();
 
   //================================================================
   //                        Scalar Methods
   //================================================================
 
-  static Node Random() ;
-  static Node Scalar(double initial_value) ;
-  static Node ScalarConst(double initial_value) ;
+  static Node Random();
+  static Node Scalar(double initial_value);
+  static Node ScalarConst(double initial_value);
 
   //================================================================
   //                        Vector Methods
   //================================================================
 
-  static Node Random(size_t rows) ;
-  static Node Vector(size_t rows) ;
-  static Node Vector(size_t rows, double fill_value) ;
-  static Node Vector(std::initializer_list<double> initial_vector) ;
+  static Node Random(size_t rows);
+  static Node Vector(size_t rows);
+  static Node Vector(size_t rows, double fill_value);
+  static Node Vector(std::initializer_list<double> initial_vector);
 
   //================================================================
   //                        Matrix Methods
   //================================================================
 
-  static Node Random(size_t rows, size_t cols) ;
-  static Node Matrix(size_t rows, size_t cols) ;
-  static Node Matrix(size_t rows, size_t cols, size_t fill_value) ;
+  static Node Random(size_t rows, size_t cols);
+  static Node Matrix(size_t rows, size_t cols);
+  static Node Matrix(size_t rows, size_t cols, size_t fill_value);
   static Node
-  Matrix(std::initializer_list<std::initializer_list<double>> initial_matrix) ;
+  Matrix(std::initializer_list<std::initializer_list<double>> initial_matrix);
 };
 
 /**
@@ -135,36 +138,35 @@ protected:
   size_t num_inputs = 0;
   virtual void compute() = 0;
   virtual Eigen::MatrixXd derivative(size_t input_wrt_index) = 0;
-  virtual void setSize() ;
+  virtual void setSize();
 
 public:
   OperatorNode() = default;
-  OperatorNode(std::initializer_list<Node *> input_list) ;
-  OperatorNode(Node *a) ;
-  OperatorNode(Node *a, Node *b) ;
-  void initializeInput(std::initializer_list<Node *> input_list) ;
-  void addInput(Node *new_input) ;
+  OperatorNode(std::initializer_list<Node *> input_list);
+  OperatorNode(Node *a);
+  OperatorNode(Node *a, Node *b);
+  void initializeInput(std::initializer_list<Node *> input_list);
+  void addInput(Node *new_input);
 
   //================================================================
   //                          Getters
   //================================================================
 
-  Eigen::MatrixXd getInput(size_t input_index) ;
-  Eigen::MatrixXd getInput() ;
+  Eigen::MatrixXd getInput(size_t input_index);
+  Eigen::MatrixXd getInput();
 
   //================================================================
   //                      Graph Methods
   //================================================================
 
-  std::vector<Node *> getAllLeaveNode() override ;
-  void clearGraph() ;
-  void reset() override ;
-  void finished() ;
-  void finished(bool is_child) override ;
-  Eigen::MatrixXd &forward() override ;
-  void backward() ;
+  std::vector<Node *> getAllLeaveNode() override;
+  void clearGraph();
+  void reset() override;
+  void finished();
+  void finished(bool is_child) override;
+  Eigen::MatrixXd &forward() override;
+  void backward();
   void backward(Eigen::MatrixXd partial_outer_derivative) override;
 };
 
 } // namespace nodeflow
-

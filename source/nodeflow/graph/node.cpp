@@ -25,7 +25,9 @@ Node::Node(Eigen::MatrixXd initial_value) {
 size_t Node::getRows() { return this->rows; }
 size_t Node::getCols() { return this->cols; }
 Eigen::MatrixXd &Node::operator()() { return this->value; }
-double &Node::operator()(size_t row, size_t col) { return this->value(row, col); }
+double &Node::operator()(size_t row, size_t col) {
+  return this->value(row, col);
+}
 double Node::getValue(size_t row, size_t col) { return this->value(row, col); }
 double Node::getValue() { return this->value(0, 0); }
 Eigen::MatrixXd &Node::getMatrix() { return this->value; }
@@ -34,6 +36,7 @@ Eigen::MatrixXd &Node::getGrad() {
     std::cout << "Warning: Calling 'getGrad()' on a constant node" << std::endl;
   return this->outer_derivative;
 }
+std::string Node::getName() { return this->name; }
 void Node::print() {
   std::cout << "Node: "
             << " (Matrix) "
@@ -57,6 +60,7 @@ void Node::setValue(size_t row, size_t col, double new_value) {
   this->value(row, col) = new_value;
 }
 void Node::setValue(double new_value) { this->value(0, 0) = new_value; }
+void Node::setName(std::string new_name) { this->name = new_name; }
 void Node::operator=(Eigen::MatrixXd new_value) {
   this->value = new_value;
 
@@ -80,12 +84,12 @@ Node &Node::constant() {
 //                       Graph Methods
 //================================================================
 
- std::vector<Node *> Node::getAllLeaveNode() {
+std::vector<Node *> Node::getAllLeaveNode() {
   return std::vector<Node *>{this};
 }
 
- void Node::finished() { this->finished(true); }
- void Node::finished(bool is_child) {
+void Node::finished() { this->finished(true); }
+void Node::finished(bool is_child) {
   this->setRows(this->value.rows());
   this->setCols(this->value.cols());
   this->num_parent++;
@@ -94,12 +98,12 @@ void Node::clearGraph() {
   this->num_parent = 0;
   return;
 }
- void Node::reset() {
+void Node::reset() {
   this->is_value_ready = false;
   this->parent_called_count = 0;
 }
- Eigen::MatrixXd &Node::forward() { return this->value; }
- void Node::backward(Eigen::MatrixXd partial_outer_derivative) {
+Eigen::MatrixXd &Node::forward() { return this->value; }
+void Node::backward(Eigen::MatrixXd partial_outer_derivative) {
   if (!this->is_differentiatable)
     return;
 
@@ -111,7 +115,7 @@ void Node::clearGraph() {
 
   this->parent_called_count++;
 }
- void Node::backward() { /*a method with no pupose just for the graph*/
+void Node::backward() { /*a method with no pupose just for the graph*/
 }
 
 //================================================================
@@ -160,7 +164,8 @@ Node Node::Matrix(size_t rows, size_t cols) {
 Node Node::Matrix(size_t rows, size_t cols, size_t fill_value) {
   return Node(Eigen::MatrixXd::Constant(rows, cols, fill_value));
 }
-Node Node::Matrix(std::initializer_list<std::initializer_list<double>> initial_matrix) {
+Node Node::Matrix(
+    std::initializer_list<std::initializer_list<double>> initial_matrix) {
   Node temp = Eigen::MatrixXd(initial_matrix);
   return temp;
 }
@@ -220,13 +225,15 @@ void OperatorNode::addInput(Node *new_input) {
 Eigen::MatrixXd OperatorNode::getInput(size_t input_index) {
   return this->inputs[input_index]->getMatrix();
 }
-Eigen::MatrixXd OperatorNode::getInput() { return this->inputs[0]->getMatrix(); }
+Eigen::MatrixXd OperatorNode::getInput() {
+  return this->inputs[0]->getMatrix();
+}
 
 //================================================================
 //                      Graph Methods
 //================================================================
 
-std::vector<Node *> OperatorNode::getAllLeaveNode(){
+std::vector<Node *> OperatorNode::getAllLeaveNode() {
   std::vector<Node *> nodes;
   for (size_t i = 0; i < this->num_inputs; i++) {
     auto temp = this->inputs[i]->getAllLeaveNode();
@@ -241,7 +248,7 @@ void OperatorNode::clearGraph() {
   }
   return;
 }
-void OperatorNode::reset(){
+void OperatorNode::reset() {
   if (!this->is_value_ready)
     return;
 
@@ -256,7 +263,7 @@ void OperatorNode::finished() {
   clearGraph();
   finished(true);
 }
-void OperatorNode::finished(bool is_child){
+void OperatorNode::finished(bool is_child) {
   this->num_parent++;
 
   bool is_diff_temp = false;
@@ -269,7 +276,7 @@ void OperatorNode::finished(bool is_child){
 
   this->setSize();
 }
-Eigen::MatrixXd &OperatorNode::forward(){
+Eigen::MatrixXd &OperatorNode::forward() {
   if (this->is_value_ready)
     return this->value;
 
@@ -284,7 +291,7 @@ Eigen::MatrixXd &OperatorNode::forward(){
 void OperatorNode::backward() {
   this->backward(Eigen::MatrixXd::Constant(this->rows, this->cols, 1.0));
 }
-void OperatorNode::backward(Eigen::MatrixXd partial_outer_derivative){
+void OperatorNode::backward(Eigen::MatrixXd partial_outer_derivative) {
   if (!this->is_differentiatable)
     return;
 
