@@ -27,6 +27,13 @@ void ExNode::deleteChildrens() {
   }
 }
 
+void ExNode::reverse_iterate(std::function<void(ExNode *)> func) {
+  for (auto child : childrens) {
+    child->reverse_iterate(func);
+  }
+  func(this);
+}
+
 //=============================================================================
 //                                  ExParser
 //=============================================================================
@@ -81,7 +88,7 @@ ExNode *ExParser::unary() {
     ExNode *expr = unary();
 
     if (op.type == MINUS)
-      op.value = "inverse";
+      op.value = "invert";
 
     ExType type = ExType::FUNCTION;
     if (op.type == HASH)
@@ -96,7 +103,7 @@ ExNode *ExParser::unary() {
 }
 
 ExNode *ExParser::reciprocal() {
-  if (match({NUMBER}) && matchValue({"1"}) && peek().type == SLASH) {
+  if (matchValue({"1"}) && peek().type == SLASH) {
     advance();
     advance();
     ExNode *expr = reciprocal();
@@ -150,7 +157,10 @@ ExNode *ExParser::function() {
 ExNode *ExParser::literal() {
   if (match({NUMBER, WORD})) {
     Token op(advance());
-    return new ExNode{ExType::END, op, _ExArgs()};
+    if (op.type == NUMBER) {
+      return new ExNode{ExType::NUMBER, op, _ExArgs()};
+    }
+    return new ExNode{ExType::NAME, op, _ExArgs()};
   }
   error::report("ExpressionParser", "Expected number or word",
                 previous().value + " " + current().value, 2);
@@ -179,18 +189,3 @@ bool ExParser::matchValue(std::initializer_list<std::string> values) {
       return true;
   return false;
 }
-
-// std::string ExParser::getOpName(Token op) {
-//   return (symb_op_map.find(op.type) != symb_op_map.end()) ?
-//   symb_op_map[op.type]
-//                                                           : op.value;
-// }
-// ExNode *ExParser::createOperator(std::string op_name, ExNode *a, ExNode *b)
-// {
-//   if (ops_map.find(op_name) == ops_map.end()) {
-//     error::report("ExpressionParser", "Operator not found", op_name, 0);
-//     return nullptr;
-//   }
-//
-//   return ops_map[op_name](a, b);
-// }
