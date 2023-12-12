@@ -2,12 +2,13 @@
 
 #include "../util/error.hpp"
 #include "ex_token.hpp"
+#include <functional>
 #include <string>
 #include <vector>
 
 namespace nodeflow {
 
-enum class ExType { SYMBOL, FUNCTION, VARIABLE, CONSTANT, SUBGRAPH, END };
+enum class ExType { SYMBOL, FUNCTION, CONSTANT, SUBGRAPH, NUMBER, NAME };
 
 struct ExNode {
   ExType type;
@@ -15,6 +16,8 @@ struct ExNode {
   std::vector<ExNode *> childrens;
   void print(std::string indent = "");
   void deleteChildrens();
+
+  void reverse_iterate(std::function<void(ExNode *)> func);
 };
 
 typedef std::vector<ExNode *> _ExArgs;
