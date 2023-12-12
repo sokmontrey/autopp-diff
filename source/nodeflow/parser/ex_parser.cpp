@@ -3,18 +3,21 @@
 
 using namespace nodeflow;
 
-void ExNode::print() {
+void ExNode::print(std::string indent) {
   // print in form + (a, b)
   std::cout << token.value;
   if (childrens.size() > 0)
-    std::cout << "(";
+    std::cout << "(\n";
+
   for (int i = 0; i < childrens.size(); i++) {
-    childrens[i]->print();
+    std::cout << indent + "  ";
+    childrens[i]->print(indent + "  ");
     if (i < childrens.size() - 1)
-      std::cout << ", ";
+      std::cout << ",\n";
   }
+
   if (childrens.size() > 0)
-    std::cout << ")";
+    std::cout << "\n" + indent + ")";
 }
 
 void ExNode::deleteChildrens() {

@@ -13,7 +13,7 @@ struct ExNode {
   ExType type;
   Token token;
   std::vector<ExNode *> childrens;
-  void print();
+  void print(std::string indent = "");
   void deleteChildrens();
 };
 
