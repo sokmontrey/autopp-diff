@@ -101,16 +101,11 @@ void ExScanner::word() {
   while (isAlpha(peek()))
     advance();
   std::string word = str.substr(start, pos - start);
-  if (word == "PI") {
-    addToken(PI);
-  } else if (word == "E") {
-    addToken(E);
-  } else {
-    addToken(WORD, word);
-  }
+  addToken(WORD, word);
 }
 void ExScanner::printTokens() {
   for (auto token : tokens)
     token.print();
+  std::cout << std::endl;
 }
 std::vector<Token> ExScanner::getTokens() { return this->tokens; }

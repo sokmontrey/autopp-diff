@@ -1,8 +1,7 @@
 #pragma once
 
-
-#include <string>
 #include <iostream>
+#include <string>
 
 namespace nodeflow {
 
@@ -22,13 +21,6 @@ enum TokenType {
   SLASH,
   POW,
 
-  SUB,
-  NEG,
-  INVS,
-
-  PI,
-  E,
-
   COMMA,
   END,
 };
@@ -40,9 +32,9 @@ struct Token {
 
   Token(TokenType type, std::string value, int pos)
       : type(type), value(value), pos(pos) {}
+  Token() : type(END), value(""), pos(0) {}
 
   void print() { std::cout << value << " "; }
 };
 
 } // namespace nodeflow
-

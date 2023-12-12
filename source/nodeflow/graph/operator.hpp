@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "node.hpp"
 
 // TODO: finish all the derivative doc
@@ -697,5 +696,3 @@ class Softmax : public OperatorNode {
 };
 
 } // namespace nodeflow
-
-
