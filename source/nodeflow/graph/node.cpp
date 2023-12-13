@@ -18,6 +18,8 @@ Node::Node(Eigen::MatrixXd initial_value) {
   this->setCols(initial_value.cols());
 }
 
+void Node::reverse_iterate(std::function<void(Node *)> func) { func(this); }
+
 //================================================================
 //                          Getters
 //================================================================
@@ -216,6 +218,13 @@ void OperatorNode::initializeInput(std::initializer_list<Node *> input_list) {
 void OperatorNode::addInput(Node *new_input) {
   this->inputs.push_back(new_input);
   this->num_inputs++;
+}
+
+void OperatorNode::reverse_iterate(std::function<void(Node *)> func) {
+  for (auto input : this->inputs) {
+    input->reverse_iterate(func);
+  }
+  func(this);
 }
 
 //================================================================

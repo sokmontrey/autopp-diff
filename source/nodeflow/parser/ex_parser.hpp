@@ -14,9 +14,9 @@ struct ExNode {
   ExType type;
   Token token;
   std::vector<ExNode *> childrens;
+
   void print(std::string indent = "");
   void deleteChildrens();
-
   void reverse_iterate(std::function<void(ExNode *)> func);
 };
 

@@ -5,9 +5,10 @@ add_library(${LIB_NAME} STATIC
     nodeflow.cpp
     nodeflow.hpp
 
-    graph/node.cpp
     parser/ex_scanner.cpp
     parser/ex_parser.cpp
+    graph/node.cpp
+    graph/graph.cpp
 )
 
 set(TARGETS ${LIB_NAME})

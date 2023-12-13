@@ -1,12 +1,15 @@
 #pragma once
 
 #include "../parser/ex_parser.hpp"
+#include "../parser/ex_scanner.hpp"
+#include "../parser/ex_token.hpp"
+#include "../util/error.hpp"
 #include "./node.hpp"
 #include "./operator.hpp"
-#include <map>
+#include <deque>
+#include <memory>
 #include <string>
-#include <tuple>
-#include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -41,16 +44,49 @@ namespace nodeflow {
  */
 
 // TODO: deallocate ExNode tree after
+typedef function<Node *(Node *, Node *)> OpCreatorLambda;
 
 class Graph {
 public:
-  Graph(string name, ...);
+  template <typename... Args> Graph(Args... params) {
+    processParams(params...);
+  }
   ~Graph();
 
+  // create node name
+  Graph &declare(string node_name);
+
+  // define node value
+  Graph &define(string node_name, Node node);
+  // define subgraph
+  Graph &define(string node_name, Node *node);
+  void parse(string expression);
+  void operator=(const char *expression);
+
 private:
-  vector<Node *> sub_graphs;
-  vector<Node *> nodes;
-  vector<OperatorNode *> operators;
+  unordered_map<string, OpCreatorLambda> ops_name_map{
+      {"add", [](Node *a, Node *b) { return new Add(a, b); }},
+      {"sub", [](Node *a, Node *b) { return new Subtract(a, b); }}};
+
+  unordered_map<TokenType, string> ops_symbol_map{{PLUS, "add"},
+                                                  {MINUS, "subtract"},
+                                                  {SLASH, "div"},
+                                                  {STAR, "mul"},
+                                                  {POW, "pow"}};
+
+  void processParams(string param) { declare(param); }
+  template <typename... Args> void processParams(string param, Args... params) {
+    declare(param);
+    processParams(params...);
+  }
+
+  Node *createGraph(ExNode *ex_root);
+  Node *createOperator(string op_name, Node *a, Node *b);
+  string getOperatorName(Token op_token);
+
+  unordered_map<string, Node *> subgraphs_map;
+  unordered_map<string, Node> nodes_map;
+  Node *root;
 };
 
-}; // namespace nodeflow
+} // namespace nodeflow

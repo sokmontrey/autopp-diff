@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <string>
 #include <vector>
 
@@ -40,8 +39,6 @@ private:
 
   void number();
   void word();
-
 };
 
-} //namespace nodeflow
-
+} // namespace nodeflow

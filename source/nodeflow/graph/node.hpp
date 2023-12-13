@@ -2,6 +2,7 @@
 
 #include <Eigen/Dense>
 
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <string>
@@ -37,6 +38,8 @@ protected:
 public:
   Node() = default;
   Node(Eigen::MatrixXd initial_value);
+
+  virtual void reverse_iterate(std::function<void(Node *)> func);
 
   //================================================================
   //                          Getters
@@ -147,6 +150,8 @@ public:
   OperatorNode(Node *a, Node *b);
   void initializeInput(std::initializer_list<Node *> input_list);
   void addInput(Node *new_input);
+
+  void reverse_iterate(std::function<void(Node *)> func) override;
 
   //================================================================
   //                          Getters

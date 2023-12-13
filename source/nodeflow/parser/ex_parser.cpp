@@ -21,10 +21,7 @@ void ExNode::print(std::string indent) {
 }
 
 void ExNode::deleteChildrens() {
-  for (auto child : childrens) {
-    child->deleteChildrens();
-    delete child;
-  }
+  reverse_iterate([](ExNode *ex_node) { delete ex_node; });
 }
 
 void ExNode::reverse_iterate(std::function<void(ExNode *)> func) {
