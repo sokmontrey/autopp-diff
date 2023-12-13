@@ -6,6 +6,7 @@
 #include "../util/error.hpp"
 #include "./node.hpp"
 #include "./operator.hpp"
+#include <Eigen/Dense>
 #include <deque>
 #include <memory>
 #include <string>
@@ -51,7 +52,6 @@ public:
   template <typename... Args> Graph(Args... params) {
     processParams(params...);
   }
-  ~Graph();
 
   // create node name
   Graph &declare(string node_name);
@@ -62,6 +62,15 @@ public:
   Graph &define(string node_name, Node *node);
   void parse(string expression);
   void operator=(const char *expression);
+
+  Graph &evaluate();
+  Graph &operator()();
+
+  Graph &gradient();
+
+  Eigen::MatrixXd partial(string node_name);
+
+  Graph &print();
 
 private:
   unordered_map<string, OpCreatorLambda> ops_name_map{
@@ -80,7 +89,7 @@ private:
     processParams(params...);
   }
 
-  Node *createGraph(ExNode *ex_root);
+  void buildGraph(ExNode *ex_root);
   Node *createOperator(string op_name, Node *a, Node *b);
   string getOperatorName(Token op_token);
 

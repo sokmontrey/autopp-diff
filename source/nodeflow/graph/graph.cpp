@@ -3,13 +3,6 @@
 using namespace nodeflow;
 using namespace std;
 
-Graph::~Graph() {
-  root->reverse_iterate([](Node *node) { delete node; });
-  for (auto &subgraph : subgraphs_map) {
-    delete subgraph.second;
-  }
-}
-
 Graph &Graph::declare(string param) {
   if (nodes_map.find(param) != nodes_map.end())
     error::report("Graph", "parameter already declared", param, 0);
@@ -55,15 +48,11 @@ void Graph::operator=(const char *expression) { parse(expression); }
 void Graph::parse(string expression) {
   ExScanner scanner(expression);
   ExParser parser(scanner.scan());
-
-  ExNode *ex_root = parser.parse();
-  root = createGraph(ex_root);
-
-  ex_root->deleteChildrens();
-  delete ex_root;
+  buildGraph(parser.parse());
+  root->finished();
 }
 
-Node *Graph::createGraph(ExNode *ex_root) {
+void Graph::buildGraph(ExNode *ex_root) {
   deque<Node *> temp_nodes;
 
   ex_root->reverse_iterate([&](ExNode *ex_node) {
@@ -119,5 +108,27 @@ Node *Graph::createGraph(ExNode *ex_root) {
     }
   });
 
-  return temp_nodes.back();
+  root = temp_nodes[0];
+}
+
+Graph &Graph::operator()() { return evaluate(); }
+Graph &Graph::evaluate() {
+  root->forward();
+  return *this;
+}
+
+Graph &Graph::gradient() {
+  root->backward();
+  return *this;
+}
+
+Eigen::MatrixXd Graph::partial(string node_name) {
+  if (nodes_map.find(node_name) == nodes_map.end())
+    error::report("Graph", "parameter not declared", node_name, 0);
+  return nodes_map[node_name].getGrad();
+}
+
+Graph &Graph::print() {
+  root->print();
+  return *this;
 }

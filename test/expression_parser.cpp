@@ -5,7 +5,17 @@ using namespace nodeflow;
 int main() {
   Graph f("a", "b", "c");
 
-  f = "a + b + c";
+  f.define("a", Node::Scalar(1));
+  f.define("b", Node::Scalar(2));
+  f.define("c", Node::Scalar(3));
+
+  f = "a + b + c + 9";
+
+  f().print();
+
+  f.gradient();
+
+  std::cout << f.partial("a") << std::endl;
 
   // f = "sin(cos((abc - #BCC) * $c + 1.5)) / -2*2";
   // std::endl;

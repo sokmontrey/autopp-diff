@@ -20,10 +20,6 @@ void ExNode::print(std::string indent) {
     std::cout << "\n" + indent + ")";
 }
 
-void ExNode::deleteChildrens() {
-  reverse_iterate([](ExNode *ex_node) { delete ex_node; });
-}
-
 void ExNode::reverse_iterate(std::function<void(ExNode *)> func) {
   for (auto child : childrens) {
     child->reverse_iterate(func);
@@ -36,12 +32,6 @@ void ExNode::reverse_iterate(std::function<void(ExNode *)> func) {
 //=============================================================================
 
 ExParser::ExParser(std::vector<Token> tokens) { this->tokens = tokens; }
-ExParser::~ExParser() {
-  if (root != nullptr) {
-    root->deleteChildrens();
-    delete root;
-  }
-}
 
 ExNode *ExParser::parse() { return expression(); }
 ExNode *ExParser::expression() {

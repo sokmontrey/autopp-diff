@@ -16,7 +16,6 @@ struct ExNode {
   std::vector<ExNode *> childrens;
 
   void print(std::string indent = "");
-  void deleteChildrens();
   void reverse_iterate(std::function<void(ExNode *)> func);
 };
 
@@ -49,23 +48,12 @@ typedef std::vector<ExNode *> _ExArgs;
 class ExParser {
 public:
   ExParser(std::vector<Token> tokens);
-  ~ExParser();
   ExNode *parse();
 
 private:
   std::vector<Token> tokens;
   int pos = 0;
   ExNode *root;
-
-  // typedef std::function<Node *(Node *, Node *)> OpCreatorFunc;
-  // std::unordered_map<std::string, OpCreatorFunc> ops_map{
-  //     {"add", [](Node *a, Node *b) { return new Add(a, b); }},
-  //     {"sub", [](Node *a, Node *b) { return new Subtract(a, b); }},
-  //     {"sin", [](Node *a, Node *b) { return new Sin(a, b); }}};
-
-  // std::unordered_map<TokenType, std::string> symb_op_map{
-  //     {PLUS, "add"}, {STAR, "mul"},   {SLASH, "div"},      {POW, "pow"},
-  //     {WORD, "var"}, {HASH, "const"}, {DOLLAR, "subgraph"}};
 
   ExNode *expression();
   ExNode *term();
@@ -76,9 +64,6 @@ private:
   ExNode *primary();
   ExNode *function();
   ExNode *literal();
-
-  // std::string getOpName(Token op);
-  // ExNode *createOperator(std::string op_name, ExNode *a, ExNode *b);
 
   Token advance();
   Token peek();
