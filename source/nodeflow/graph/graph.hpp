@@ -48,12 +48,39 @@ public:
   Graph &print();
 
 private:
-  unordered_map<string, OneArgOpCreator> one_args_ops_map{
+  unordered_map<string, OneArgOpCreator> one_arg_ops_map{
+      {"sqrt", [](Node *a) { return new Sqrt(a); }},
+      {"invert", [](Node *a) { return new Invert(a); }},
+      {"inverse", [](Node *a) { return new Inverse(a); }},
       {"sin", [](Node *a) { return new Sin(a); }},
+      {"cos", [](Node *a) { return new Cos(a); }},
+      {"tan", [](Node *a) { return new Tan(a); }},
+      {"sinh", [](Node *a) { return new Sinh(a); }},
+      {"cosh", [](Node *a) { return new Cosh(a); }},
+      {"tanh", [](Node *a) { return new Tanh(a); }},
+      {"exp", [](Node *a) { return new Exp(a); }},
+      {"loge", [](Node *a) { return new Loge(a); }},
+      {"ln", [](Node *a) { return new Loge(a); }},
+      {"sum", [](Node *a) { return new Sum(a); }},
+      {"sigmoid", [](Node *a) { return new Sigmoid(a); }},
+      {"relu", [](Node *a) { return new ReLU(a); }},
+      {"softmax", [](Node *a) { return new Softmax(a); }},
   };
+
   unordered_map<string, TwoArgsOpCreator> two_args_ops_map{
       {"add", [](Node *a, Node *b) { return new Add(a, b); }},
-      {"sub", [](Node *a, Node *b) { return new Subtract(a, b); }}};
+      {"sub", [](Node *a, Node *b) { return new Subtract(a, b); }},
+      {"subtract", [](Node *a, Node *b) { return new Subtract(a, b); }},
+      {"matmul", [](Node *a, Node *b) { return new Mul(a, b); }},
+      {"dot", [](Node *a, Node *b) { return new Mul(a, b); }},
+      {"ele_mul", [](Node *a, Node *b) { return new EleWiseMul(a, b); }},
+      {"scl_mul", [](Node *a, Node *b) { return new ScalarMul(a, b); }},
+      {"div", [](Node *a, Node *b) { return new Div(a, b); }},
+      {"ele_div", [](Node *a, Node *b) { return new EleWiseDiv(a, b); }},
+      {"scl_div", [](Node *a, Node *b) { return new ScalarDiv(a, b); }},
+      {"pow", [](Node *a, Node *b) { return new Pow(a, b); }},
+      {"leaky_relu", [](Node *a, Node *b) { return new LeakyReLU(a, b); }},
+  };
 
   unordered_map<TokenType, string> ops_symbol_map{{PLUS, "add"},
                                                   {MINUS, "subtract"},
@@ -69,15 +96,11 @@ private:
 
   void buildGraph(ExNode *ex_root);
 
-  Node *createOperator(string op_name, Node *a);
-  Node *createOperator(string op_name, Node *a, Node *b);
-  Node *createFunction(string func_name, Node *a, Node *b);
-
   string getOperatorName(Token op_token);
 
   unordered_map<string, Node *> subgraph_nodes_map;
   unordered_map<string, Node> nodes_map;
-  Node *root = nullptr;
+  Node *root;
   string expression;
 };
 

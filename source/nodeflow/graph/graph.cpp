@@ -28,20 +28,10 @@ Graph &Graph::define(string node_name, Node node) {
 // for subgraph
 Graph &Graph::define(string subgraph_name, Graph &subgraph) {
   if (subgraph_nodes_map.find(subgraph_name) == subgraph_nodes_map.end())
-    error::report("Graph::define", "parameter not declared", subgraph_name, 0);
+    error::report("Graph::define (subgraph)", "parameter not declared",
+                  subgraph_name, 0);
   subgraph_nodes_map[subgraph_name] = subgraph.getRoot();
   return *this;
-}
-
-Node *Graph::createOperator(string op_name, Node *a) {
-  if (one_args_ops_map.find(op_name) == one_args_ops_map.end())
-    return nullptr;
-  return one_args_ops_map[op_name](a);
-}
-Node *Graph::createOperator(string op_name, Node *a, Node *b) {
-  if (two_args_ops_map.find(op_name) == two_args_ops_map.end())
-    return nullptr;
-  return two_args_ops_map[op_name](a, b);
 }
 
 string Graph::getOperatorName(Token op_token) {
@@ -49,29 +39,6 @@ string Graph::getOperatorName(Token op_token) {
     error::report("Graph::getOperatorName", "Undefined Symbol", op_token.value,
                   0);
   return ops_symbol_map[op_token.type];
-}
-
-Node *Graph::createFunction(string func_name, Node *a, Node *b) {
-  Node *func = nullptr;
-
-  if (a == nullptr) {
-    error::report("Graph::createFunction", "Undefined Function",
-                  func_name + " with NO argument", 0);
-  }
-
-  if (b == nullptr) {
-    func = createOperator(func_name, a);
-    if (func == nullptr)
-      error::report("Graph::createFunction", "Undefined Function",
-                    func_name + " with ONE argument", 0);
-  } else {
-    func = createOperator(func_name, a, b);
-    if (func == nullptr)
-      error::report("Graph::createFunction", "Undefined Function",
-                    func_name + " with TWO arguments", 0);
-  }
-
-  return func;
 }
 
 void Graph::operator=(const char *expression) { parse(expression); }
@@ -86,11 +53,7 @@ void Graph::parse(string expression) {
 }
 
 void Graph::buildGraph(ExNode *ex_root) {
-  if (root != nullptr)
-    error::report("Graph::buildGraph", "expression is already defined",
-                  expression, 0);
-
-  Node *nodes[2] = {nullptr, nullptr};
+  deque<Node *> operators;
 
   ex_root->reverse_iterate([&](ExNode *ex_node) {
     string value = ex_node->token.value;
@@ -100,15 +63,15 @@ void Graph::buildGraph(ExNode *ex_root) {
       if (nodes_map.find(value) == nodes_map.end())
         error::report("Graph::buildGraph NAME", "parameter not defined", value,
                       0);
-      nodes[nodes[0] == nullptr ? 0 : 1] = &nodes_map[value];
+      operators.push_back(&nodes_map[value]);
     } break;
     case ExType::NUMBER: {
       if (nodes_map.find(value) == nodes_map.end())
         nodes_map.insert({value, Node::Scalar(stod(value))});
-      nodes[nodes[0] == nullptr ? 0 : 1] = &nodes_map[value];
+      operators.push_back(&nodes_map[value]);
     } break;
     case ExType::CONSTANT: {
-      nodes[nodes[1] == nullptr ? 0 : 1]->constant();
+      operators.back()->constant();
       break;
     }
     case ExType::SUBGRAPH: {
@@ -118,26 +81,32 @@ void Graph::buildGraph(ExNode *ex_root) {
       if (subgraph_nodes_map[value] == nullptr)
         error::report("Graph::buildGraph SUBGRAPH", "subgraph not defined",
                       value, 0);
-      nodes[nodes[0] == nullptr ? 0 : 1] = subgraph_nodes_map[value];
+      operators.push_back(subgraph_nodes_map[value]);
     } break;
+    case ExType::SYMBOL:
     case ExType::FUNCTION: {
-      nodes[0] = createFunction(value, nodes[0], nodes[1]);
-      nodes[1] = nullptr;
-    } break;
-    case ExType::SYMBOL: {
-      string op_name = getOperatorName(ex_node->token);
-      nodes[0] = createOperator(op_name, nodes[0], nodes[1]);
-      nodes[1] = nullptr;
+      string name = value;
+      if (ex_node->type == ExType::SYMBOL)
+        name = getOperatorName(ex_node->token);
+      if (one_arg_ops_map.find(name) != one_arg_ops_map.end()) {
+        Node *a = operators.back();
+        operators.pop_back();
+        operators.push_back(one_arg_ops_map[name](a));
+        break;
+      }
+      if (two_args_ops_map.find(name) != two_args_ops_map.end()) {
+        Node *b = operators.back();
+        operators.pop_back();
+        Node *a = operators.back();
+        operators.pop_back();
+        operators.push_back(two_args_ops_map[name](a, b));
+        break;
+      }
     } break;
     }
   });
 
-  if (nodes[1] != nullptr)
-    error::report("Graph::buildGraph",
-                  "invalid expression (expression should end with a function)",
-                  "", 0);
-
-  this->root = nodes[0];
+  root = operators.back();
 }
 
 Graph &Graph::operator()() { return evaluate(); }
