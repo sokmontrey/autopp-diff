@@ -16,6 +16,73 @@ using namespace std;
 
 namespace nodeflow {
 
+// TODO: deallocate ExNode tree after
+typedef function<Node *(Node *)> OneArgOpCreator;
+typedef function<Node *(Node *, Node *)> TwoArgsOpCreator;
+
+class Graph {
+public:
+  template <typename... Args> Graph(Args... params) {
+    processParams(params...);
+  }
+
+  // create node name
+  Graph &declare(string node_name);
+  // define node value
+  Graph &define(string node_name, Node node);
+  // define subgraph
+  Graph &define(string subgraph_name, Graph &subgraph);
+
+  void parse(string expression);
+  void operator=(const char *expression);
+
+  Graph &evaluate();
+  Graph &operator()();
+
+  Graph &gradient();
+
+  Eigen::MatrixXd partial(string node_name);
+
+  Node *getRoot();
+
+  Graph &print();
+
+private:
+  unordered_map<string, OneArgOpCreator> one_args_ops_map{
+      {"sin", [](Node *a) { return new Sin(a); }},
+  };
+  unordered_map<string, TwoArgsOpCreator> two_args_ops_map{
+      {"add", [](Node *a, Node *b) { return new Add(a, b); }},
+      {"sub", [](Node *a, Node *b) { return new Subtract(a, b); }}};
+
+  unordered_map<TokenType, string> ops_symbol_map{{PLUS, "add"},
+                                                  {MINUS, "subtract"},
+                                                  {SLASH, "div"},
+                                                  {STAR, "mul"},
+                                                  {POW, "pow"}};
+
+  void processParams(string param) { declare(param); }
+  template <typename... Args> void processParams(string param, Args... params) {
+    declare(param);
+    processParams(params...);
+  }
+
+  void buildGraph(ExNode *ex_root);
+
+  Node *createOperator(string op_name, Node *a);
+  Node *createOperator(string op_name, Node *a, Node *b);
+  Node *createFunction(string func_name, Node *a, Node *b);
+
+  string getOperatorName(Token op_token);
+
+  unordered_map<string, Node *> subgraph_nodes_map;
+  unordered_map<string, Node> nodes_map;
+  Node *root = nullptr;
+  string expression;
+};
+
+} // namespace nodeflow
+
 /*
  * Graph f("a", "b", "$c");
  *
@@ -43,59 +110,3 @@ namespace nodeflow {
  * Graph::getConsts(f);
  *
  */
-
-// TODO: deallocate ExNode tree after
-typedef function<Node *(Node *, Node *)> OpCreatorLambda;
-
-class Graph {
-public:
-  template <typename... Args> Graph(Args... params) {
-    processParams(params...);
-  }
-
-  // create node name
-  Graph &declare(string node_name);
-
-  // define node value
-  Graph &define(string node_name, Node node);
-  // define subgraph
-  Graph &define(string node_name, Node *node);
-  void parse(string expression);
-  void operator=(const char *expression);
-
-  Graph &evaluate();
-  Graph &operator()();
-
-  Graph &gradient();
-
-  Eigen::MatrixXd partial(string node_name);
-
-  Graph &print();
-
-private:
-  unordered_map<string, OpCreatorLambda> ops_name_map{
-      {"add", [](Node *a, Node *b) { return new Add(a, b); }},
-      {"sub", [](Node *a, Node *b) { return new Subtract(a, b); }}};
-
-  unordered_map<TokenType, string> ops_symbol_map{{PLUS, "add"},
-                                                  {MINUS, "subtract"},
-                                                  {SLASH, "div"},
-                                                  {STAR, "mul"},
-                                                  {POW, "pow"}};
-
-  void processParams(string param) { declare(param); }
-  template <typename... Args> void processParams(string param, Args... params) {
-    declare(param);
-    processParams(params...);
-  }
-
-  void buildGraph(ExNode *ex_root);
-  Node *createOperator(string op_name, Node *a, Node *b);
-  string getOperatorName(Token op_token);
-
-  unordered_map<string, Node *> subgraphs_map;
-  unordered_map<string, Node> nodes_map;
-  Node *root;
-};
-
-} // namespace nodeflow

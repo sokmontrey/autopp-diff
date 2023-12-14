@@ -74,17 +74,17 @@ ExNode *ExParser::unary() {
     Token op(advance());
     ExNode *expr = unary();
 
-    if (op.type == MINUS)
+    if (op.type == DOLLAR) {
+      expr->type = ExType::SUBGRAPH;
+      return expr;
+    }
+    if (op.type == HASH) {
+      return new ExNode{ExType::CONSTANT, op, _ExArgs{expr}};
+    }
+    if (op.type == MINUS) {
       op.value = "invert";
-
-    ExType type = ExType::FUNCTION;
-    if (op.type == HASH)
-      type = ExType::CONSTANT;
-    else if (op.type == DOLLAR)
-      type = ExType::SUBGRAPH;
-
-    expr = new ExNode{type, op, _ExArgs{expr}};
-    return expr;
+      return new ExNode{ExType::FUNCTION, op, _ExArgs{expr}};
+    }
   }
   return reciprocal();
 }

@@ -3,19 +3,26 @@
 using namespace nodeflow;
 
 int main() {
-  Graph f("a", "b", "c");
+  Graph a("x", "y");
 
-  f.define("a", Node::Scalar(1));
+  a.define("x", Node::Scalar(1));
+  a.define("y", Node::Scalar(1));
+
+  a = "x + y";
+
+  Graph f("$a", "b", "c");
+
+  f.define("a", a);
   f.define("b", Node::Scalar(2));
   f.define("c", Node::Scalar(3));
 
-  f = "a + b + c + 9";
+  f = "$a + b + c";
 
   f().print();
 
   f.gradient();
 
-  std::cout << f.partial("a") << std::endl;
+  std::cout << a.partial("x") << std::endl;
 
   // f = "sin(cos((abc - #BCC) * $c + 1.5)) / -2*2";
   // std::endl;
