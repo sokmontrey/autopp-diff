@@ -3,36 +3,84 @@
 using namespace nodeflow;
 using namespace std;
 
-Graph &Graph::declare(string param) {
-  if (nodes_map.find(param) != nodes_map.end())
-    error::report("Graph::declare", "parameter already declared", param, 0);
-
-  if (param[0] == '$')
-    subgraph_nodes_map.insert({param.substr(1), nullptr});
-  else if (param[1] != '\0' && param[1] == '$')
-    subgraph_nodes_map.insert({param.substr(2), nullptr});
-  else
-    nodes_map.insert({param, Node::Scalar(0)});
-
+Graph &Graph::finished() {
+  if (root == nullptr)
+    error::report("Graph::finished", "root is not defined", "", 0);
+  root->finished();
   return *this;
 }
 
-// for node
-Graph &Graph::define(string node_name, Node node) {
+Node *Graph::getRoot() { return root; }
+
+Graph &Graph::evaluate(bool is_reset) {
+  if (root == nullptr)
+    error::report("Graph::evaluate", "root is not defined", "", 0);
+  if (is_reset)
+    root->reset();
+  root->forward();
+  return *this;
+}
+
+Graph &Graph::gradient(bool is_reset) {
+  if (root == nullptr)
+    error::report("Graph::backward", "root is not defined", "", 0);
+  if (is_reset)
+    root->reset();
+  root->backward();
+  return *this;
+}
+
+Graph &Graph::reset() {
+  if (root == nullptr)
+    error::report("Graph::reset", "root is not defined", "", 0);
+  root->reset();
+  return *this;
+}
+
+Graph &Graph::print() {
+  if (root == nullptr)
+    error::report("Graph::print", "root is not defined", "", 0);
+  root->print();
+  return *this;
+}
+
+Eigen::MatrixXd Graph::partial(string node_name) {
+  if (root == nullptr)
+    error::report("Graph::partial", "root is not defined", "", 0);
   if (nodes_map.find(node_name) == nodes_map.end())
-    error::report("Graph::define", "parameter not declared", node_name, 0);
-  nodes_map[node_name] = node;
-  return *this;
+    error::report("Graph::partial", "node not defined", node_name, 0);
+  return nodes_map[node_name].getGrad();
 }
 
-// for subgraph
-Graph &Graph::define(string subgraph_name, Graph &subgraph) {
-  if (subgraph_nodes_map.find(subgraph_name) == subgraph_nodes_map.end())
-    error::report("Graph::define (subgraph)", "parameter not declared",
-                  subgraph_name, 0);
-  subgraph_nodes_map[subgraph_name] = subgraph.getRoot();
-  return *this;
+//=============================================================================
+//                                  Getters
+//=============================================================================
+
+Node *Graph::node(string node_name) {
+  if (nodes_map.find(node_name) == nodes_map.end())
+    error::report("Graph::node", "node not defined", node_name, 0);
+  return &nodes_map[node_name];
 }
+
+double Graph::value(string node_name, int row, int col) {
+  if (nodes_map.find(node_name) == nodes_map.end())
+    error::report("Graph::value", "node not defined", node_name, 0);
+  return nodes_map[node_name].getValue(row, col);
+}
+
+Eigen::MatrixXd &Graph::matrix(string node_name) {
+  if (nodes_map.find(node_name) == nodes_map.end())
+    error::report("Graph::matrix", "node not defined", node_name, 0);
+  return nodes_map[node_name].getMatrix();
+}
+
+//=============================================================================
+//                                  Setters
+//=============================================================================
+
+//=============================================================================
+//                              Private Methods
+//=============================================================================
 
 string Graph::getOperatorName(Token op_token) {
   if (ops_symbol_map.find(op_token.type) == ops_symbol_map.end())
@@ -41,15 +89,11 @@ string Graph::getOperatorName(Token op_token) {
   return ops_symbol_map[op_token.type];
 }
 
-void Graph::operator=(const char *expression) { parse(expression); }
-
-void Graph::parse(string expression) {
-  this->expression = expression;
-
+void Graph::parse() {
   ExScanner scanner(expression);
   ExParser parser(scanner.scan());
   buildGraph(parser.parse());
-  root->finished();
+  finished();
 }
 
 void Graph::buildGraph(ExNode *ex_root) {
@@ -107,28 +151,4 @@ void Graph::buildGraph(ExNode *ex_root) {
   });
 
   root = operators.back();
-}
-
-Graph &Graph::operator()() { return evaluate(); }
-Graph &Graph::evaluate() {
-  root->forward();
-  return *this;
-}
-
-Graph &Graph::gradient() {
-  root->backward();
-  return *this;
-}
-
-Eigen::MatrixXd Graph::partial(string node_name) {
-  if (nodes_map.find(node_name) == nodes_map.end())
-    error::report("Graph::partial", "parameter not declared", node_name, 0);
-  return nodes_map[node_name].getGrad();
-}
-
-Node *Graph::getRoot() { return root; }
-
-Graph &Graph::print() {
-  root->print();
-  return *this;
 }

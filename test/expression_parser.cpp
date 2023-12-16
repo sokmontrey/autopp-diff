@@ -3,9 +3,10 @@
 using namespace nodeflow;
 
 int main() {
-  Graph f("abc", "BCC", "c");
-
-  f = "sin(cos((abc - #BCC) * c + 1.5)) / -2*2";
+  // Graph f("abc", "BCC", "c");
+  Graph f("a + b * c", {{"a", Node::Scalar(1.0)},
+                        {"b", Node::Scalar(2.0)},
+                        {"c", Node::Scalar(3.0)}});
 
   return 0;
 }

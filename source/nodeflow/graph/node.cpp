@@ -258,9 +258,6 @@ void OperatorNode::clearGraph() {
   return;
 }
 void OperatorNode::reset() {
-  if (!this->is_value_ready)
-    return;
-
   this->is_value_ready = false;
   this->parent_called_count = 0;
 
