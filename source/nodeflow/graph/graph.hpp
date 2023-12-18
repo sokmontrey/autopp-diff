@@ -65,6 +65,11 @@ public:
     parse();
   }
 
+  // IMPORTANT: use this things.
+  // I ran out of idea to make thing easy for you
+  // so do it yourself.
+  void destroy();
+
   Graph &finished();
   Node *getRoot();
 

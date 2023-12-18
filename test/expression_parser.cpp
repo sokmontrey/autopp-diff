@@ -16,5 +16,7 @@ int main() {
   f.node("w")->setMatrix(f.partial("w") * 0.1);
   f.node("b")->setVector(f.partial("b") * 0.1);
 
+  e.destroy();
+
   return 0;
 }

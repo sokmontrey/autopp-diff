@@ -40,6 +40,8 @@ Eigen::MatrixXd &Node::getGrad() {
 }
 std::string Node::getName() { return this->name; }
 
+NodeType Node::getType() { return NodeType::NODE; }
+
 //================================================================
 //                          Setters
 //================================================================
@@ -275,6 +277,8 @@ Eigen::MatrixXd OperatorNode::getInput(size_t input_index) {
 Eigen::MatrixXd OperatorNode::getInput() {
   return this->inputs[0]->getMatrix();
 }
+
+NodeType OperatorNode::getType() { return NodeType::OPERATOR; }
 
 //================================================================
 //                      Graph Methods

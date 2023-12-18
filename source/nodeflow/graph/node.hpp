@@ -17,6 +17,9 @@ namespace nodeflow {
  *      @params: Eigen::Matrix or Eigen::Vector : Assign an Eigen::Matrix or
  * Vector object to the value member.
  */
+
+enum class NodeType { NODE, OPERATOR };
+
 class Node {
 protected:
   bool is_differentiatable = true;
@@ -55,6 +58,7 @@ public:
   Eigen::MatrixXd &getMatrix();
   Eigen::MatrixXd &getGrad();
   std::string getName();
+  virtual NodeType getType();
 
   //================================================================
   //                          Setters
@@ -164,6 +168,7 @@ public:
 
   Eigen::MatrixXd getInput(size_t input_index);
   Eigen::MatrixXd getInput();
+  NodeType getType() override;
 
   //================================================================
   //                      Graph Methods

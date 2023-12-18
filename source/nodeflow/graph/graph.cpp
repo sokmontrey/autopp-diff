@@ -3,7 +3,14 @@
 using namespace nodeflow;
 using namespace std;
 
-//TODO: deconstructor
+void Graph::destroy() {
+  if (this->root) {
+    this->root->reverse_iterate([](Node *node) {
+      if (node != nullptr && node->getType() != NodeType::NODE)
+        delete node;
+    });
+  }
+}
 
 Graph &Graph::finished() {
   if (root == nullptr)
@@ -87,12 +94,14 @@ string Graph::getOperatorName(Token op_token) {
 void Graph::parse() {
   ExScanner scanner(expression);
   ExParser parser(scanner.scan());
-  buildGraph(parser.parse());
+  ExNode *ex_root = parser.parse();
+  buildGraph(ex_root);
   finished();
+  ex_root->reverse_iterate([](ExNode *ex_node) { delete ex_node; });
 }
 
 void Graph::buildGraph(ExNode *ex_root) {
-  deque<Node *> operators;
+  deque<Node *> nodes;
 
   ex_root->reverse_iterate([&](ExNode *ex_node) {
     string value = ex_node->token.value;
@@ -102,15 +111,15 @@ void Graph::buildGraph(ExNode *ex_root) {
       if (nodes_map.find(value) == nodes_map.end())
         error::report("Graph::buildGraph NAME", "parameter not defined", value,
                       0);
-      operators.push_back(&nodes_map[value]);
+      nodes.push_back(&nodes_map[value]);
     } break;
     case ExType::NUMBER: {
       if (nodes_map.find(value) == nodes_map.end())
         nodes_map.insert({value, Node::Scalar(stod(value))});
-      operators.push_back(&nodes_map[value]);
+      nodes.push_back(&nodes_map[value]);
     } break;
     case ExType::CONSTANT: {
-      operators.back()->constant();
+      nodes.back()->constant();
       break;
     }
     case ExType::SUBGRAPH: {
@@ -120,30 +129,32 @@ void Graph::buildGraph(ExNode *ex_root) {
       if (subgraph_nodes_map[value] == nullptr)
         error::report("Graph::buildGraph SUBGRAPH", "subgraph not defined",
                       value, 0);
-      operators.push_back(subgraph_nodes_map[value]);
+      nodes.push_back(subgraph_nodes_map[value]);
     } break;
     case ExType::SYMBOL:
     case ExType::FUNCTION: {
       string name = value;
       if (ex_node->type == ExType::SYMBOL)
         name = getOperatorName(ex_node->token);
+
+      Node *op = nullptr;
       if (one_arg_ops_map.find(name) != one_arg_ops_map.end()) {
-        Node *a = operators.back();
-        operators.pop_back();
-        operators.push_back(one_arg_ops_map[name](a));
-        break;
+        Node *a = nodes.back();
+        nodes.pop_back();
+        op = one_arg_ops_map[name](a);
       }
+
       if (two_args_ops_map.find(name) != two_args_ops_map.end()) {
-        Node *b = operators.back();
-        operators.pop_back();
-        Node *a = operators.back();
-        operators.pop_back();
-        operators.push_back(two_args_ops_map[name](a, b));
-        break;
+        Node *b = nodes.back();
+        nodes.pop_back();
+        Node *a = nodes.back();
+        nodes.pop_back();
+        op = two_args_ops_map[name](a, b);
       }
+      nodes.push_back(op);
     } break;
     }
   });
 
-  root = operators.back();
+  root = nodes.back();
 }

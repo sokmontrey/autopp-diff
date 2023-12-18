@@ -35,8 +35,7 @@ ExParser::ExParser(std::vector<Token> tokens) { this->tokens = tokens; }
 
 ExNode *ExParser::parse() { return expression(); }
 ExNode *ExParser::expression() {
-  root = term();
-  return root;
+  return term();
 }
 
 ExNode *ExParser::term() {
