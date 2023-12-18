@@ -3,6 +3,8 @@
 using namespace nodeflow;
 using namespace std;
 
+//TODO: deconstructor
+
 Graph &Graph::finished() {
   if (root == nullptr)
     error::report("Graph::finished", "root is not defined", "", 0);
@@ -12,13 +14,13 @@ Graph &Graph::finished() {
 
 Node *Graph::getRoot() { return root; }
 
-Graph &Graph::evaluate(bool is_reset) {
+const Eigen::MatrixXd &Graph::evaluate(bool is_reset) {
   if (root == nullptr)
     error::report("Graph::evaluate", "root is not defined", "", 0);
   if (is_reset)
     root->reset();
   root->forward();
-  return *this;
+  return root->getMatrix();
 }
 
 Graph &Graph::gradient(bool is_reset) {
@@ -37,14 +39,7 @@ Graph &Graph::reset() {
   return *this;
 }
 
-Graph &Graph::print() {
-  if (root == nullptr)
-    error::report("Graph::print", "root is not defined", "", 0);
-  root->print();
-  return *this;
-}
-
-Eigen::MatrixXd Graph::partial(string node_name) {
+const Eigen::MatrixXd &Graph::partial(string node_name) {
   if (root == nullptr)
     error::report("Graph::partial", "root is not defined", "", 0);
   if (nodes_map.find(node_name) == nodes_map.end())

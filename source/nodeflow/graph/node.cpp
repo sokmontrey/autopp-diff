@@ -39,35 +39,73 @@ Eigen::MatrixXd &Node::getGrad() {
   return this->outer_derivative;
 }
 std::string Node::getName() { return this->name; }
-void Node::print() {
-  std::cout << "Node: "
-            << " (Matrix) "
-            << "\n"
-            << "----\n"
-            << this->value << "\n"
-            << "----\n";
-}
 
 //================================================================
 //                          Setters
 //================================================================
 
-void Node::setMatrix(Eigen::MatrixXd new_value) {
+void Node::setVector(Eigen::VectorXd new_value) {
+  if (new_value.rows() != this->getRows() ||
+      new_value.cols() != this->getCols())
+    error::report("Node::setVector", "cannot set vector with different size",
+                  "", 0);
   this->value = new_value;
-
-  this->setRows(new_value.rows());
-  this->setCols(new_value.cols());
 }
+
+void Node::setVector(std::initializer_list<double> list) {
+  if (list.size() == 0)
+    error::report("Node::setVector", "list is empty", "", 0);
+
+  if (list.size() != this->getRows() * this->getCols())
+    error::report("Node::setVector", "cannot set vector with different size",
+                  "", 0);
+
+  int i = 0;
+  for (auto &value : list) {
+    this->value(i) = value;
+    i++;
+  }
+}
+
+void Node::setMatrix(Eigen::MatrixXd new_value) {
+  if (new_value.rows() != this->getRows() ||
+      new_value.cols() != this->getCols())
+    error::report("Node::setMatrix", "cannot set matrix with different size",
+                  "", 0);
+  this->value = new_value;
+}
+
+void Node::setMatrix(
+    std::initializer_list<std::initializer_list<double>> list) {
+  if (list.size() == 0)
+    error::report("Node::setMatrix", "list is empty", "", 0);
+
+  if (list.size() != this->getRows() || list.begin()->size() != this->getCols())
+    error::report("Node::setMatrix", "cannot set matrix with different size",
+                  "", 0);
+
+  int row = 0;
+  for (auto &row_list : list) {
+    int col = 0;
+    for (auto &value : row_list) {
+      this->value(row, col) = value;
+      col++;
+    }
+    row++;
+  }
+}
+
 void Node::setValue(size_t row, size_t col, double new_value) {
   this->value(row, col) = new_value;
 }
 void Node::setValue(double new_value) { this->value(0, 0) = new_value; }
 void Node::setName(std::string new_name) { this->name = new_name; }
-void Node::operator=(Eigen::MatrixXd new_value) {
+Node &Node::operator=(Eigen::MatrixXd new_value) {
   this->value = new_value;
 
   this->setRows(new_value.rows());
   this->setCols(new_value.cols());
+  return *this;
 }
 
 //================================================================

@@ -2,6 +2,7 @@
 
 #include <Eigen/Dense>
 
+#include "../util/error.hpp"
 #include <functional>
 #include <initializer_list>
 #include <iostream>
@@ -54,17 +55,21 @@ public:
   Eigen::MatrixXd &getMatrix();
   Eigen::MatrixXd &getGrad();
   std::string getName();
-  void print();
 
   //================================================================
   //                          Setters
   //================================================================
 
+  void setVector(Eigen::VectorXd new_value);
+  void setVector(std::initializer_list<double> list);
+
   void setMatrix(Eigen::MatrixXd new_value);
+  void setMatrix(std::initializer_list<std::initializer_list<double>> list);
+
   void setValue(size_t row, size_t col, double new_value);
   void setValue(double new_value);
   void setName(std::string new_name);
-  void operator=(Eigen::MatrixXd new_value);
+  Node &operator=(Eigen::MatrixXd new_value);
 
   //================================================================
   //                       Node Methods

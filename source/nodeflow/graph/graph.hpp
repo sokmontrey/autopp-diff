@@ -68,12 +68,11 @@ public:
   Graph &finished();
   Node *getRoot();
 
-  Graph &evaluate(bool is_reset = true);
+  const Eigen::MatrixXd &evaluate(bool is_reset = true);
   Graph &reset();
-  Graph &print();
 
   Graph &gradient(bool is_reset = true);
-  Eigen::MatrixXd partial(std::string node_name);
+  const Eigen::MatrixXd &partial(std::string node_name);
 
   Node *node(std::string node_name);
   double value(std::string node_name, int row = 0, int col = 0);
