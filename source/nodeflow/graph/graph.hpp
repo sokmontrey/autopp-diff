@@ -56,19 +56,26 @@ public:
 
   Graph(std::string expression,
         std::unordered_map<std::string, Node> nodes_map = {},
-        std::unordered_map<std::string, Graph> subgraph_nodes_map = {})
+        std::unordered_map<std::string, Graph &> subgraph_nodes_map = {})
       : expression(expression), nodes_map(nodes_map) {
     for (auto &subgraph : subgraph_nodes_map) {
+      subgraph.second.subgraph();
       this->subgraph_nodes_map.insert(
           {subgraph.first, subgraph.second.getRoot()});
     }
     parse();
   }
 
+  ~Graph() {
+    if (!is_subgraph)
+      destroy();
+  }
+
   // IMPORTANT: use this things.
   // I ran out of idea to make thing easy for you
   // so do it yourself.
   void destroy();
+  void subgraph();
 
   Graph &finished();
   Node *getRoot();
@@ -94,6 +101,8 @@ private:
                                                             {SLASH, "div"},
                                                             {STAR, "mul"},
                                                             {POW, "pow"}};
+
+  bool is_subgraph = false;
 
   void parse();
   void buildGraph(ExNode *ex_root);

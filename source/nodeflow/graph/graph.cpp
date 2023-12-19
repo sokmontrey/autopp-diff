@@ -12,6 +12,12 @@ void Graph::destroy() {
   }
 }
 
+void Graph::subgraph() {
+  if (root == nullptr)
+    error::report("Graph::subgraph", "root is not defined", "", 0);
+  is_subgraph = true;
+}
+
 Graph &Graph::finished() {
   if (root == nullptr)
     error::report("Graph::finished", "root is not defined", "", 0);
